@@ -28,6 +28,7 @@ import {
   AlertCircle,
   User,
   X,
+  ClipboardList,
 } from "lucide-react";
 import ChatPage from "../common/ChatPage";
 import PatientConfigPanel from "../../components/dashboard/PatientConfigPanel";
@@ -142,20 +143,13 @@ const Sidebar = ({
           onClick={() => setActiveView("messages")}
           collapsed={isCollapsed}
         />
-        {/* <SidebarItem
-          icon={<Pill size={18} />}
-          label="Medicines"
-          active={activeView === "medicines"}
-          onClick={() => setActiveView("medicines")}
+        <SidebarItem
+          icon={<ClipboardList size={18} />}
+          label="Assessment"
+          active={activeView === "assessment"}
+          onClick={() => setActiveView("assessment")}
           collapsed={isCollapsed}
-        /> */}
-        {/* <SidebarItem
-          icon={<UserCog size={18} />}
-          label="Edit Profile"
-          active={activeView === 'profile'}
-          onClick={() => setActiveView('profile')}
-          collapsed={isCollapsed}
-        /> */}
+        />
       </nav>
     </div>
 
@@ -969,6 +963,113 @@ const QuickReminders = ({ patients, isDarkMode }) => {
   );
 };
 
+// Assessment Management View for Doctors
+const DoctorAssessmentView = ({ patients, isDarkMode, navigate }) => {
+  return (
+    <div className="space-y-8 fade-in">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 sm:p-10 shadow-premium border border-gray-150 dark:border-gray-800">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs font-black uppercase tracking-wider mb-2 border border-primary-200 dark:border-primary-800/50">
+              <ClipboardList size={14} /> Clinical Evaluation Hub
+            </div>
+            <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+              Patient <span className="text-primary-500">Assessments</span>
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium text-sm">
+              Standardised physical therapy tests (ARAT · BBT · WMFT · Fugl-Meyer) and objective kinematic tracking
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => navigate("/assessment/start")}
+              className="px-6 py-3.5 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-2xl shadow-lg shadow-primary-500/25 transition-all active:scale-95 flex items-center gap-2 text-sm cursor-pointer"
+            >
+              <Activity size={18} />
+              <span>Configure Assessment</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 5 Clinical Batteries Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="p-4 rounded-2xl bg-gray-50/70 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl">🦾</span>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Gross Reach & ROM</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">ARAT Gross (9 pts) & FMA Shoulder/Elbow</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-gray-50/70 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl">📦</span>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Dexterity & Transfer</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Box & Block Test (60s Timed) & ARAT Pinch (15 pts)</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-gray-50/70 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl">⚡</span>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Speed & Smoothness</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Wolf Motor Function (WMFT) Timed Reaction</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Patients List for Assessment Launch */}
+        <div>
+          <h2 className="text-base font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <Users size={16} className="text-primary-500" />
+            Assigned Patients ({patients?.length || 0})
+          </h2>
+          {(!patients || patients.length === 0) ? (
+            <div className="text-center py-8 text-sm text-gray-400 border border-dashed border-gray-200 dark:border-gray-800 rounded-2xl">
+              No patients assigned yet.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {patients.map((p) => (
+                <div
+                  key={p._id}
+                  className="p-4 rounded-2xl bg-gray-50/60 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary-500/40 transition-all"
+                >
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-500 to-purple-500 text-white font-bold flex items-center justify-center text-sm">
+                      {(p.name || p.email || "P")[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm text-gray-900 dark:text-white">{p.name || "Patient"}</div>
+                      <div className="text-xs text-gray-400">{p.email} • ID: {p._id?.slice(-6)}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => navigate("/assessment/start")}
+                      className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Activity size={14} />
+                      <span>Start Assessment</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const DoctorDashboard = () => {
   const { user, logout, isDarkMode, toggleDarkMode } = useAuth();
 
@@ -1101,6 +1202,13 @@ const DoctorDashboard = () => {
           {activeView === "schedule" && <SchedulePage />}
           {activeView === "messages" && <ChatPage />}
           {activeView === "medicines" && <MedicinesView />}
+          {activeView === "assessment" && (
+            <DoctorAssessmentView
+              patients={patients}
+              isDarkMode={isDarkMode}
+              navigate={navigate}
+            />
+          )}
 
           {/* <div className=' mt-3'></div> */}
         </main>

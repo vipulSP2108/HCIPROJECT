@@ -78,6 +78,7 @@ import DrawingPerformancePanel from "../../components/dashboard/DrawingPerforman
 import ArmReachVisualizer from "../game/ArmReachVisualizer";
 import LightingSettings from "../../components/common/LightingSettings";
 import { ENABLE_CALIBRATION_MODAL } from "../../constants";
+import { listAssessments } from "../../services/assessmentService";
 
 export default function PatientDashboard({ userId }) {
   const { user, logout, isDarkMode, toggleDarkMode } = useAuth();
@@ -279,6 +280,13 @@ export default function PatientDashboard({ userId }) {
               onClick={() => changeSection("Calendar")}
               collapsed={isCollapsed}
             />
+            <SidebarItem
+              icon={<Activity size={18} />}
+              label="Assessment"
+              active={activeSection === "Assessment"}
+              onClick={() => changeSection("Assessment")}
+              collapsed={isCollapsed}
+            />
           </nav>
         </div>
 
@@ -349,6 +357,14 @@ export default function PatientDashboard({ userId }) {
           )}
           {activeSection === "Appointment" && (
             <PatientAppointments isDarkMode={isDarkMode} />
+          )}
+          {activeSection === "Assessment" && (
+            <AssessmentSectionContent
+              userData={userData}
+              user={user}
+              navigate={navigate}
+              isDarkMode={isDarkMode}
+            />
           )}
           {activeSection === "Record" && (
             <RecordContent isDarkMode={isDarkMode} />
@@ -571,10 +587,10 @@ const CoordinateVisualizer = ({ coordinates }) => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 text-xs font-bold rounded-full">
+          <span className="px-3 py-1 bg-green-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-green-200 dark:border-emerald-800/40 text-xs font-bold rounded-full">
             {coordinates.length} positions
           </span>
-          <span className="px-3 py-1 bg-primary-50 dark:bg-primary-950/30 text-primary-600 dark:text-primary-400 text-xs font-bold rounded-full">
+          <span className="px-3 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 border border-primary-200 dark:border-primary-800/40 text-xs font-bold rounded-full">
             1s Sample Rate
           </span>
         </div>
@@ -3038,6 +3054,215 @@ const TopBar = ({
           <LogOut size={18} />
           <span className="hidden sm:inline">Logout</span>
         </button>
+      </div>
+    </div>
+  );
+};
+
+// Functional component for Motor Assessment Hub inside PatientDashboard
+const AssessmentSectionContent = ({ userData, user, navigate, isDarkMode }) => {
+  const [assessments, setAssessments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    listAssessments(user?._id)
+      .then((data) => {
+        if (isMounted) setAssessments(data?.assessments || []);
+      })
+      .catch((err) => {
+        console.error("Failed to load assessments in Dashboard:", err);
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [user?._id]);
+
+  const phaseColors = {
+    pre: "bg-primary-500 text-white",
+    ongoing: "bg-amber-500 text-white",
+    post: "bg-emerald-500 text-white",
+  };
+
+  return (
+    <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-6 md:space-y-8 fade-in pb-20">
+      {/* Hero Card */}
+      <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-10 shadow-premium border border-gray-150 dark:border-gray-800">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs font-black uppercase tracking-wider mb-2 border border-primary-200 dark:border-primary-800/50">
+              <Activity size={14} /> Objective Kinematics
+            </div>
+            <h1 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
+              Motor <span className="text-primary-500">Assessment</span>
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium text-sm md:text-base">
+              Standardized clinical protocols & therapeutic progress evaluations
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => navigate("/assessment/start")}
+              className="px-6 py-3.5 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-2xl shadow-lg shadow-primary-500/25 transition-all active:scale-95 flex items-center gap-2 text-sm cursor-pointer"
+            >
+              <Plus size={18} />
+              <span>Start New Assessment</span>
+            </button>
+            <button
+              onClick={() => navigate("/assessment/start")}
+              className="px-5 py-3.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-2xl transition-all flex items-center gap-2 text-sm cursor-pointer"
+            >
+              <ShieldCheck size={18} className="text-primary-500" />
+              <span>Clinical Battery Only</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 2 Track Feature Banner */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="p-5 rounded-2xl bg-gray-50/70 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl">🎮</span>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Track A — Game Kinematics</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Response latency, accuracy, reach smoothness & tracing error</p>
+              </div>
+            </div>
+            <div className="text-[11px] text-primary-600 dark:text-primary-400 font-semibold mt-2">
+              Includes: Piano Reaction, Fruit Basket, Board Drawing, Shape Tracing
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-gray-50/70 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-2xl">🏥</span>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Track B — Clinical Protocols</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Validated physical therapy assessments with real-time pose estimation</p>
+              </div>
+            </div>
+            <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-2">
+              Includes: ARAT Gross (9 pts), BBT 60s, ARAT Pinch (15 pts), WMFT, FMA Proximal ROM
+            </div>
+          </div>
+        </div>
+
+        {/* Assessment Sessions History Table / List */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <Clock size={16} className="text-primary-500" />
+              Your Assessment History
+            </h2>
+            <span className="text-xs font-bold text-gray-400">
+              {assessments.length} Recorded Sessions
+            </span>
+          </div>
+
+          {loading ? (
+            <div className="p-8 text-center text-gray-400 text-sm">
+              <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary-500 mb-2" />
+              Loading assessments…
+            </div>
+          ) : assessments.length === 0 ? (
+            <div className="text-center py-12 px-4 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800">
+              <Activity className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+              <h3 className="text-base font-bold text-gray-800 dark:text-gray-200 mb-1">
+                No Assessments Yet
+              </h3>
+              <p className="text-xs text-gray-400 max-w-sm mx-auto mb-5">
+                Complete your baseline assessment to establish objective benchmarks and unlock longitudinal progress tracking.
+              </p>
+              <button
+                onClick={() => navigate("/assessment/start")}
+                className="px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-xl text-xs shadow-md shadow-primary-500/25 transition-all cursor-pointer"
+              >
+                Begin Baseline Assessment
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {(() => {
+                const inProgress = assessments.filter(a => a.status !== "completed");
+                const completed = assessments.filter(a => a.status === "completed");
+                const displayAssessments = [...(inProgress.length > 0 ? [inProgress[0]] : []), ...completed];
+                
+                return displayAssessments.map((a) => {
+                  const isCompleted = a.status === "completed";
+                const dateStr = a.completedAt
+                  ? new Date(a.completedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
+                  : new Date(a.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+                const overallScore = a.overallScore != null ? a.overallScore : (a.clinicalMetrics?.totalScore || null);
+                const uncappedScore = a.overallUncappedScore != null ? a.overallUncappedScore : null;
+
+                return (
+                  <div
+                    key={a._id}
+                    className="p-4 rounded-2xl bg-gray-50/60 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary-500/40 transition-all"
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-primary-500 font-bold flex-shrink-0 shadow-xs">
+                        {a.track === "clinical" ? "🏥" : a.track === "game" ? "🎮" : "⭐"}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${phaseColors[a.phase] || "bg-primary-500 text-white"}`}>
+                            {a.phase}
+                          </span>
+                          <span className="text-xs font-bold text-gray-900 dark:text-white">
+                            {a.label || "Assessment Session"}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-gray-400">
+                          {dateStr} • Track {a.track?.toUpperCase()} • {isCompleted ? "Completed" : "In Progress"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 self-end sm:self-center">
+                      <div className="flex gap-4 sm:mr-4">
+                        {uncappedScore != null && (
+                          <div className="text-right">
+                            <span className="text-lg font-black text-amber-500">{uncappedScore.toLocaleString()}</span>
+                            <span className="text-[10px] text-gray-400 font-bold block -mt-1 uppercase">Kinematic Pts</span>
+                          </div>
+                        )}
+                        {overallScore != null && (
+                          <div className="text-right">
+                            <span className="text-lg font-black text-primary-500">{overallScore}</span>
+                            <span className="text-[10px] text-gray-400 font-bold block -mt-1 uppercase">Overall %</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {isCompleted ? (
+                        <button
+                          onClick={() => navigate(`/assessment/report/${a._id}`)}
+                          className="px-4 py-2 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-primary-600 dark:text-primary-400 font-bold text-xs rounded-xl border border-gray-200 dark:border-gray-700 transition-all flex items-center gap-1 shadow-xs cursor-pointer"
+                        >
+                          <span>View Report</span>
+                          <ChevronRight size={14} />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => navigate(`/assessment/run/${a._id}`)}
+                          className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Resume</span>
+                          <ChevronRight size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+                });
+              })()}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -3,16 +3,21 @@ import gameSessionBuffer from '../../services/gameSessionBuffer';
 import offlineBuffer from '../../services/offlineBuffer';
 import { useNavigate } from 'react-router-dom';
 import FullScreenLoader from '../../components/common/FullScreenLoader';
+import { linkGameSession } from '../../services/assessmentService';
 
 /**
  * Sticky "Save & Exit" floating button for all games.
  * Shows a confirmation dialog, flushes local buffer to backend, then navigates back.
  */
-const SaveExitButton = ({ onBeforeSave, onSaveStart, onSaveCancel, disabled, isMobile }) => {
+const SaveExitButton = ({ onBeforeSave, onSaveStart, onSaveCancel, disabled, isMobile, assessmentId, gameType }) => {
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
 
   const navigateToDashboard = () => {
+    if (assessmentId) {
+      navigate(`/assessment/run/${assessmentId}`);
+      return;
+    }
     const { user } = JSON.parse(localStorage.getItem("user") || "{}");
     const dashPath = user?.type === "doctor" ? "/doctor/dashboard" : "/patient/dashboard";
     navigate(dashPath);
@@ -45,6 +50,18 @@ const SaveExitButton = ({ onBeforeSave, onSaveStart, onSaveCancel, disabled, isM
       if (gameSessionBuffer.hasPending()) {
         const response = await gameSessionBuffer.saveAndExit();
         console.log('Session saved successfully:', response);
+        
+        if (assessmentId && response?.session?._id) {
+          try {
+            await linkGameSession(assessmentId, { 
+              gameType: gameType || 'game', 
+              gameSessionId: response.session._id 
+            });
+            console.log('Session linked to assessment successfully.');
+          } catch (linkErr) {
+            console.error('Failed to link session to assessment:', linkErr);
+          }
+        }
       }
 
       navigateToDashboard();

@@ -286,7 +286,7 @@ const PatientAppointments = ({ isDarkMode }) => {
 
                 {selectedSlot && (
                   <div className="pt-8 mt-8 border-t border-gray-100 dark:border-gray-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-primary-50 dark:bg-primary-900/10 p-6 rounded-[2rem] border border-primary-100 dark:border-primary-800/50">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-primary-50 dark:bg-gray-800/80 p-6 rounded-[2rem] border border-primary-200 dark:border-gray-700">
                       <div>
                         <p className="text-[10px] text-primary-600 dark:text-primary-400 font-black uppercase tracking-widest mb-1">
                           Confirm Selection

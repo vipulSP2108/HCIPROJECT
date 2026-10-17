@@ -132,12 +132,12 @@ function PatientSetting() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {error && (
-          <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-2xl text-sm font-medium">
+          <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 text-red-700 dark:text-red-300 px-4 py-3 rounded-2xl text-sm font-medium">
             {error}
           </div>
         )}
         {success && (
-          <div className="bg-green-50 border border-green-100 text-green-600 px-4 py-3 rounded-2xl text-sm font-medium">
+          <div className="bg-green-50 dark:bg-emerald-950/40 border border-green-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-2xl text-sm font-medium">
             {success}
           </div>
         )}
@@ -223,7 +223,7 @@ function PatientSetting() {
               />
             </div>
 
-            <div className="mt-8 p-4 bg-secondary-50 rounded-2xl border border-secondary-100 italic text-xs text-secondary-700">
+            <div className="mt-8 p-4 bg-secondary-50 dark:bg-gray-800/80 rounded-2xl border border-secondary-200 dark:border-gray-700 italic text-xs text-secondary-800 dark:text-secondary-300">
               Note: These metrics are used to personalize your therapy plan and
               track physical progress over time.
             </div>
@@ -273,7 +273,7 @@ function PatientSetting() {
 
           <div className="space-y-4">
             {offlineSessions.length === 0 ? (
-              <div className="text-center py-8 text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+              <div className="text-center py-8 text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
                 <Wifi className="w-8 h-8 mx-auto mb-3 opacity-50" />
                 <p className="text-sm font-medium">No offline sessions.</p>
                 <p className="text-xs">Your connection is stable and all data is synced.</p>

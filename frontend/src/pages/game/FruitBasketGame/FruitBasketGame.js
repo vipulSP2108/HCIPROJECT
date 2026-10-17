@@ -2,7 +2,8 @@ import { Hands } from "@mediapipe/hands";
 import { Pose } from "@mediapipe/pose";
 import { Camera } from "@mediapipe/camera_utils";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { linkGameSession } from "../../../services/assessmentService";
 import { useAuth } from "../../../context/AuthContext";
 import gameSessionBuffer from "../../../services/gameSessionBuffer";
 import offlineBuffer from "../../../services/offlineBuffer";
@@ -73,6 +74,9 @@ const CONFIG = {
 const FruitBasketGame = () => {
   const { user, isDarkMode } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const assessmentId = location.state?.assessmentId;
+  const gameType = location.state?.gameType;
   const { globalSettings } = useSettings();
   const [patientConfig, setPatientConfig] = useState(null);
   const [configLoaded, setConfigLoaded] = useState(false);
@@ -92,7 +96,7 @@ const FruitBasketGame = () => {
       setConfigLoaded(true);
     }
   }, [user?.id || user?._id]);
-  
+
   // State Management
   const [isInitialized, setIsInitialized] = useState(false);
   const [calibrationDone, setCalibrationDone] = useState(false);
@@ -163,7 +167,7 @@ const FruitBasketGame = () => {
   const logsRef = useRef([]);
   const attemptsRef = useRef(0);
   const successesRef = useRef(0);
-  
+
   const scoreRef = useRef(score);
   const aratTotalScoreRef = useRef(0);
   const isInitializedRef = useRef(isInitialized);
@@ -190,11 +194,11 @@ const FruitBasketGame = () => {
 
   // ── Live game settings ref — doctor config > admin config > defaults ──
   const gameConfigRef = useRef({
-    cooldownSeconds:            globalSettings?.fruitBasketCooldownSeconds          ?? 3,
-    trialTimeoutMs:             (globalSettings?.fruitBasketAttemptTimeoutSeconds   ?? 10) * 1000,
-    maxAttempts:                globalSettings?.fruitBasketMaxAttempts               ?? 3,
-    testingMode:                globalSettings?.testingMode                          ?? false,
-    testingFruitBasketSequence: globalSettings?.testingFruitBasketSequence           ?? [],
+    cooldownSeconds: globalSettings?.fruitBasketCooldownSeconds ?? 3,
+    trialTimeoutMs: (globalSettings?.fruitBasketAttemptTimeoutSeconds ?? 10) * 1000,
+    maxAttempts: globalSettings?.fruitBasketMaxAttempts ?? 3,
+    testingMode: globalSettings?.testingMode ?? false,
+    testingFruitBasketSequence: globalSettings?.testingFruitBasketSequence ?? [],
   });
   const patientFreedomStr = patientConfig?.games?.fruitBasket?.patientFreedom?.value || "";
   const patientFreedom = patientFreedomStr.split(',').filter(Boolean);
@@ -204,7 +208,7 @@ const FruitBasketGame = () => {
     // Priority: Admin Testing Mode > Doctor Config > Default
     const isTesting = globalSettings?.testingMode ?? false;
 
-    const effectiveTimeoutMs = isTesting 
+    const effectiveTimeoutMs = isTesting
       ? (globalSettings?.fruitBasketAttemptTimeoutSeconds ?? 10) * 1000
       : (patientConfig?.games?.fruitBasket?.trialTimeoutSeconds?.value ?? 10) * 1000;
 
@@ -217,13 +221,13 @@ const FruitBasketGame = () => {
       : (patientConfig?.games?.fruitBasket?.maxAttempts?.value ?? 3);
 
     gameConfigRef.current = {
-      cooldownSeconds:            effectiveCooldown,
-      trialTimeoutMs:             effectiveTimeoutMs,
-      maxAttempts:                effectiveMaxAttempts,
-      testingMode:                isTesting,
+      cooldownSeconds: effectiveCooldown,
+      trialTimeoutMs: effectiveTimeoutMs,
+      maxAttempts: effectiveMaxAttempts,
+      testingMode: isTesting,
       testingFruitBasketSequence: globalSettings?.testingFruitBasketSequence ?? [],
     };
-    
+
     // Fix initial 5:00 flicker
     if (patientConfig) {
       const sessionSecs = isTesting
@@ -325,7 +329,7 @@ const FruitBasketGame = () => {
           setAssistiveMode(true);
         }
       }
-    } catch (e) {}
+    } catch (e) { }
   }, []);
 
   const gridHolesRef = useRef([]);
@@ -466,8 +470,8 @@ const FruitBasketGame = () => {
       source_idx: sourceIdx,
       basket_idx: bIdx,
     });
-  // No deps on globalSettings — all settings read live via gameConfigRef
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // No deps on globalSettings — all settings read live via gameConfigRef
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Keep ref in sync so cooldown effect always has the latest function
@@ -528,8 +532,8 @@ const FruitBasketGame = () => {
     const succ = successesRef.current;
     const rate = total > 0 ? ((succ / total) * 100).toFixed(0) : 0;
     setSuccessRate(rate);
-  // No dep on spawnFruit — spawn happens via the cooldown effect using spawnFruitRef
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // No dep on spawnFruit — spawn happens via the cooldown effect using spawnFruitRef
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -553,8 +557,8 @@ const FruitBasketGame = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
-  // spawnFruit intentionally excluded — accessed via ref to avoid re-runs
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // spawnFruit intentionally excluded — accessed via ref to avoid re-runs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cooldownTimeLeft, isPaused, isSessionActive]);
   // ==================== MEDIAPIPE HANDLERS ====================
   const onHandsResults = useCallback((results) => {
@@ -571,9 +575,13 @@ const FruitBasketGame = () => {
         const lm = results.multiHandLandmarks[i];
         const label = results.multiHandedness[i].label;
 
+        const palmX = (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5;
+        const palmY = (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5;
+        const fingersX = (lm[4].x + lm[8].x + lm[12].x + lm[16].x + lm[20].x) / 5;
+        const fingersY = (lm[4].y + lm[8].y + lm[12].y + lm[16].y + lm[20].y) / 5;
         const palmCenter = {
-          x: (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5,
-          y: (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5,
+          x: (palmX + fingersX) / 2,
+          y: (palmY + fingersY) / 2,
         };
         const rawPos = { x: palmCenter.x, y: palmCenter.y };
         handState[label].pos = rawPos;
@@ -665,30 +673,30 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
       isPositionedCorrectlyRef.current = false;
       return;
     }
-    
+
     const pl = lastPoseResultsRef.current.poseLandmarks;
     const leftShoulder = pl[11];
     const rightShoulder = pl[12];
-    
-    if (!leftShoulder || !rightShoulder || 
-        leftShoulder.visibility < CONFIG.MIN_SHOULDER_VISIBILITY || 
-        rightShoulder.visibility < CONFIG.MIN_SHOULDER_VISIBILITY) {
+
+    if (!leftShoulder || !rightShoulder ||
+      leftShoulder.visibility < CONFIG.MIN_SHOULDER_VISIBILITY ||
+      rightShoulder.visibility < CONFIG.MIN_SHOULDER_VISIBILITY) {
       setIsPositionedCorrectly(false);
       isPositionedCorrectlyRef.current = false;
       return;
     }
-    
-    const leftInFrame = leftShoulder.x > 0.1 && leftShoulder.x < 0.9 && 
-                       leftShoulder.y > CONFIG.IDEAL_SHOULDER_Y_RANGE[0] && 
-                       leftShoulder.y < CONFIG.IDEAL_SHOULDER_Y_RANGE[1];
-    
-    const rightInFrame = rightShoulder.x > 0.1 && rightShoulder.x < 0.9 && 
-                        rightShoulder.y > CONFIG.IDEAL_SHOULDER_Y_RANGE[0] && 
-                        rightShoulder.y < CONFIG.IDEAL_SHOULDER_Y_RANGE[1];
-    
+
+    const leftInFrame = leftShoulder.x > 0.1 && leftShoulder.x < 0.9 &&
+      leftShoulder.y > CONFIG.IDEAL_SHOULDER_Y_RANGE[0] &&
+      leftShoulder.y < CONFIG.IDEAL_SHOULDER_Y_RANGE[1];
+
+    const rightInFrame = rightShoulder.x > 0.1 && rightShoulder.x < 0.9 &&
+      rightShoulder.y > CONFIG.IDEAL_SHOULDER_Y_RANGE[0] &&
+      rightShoulder.y < CONFIG.IDEAL_SHOULDER_Y_RANGE[1];
+
     const shoulderWidth = Math.abs(rightShoulder.x - leftShoulder.x);
     calibrationRef.current.shoulderWidth = shoulderWidth;
-    
+
     const isCorrect = leftInFrame && rightInFrame && shoulderWidth >= CONFIG.MIN_SHOULDER_WIDTH;
     setIsPositionedCorrectly(isCorrect);
     isPositionedCorrectlyRef.current = isCorrect;
@@ -741,27 +749,27 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         handState[side].shoulder = { x: sh.x, y: sh.y };
         handState[side].elbow = { x: el.x, y: el.y };
 
-        const wrist   = { x: wristRaw.x * w, y: wristRaw.y * h };
+        const wrist = { x: wristRaw.x * w, y: wristRaw.y * h };
         const shPixel = { x: sh.x * w, y: sh.y * h };
         const elPixel = { x: el.x * w, y: el.y * h };
 
         // 1. ELBOW ANGLE: interior angle at elbow vertex (wrist→elbow vs shoulder→elbow)
         const vElbowToShoulder = vecSub(shPixel, elPixel);
-        const vElbowToWrist    = vecSub(wrist, elPixel);
+        const vElbowToWrist = vecSub(wrist, elPixel);
         handState[side].elbowAngle = Math.round(vecAngle(vElbowToShoulder, vElbowToWrist));
 
         // 2. SHOULDER ABDUCTION ANGLE: shoulder→otherShoulder vs shoulder→elbow
         //    Requires both shoulders visible
         if (otherSh && otherSh.visibility >= 0.3) {
           const otherShPixel = { x: otherSh.x * w, y: otherSh.y * h };
-          const vAcross    = vecSub(otherShPixel, shPixel); // shoulder → otherShoulder
-          const vToElbow   = vecSub(elPixel, shPixel);      // shoulder → elbow
+          const vAcross = vecSub(otherShPixel, shPixel); // shoulder → otherShoulder
+          const vToElbow = vecSub(elPixel, shPixel);      // shoulder → elbow
           handState[side].shoulderAngle = Math.round(vecAngle(vAcross, vToElbow));
         }
 
         // 3. VERTICAL ANGLE: upper arm vs vertical down axis (elevation angle)
-        const vUpper  = vecSub(elPixel, shPixel);
-        const vTrunk  = { x: 0, y: 1 }; // vertical down
+        const vUpper = vecSub(elPixel, shPixel);
+        const vTrunk = { x: 0, y: 1 }; // vertical down
         handState[side].verticalAngle = Math.round(vecAngle(vUpper, vTrunk));
       });
       // ----------------------------------------------------
@@ -798,8 +806,8 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     // If singletons already exist, just re-wire the refs and mark initialized.
     if (_handsInst && _poseInst && _camInst) {
       handsModuleRef.current = _handsInst;
-      poseModuleRef.current  = _poseInst;
-      cameraRef.current      = _camInst;  // ← FIX: assign so cleanup/quit can stop it
+      poseModuleRef.current = _poseInst;
+      cameraRef.current = _camInst;  // ← FIX: assign so cleanup/quit can stop it
       // Re-attach the result callbacks (they may point to stale closures after remount)
       _handsInst.onResults(onHandsResults);
       _poseInst.onResults(onPoseResults);
@@ -849,7 +857,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         onFrame: async () => {
           if (!videoRef.current || !isInitializedRef.current) return;
           if (usingMouseFallbackRef.current) return;
-          
+
           const handsInst = _handsInst;
           const poseInst = _poseInst;
           if (!handsInst || !poseInst) return;
@@ -892,7 +900,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     // Don't tick game logic while paused
     if (isPausedRef.current) return;
     if (!fruitRef.current || !sessionStartRef.current) return;
-    
+
     // Throttled trial timer update (once per second)
     const elapsedTrial = (Date.now() - trialStartTimeRef.current) / 1000;
     const remainingTrial = Math.max(0, gameConfigRef.current.trialTimeoutMs / 1000 - elapsedTrial);
@@ -907,7 +915,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
       if (!fruitRef.current) return; // Skip if fruit was cleared (e.g. cooldown started) by the other hand in this tick
       const hand = handState[label];
       if (!hand.smoothPos || !hand.visible) return;
-      
+
       // Track downsampled coordinates for relative hand trajectory visualization
       const lastHandCoordTimeRef = label === "Left" ? lastLeftCoordTimeRef : lastRightCoordTimeRef;
       const coordSampleMs = globalSettings?.fruitBasketCoordSampleMs ?? FRUIT_BASKET_COORD_SAMPLE_MS;
@@ -1168,7 +1176,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     const h = canvas.height;
     if (lastPoseResultsRef.current?.poseLandmarks) {
       const pl = lastPoseResultsRef.current.poseLandmarks;
-      
+
       const drawBone = (idx1, idx2) => {
         const p1 = pl[idx1];
         const p2 = pl[idx2];
@@ -1184,11 +1192,11 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
 
       // Draw shoulder connection line
       drawBone(11, 12);
-      
+
       // Draw left arm (Shoulder -> Elbow -> Wrist)
       drawBone(11, 13);
       drawBone(13, 15);
-      
+
       // Draw right arm (Shoulder -> Elbow -> Wrist)
       drawBone(12, 14);
       drawBone(14, 16);
@@ -1444,12 +1452,12 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     let startTime = Date.now();
     let successFrames = 0;
     const requiredFrames = 3; // Need 3 consecutive successful frames
-    
+
     const checkHand = () => {
       if (!calibrationRef.current.active) return;
       const elapsed = Date.now() - startTime;
       const hand = handStateRef.current[handLabel];
-      
+
       // Check if hand is visible
       if (!hand.visible || !hand.smoothPos) {
         if (elapsed >= durationMs) {
@@ -1459,10 +1467,10 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         calibrationRef.current.handTestTimer = setTimeout(checkHand, 50);
         return;
       }
-      
+
       // Check if hand is in the required state
       const isCorrectState = action === 'open' ? !hand.closed : hand.closed;
-      
+
       if (isCorrectState) {
         successFrames++;
         if (successFrames >= requiredFrames) {
@@ -1472,7 +1480,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
       } else {
         successFrames = 0;
       }
-      
+
       if (elapsed >= durationMs) {
         onTimeout();
       } else {
@@ -1482,25 +1490,25 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         calibrationRef.current.handTestTimer = setTimeout(checkHand, 50);
       }
     };
-    
+
     checkHand();
   }, []);
 
   const finishCalibration = useCallback(() => {
     calibrationRef.current.active = false;
     setIsCalibrating(false);
-    
+
     // Calculate movement range
     calibrationRef.current.centerX = (calibrationRef.current.minX + calibrationRef.current.maxX) / 2;
     calibrationRef.current.centerY = (calibrationRef.current.minY + calibrationRef.current.maxY) / 2;
-    const dx = Math.max(Math.abs(calibrationRef.current.centerX - calibrationRef.current.minX), 
-                        Math.abs(calibrationRef.current.centerX - calibrationRef.current.maxX));
-    const dy = Math.max(Math.abs(calibrationRef.current.centerY - calibrationRef.current.minY), 
-                        Math.abs(calibrationRef.current.centerY - calibrationRef.current.maxY));
+    const dx = Math.max(Math.abs(calibrationRef.current.centerX - calibrationRef.current.minX),
+      Math.abs(calibrationRef.current.centerX - calibrationRef.current.maxX));
+    const dy = Math.max(Math.abs(calibrationRef.current.centerY - calibrationRef.current.minY),
+      Math.abs(calibrationRef.current.centerY - calibrationRef.current.maxY));
     calibrationRef.current.maxReachNorm = Math.sqrt(dx * dx + dy * dy) || 0.2;
     calibrationRef.current.done = true;
     setCalibrationDone(true);
-    
+
     // Determine assistive mode per hand
     const doctorAssistiveVal = patientConfig?.games?.fruitBasket?.assistiveMode?.value;
     const isTesting = globalSettings?.testingMode ?? false;
@@ -1514,43 +1522,43 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
       lAssist = !(calibrationRef.current.leftCanOpen && calibrationRef.current.leftCanClose);
       rAssist = !(calibrationRef.current.rightCanOpen && calibrationRef.current.rightCanClose);
     }
-    
+
     setAssistiveModeLeft(lAssist);
     setAssistiveModeRight(rAssist);
     assistiveModeLeftRef.current = lAssist;
     assistiveModeRightRef.current = rAssist;
-    
+
     // Set global assistive mode (if any hand needs assistance, enable global flag)
     const globalAssist = lAssist || rAssist;
     setAssistiveMode(globalAssist);
     assistiveModeRef.current = globalAssist;
-    
+
     // Log results
     const handFunction = {
       left: calibrationRef.current.leftCanOpen && calibrationRef.current.leftCanClose ? 'full' : 'limited',
       right: calibrationRef.current.rightCanOpen && calibrationRef.current.rightCanClose ? 'full' : 'limited'
     };
-    
+
     const assistiveConfig = lAssist && rAssist ? 'full_assistive' :
-                           lAssist ? 'left_assistive' :
-                           rAssist ? 'right_assistive' : 'normal';
-    
-    logsRef.current.push({ 
-      timestamp: 0, 
-      event: 'calibration_complete', 
+      lAssist ? 'left_assistive' :
+        rAssist ? 'right_assistive' : 'normal';
+
+    logsRef.current.push({
+      timestamp: 0,
+      event: 'calibration_complete',
       calibration: calibrationRef.current,
       hand_function: handFunction,
       assistive_config: assistiveConfig
     });
-    
+
     // Show summary
     let summary = '✓ Calibration complete!\n\n';
     summary += `Left Hand: ${handFunction.left === 'full' ? '✅ Full function' : '⚠️ Limited function (dwell assistive)'}\n`;
     summary += `Right Hand: ${handFunction.right === 'full' ? '✅ Full function' : '⚠️ Limited function (dwell assistive)'}\n\n`;
-    summary += `Mode: ${assistiveConfig === 'normal' ? 'Normal' : 
-                           assistiveConfig === 'full_assistive' ? 'Full Assistive' :
-                           assistiveConfig.includes('left') ? 'Left Assistive' : 'Right Assistive'}`;
-    
+    summary += `Mode: ${assistiveConfig === 'normal' ? 'Normal' :
+      assistiveConfig === 'full_assistive' ? 'Full Assistive' :
+        assistiveConfig.includes('left') ? 'Left Assistive' : 'Right Assistive'}`;
+
     alert(summary);
     showStatus('Ready to start game!', 3000);
   }, []);
@@ -1561,11 +1569,11 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
       clearTimeout(calibrationRef.current.handTestTimer);
       calibrationRef.current.handTestTimer = null;
     }
-    
+
     const step = calibrationRef.current.step;
     setCalibrationStep(step);
-    
-    switch(step) {
+
+    switch (step) {
       case 'left_open':
         setCalibTimeLeft(5);
         calibrationRef.current.currentHand = 'Left';
@@ -1580,7 +1588,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
           runCalibrationStep();
         });
         break;
-        
+
       case 'left_close':
         setCalibTimeLeft(5);
         calibrationRef.current.currentHand = 'Left';
@@ -1595,7 +1603,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
           runCalibrationStep();
         });
         break;
-        
+
       case 'right_open':
         setCalibTimeLeft(5);
         calibrationRef.current.currentHand = 'Right';
@@ -1610,7 +1618,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
           runCalibrationStep();
         });
         break;
-        
+
       case 'right_close':
         setCalibTimeLeft(5);
         calibrationRef.current.currentHand = 'Right';
@@ -1625,7 +1633,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
           runCalibrationStep();
         });
         break;
-        
+
       case 'movement':
         setCalibTimeLeft(5);
         calibrationRef.current.minX = 1; calibrationRef.current.maxX = 0;
@@ -1635,7 +1643,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
           runCalibrationStep();
         }, 5000);
         break;
-        
+
       case 'complete':
         finishCalibration();
         break;
@@ -1657,7 +1665,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     calibrationRef.current.leftCanClose = false;
     calibrationRef.current.rightCanOpen = false;
     calibrationRef.current.rightCanClose = false;
-    
+
     setIsCalibrating(true);
     runCalibrationStep();
   }, [runCalibrationStep]);
@@ -1703,10 +1711,10 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     attemptsRef.current = 0;
     successesRef.current = 0;
     logsRef.current = [];
-    
+
     setTimeRemaining(sessionSeconds);
     sessionStartRef.current = Date.now();
-    
+
     pausedTimeRef.current = 0;
     isPausedRef.current = false;
     setIsPaused(false);
@@ -1722,7 +1730,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
       setPipPos({ x: w - 180, y: 10 });
       setPipMinimized(false);
       const el = document.documentElement;
-      if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+      if (el.requestFullscreen) el.requestFullscreen().catch(() => { });
       else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
     }
 
@@ -1815,7 +1823,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     setIsSessionActive(false);
     // Exit fullscreen when returning to lobby
     if (document.fullscreenElement || document.webkitFullscreenElement) {
-      if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      if (document.exitFullscreen) document.exitFullscreen().catch(() => { });
       else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
 
@@ -1955,6 +1963,18 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     setShowExitModal(true);
   };
 
+  // Spacebar to pause/resume
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        handlePauseResume();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const _resumeAfterCancel = () => {
     if (!isSessionActive) return;
     const pausedDuration = Date.now() - (pausedTimeRef._pauseStartedAt || Date.now());
@@ -1975,9 +1995,23 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     prepareSessionBuffer();
     setIsSavingLocal(true);
     try {
-      if (gameSessionBuffer.hasPending()) await gameSessionBuffer.saveAndExit();
-      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
-    } catch (err) { 
+      let response;
+      if (gameSessionBuffer.hasPending()) {
+        response = await gameSessionBuffer.saveAndExit();
+      }
+      if (assessmentId && response?.session?._id) {
+        try {
+          await linkGameSession(assessmentId, { gameType: gameType || 'fruit_basket', gameSessionId: response.session._id });
+        } catch (linkErr) {
+          console.error('Failed to link session to assessment:', linkErr);
+        }
+      }
+      if (assessmentId) {
+        navigate(`/assessment/run/${assessmentId}`);
+      } else {
+        navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      }
+    } catch (err) {
       console.error("Save failed:", err);
       const saveOffline = window.confirm(
         'Network is slow or offline.\n\nWould you like to save this session to your offline buffer (OK) or delete the session (Cancel)?'
@@ -1987,7 +2021,11 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         if (payload) offlineBuffer.addSession(payload);
       }
       gameSessionBuffer.discard();
-      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      if (assessmentId) {
+        navigate(`/assessment/run/${assessmentId}`);
+      } else {
+        navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      }
     } finally {
       setIsSavingLocal(false);
     }
@@ -1996,7 +2034,11 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
   const handleExitDiscard = () => {
     setShowExitModal(false);
     gameSessionBuffer.discard();
-    navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+    if (assessmentId) {
+      navigate(`/assessment/run/${assessmentId}`);
+    } else {
+      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+    }
   };
 
   const handleExitCancel = () => {
@@ -2138,7 +2180,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
       _camInst = null;
       cameraRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [configLoaded]); // Run when configLoaded becomes true
   // ==================== RENDER ====================
   const isTesting = globalSettings?.testingMode ?? false;
@@ -2307,7 +2349,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
           {isMobileActive && (
             <div style={{ position: 'absolute', inset: 0, zIndex: 2, cursor: 'grab', touchAction: 'none' }}
               onPointerDown={(e) => { setIsDragging(true); dragStartRef.current = { x: e.clientX - pipPos.x, y: e.clientY - pipPos.y }; e.currentTarget.setPointerCapture(e.pointerId); }}
-              onPointerMove={(e) => { 
+              onPointerMove={(e) => {
                 if (isDragging) {
                   const pipW = pipMinimized ? 52 : 170;
                   const pipH = pipMinimized ? 52 : 128;
@@ -2318,8 +2360,8 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
                   setPipPos({ x: newX, y: newY });
                 }
               }}
-              onPointerUp={(e) => { 
-                setIsDragging(false); 
+              onPointerUp={(e) => {
+                setIsDragging(false);
                 e.currentTarget.releasePointerCapture(e.pointerId);
                 setPipPos((currentPos) => {
                   const pipW = pipMinimized ? 52 : 170;
@@ -2327,14 +2369,14 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
                   const padding = 10;
                   let finalX = currentPos.x;
                   let finalY = currentPos.y;
-                  
+
                   const distLeft = currentPos.x;
                   const distRight = window.innerWidth - (currentPos.x + pipW);
                   const distTop = currentPos.y;
                   const distBottom = window.innerHeight - (currentPos.y + pipH);
-                  
+
                   const minDist = Math.min(distLeft, distRight, distTop, distBottom);
-                  
+
                   if (minDist === distLeft) {
                     finalX = padding;
                   } else if (minDist === distRight) {
@@ -2344,7 +2386,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
                   } else {
                     finalY = window.innerHeight - pipH - padding;
                   }
-                  
+
                   finalX = Math.max(padding, Math.min(finalX, window.innerWidth - pipW - padding));
                   finalY = Math.max(padding, Math.min(finalY, window.innerHeight - pipH - padding));
                   return { x: finalX, y: finalY };
@@ -2405,65 +2447,65 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
             {statusMessage.visible && <div style={themeStyles.statusMessage}>{statusMessage.text}</div>}
           </main>
 
-          <SaveExitButton onBeforeSave={() => {
+          <SaveExitButton assessmentId={assessmentId} gameType={gameType} onBeforeSave={() => {
 
-        const playData = logsRef.current.map(log => {
-          let correct = undefined;
-          let responseTimeVal = log.timestamp;
-          if (log.event === 'drop_success') { correct = 1; responseTimeVal = log.trial_duration_sec ? parseFloat(log.trial_duration_sec) : 0; }
-          else if (log.event === 'drop_miss') { correct = -1; responseTimeVal = log.trial_duration_sec ? parseFloat(log.trial_duration_sec) : 0; }
-          else if (log.event === 'timeout') { correct = 0; responseTimeVal = -1; }
-          const entry = {
-            eventName: log.event,
-            responsetime: responseTimeVal,
-            trialId: log.trial_id || undefined,
-            hand: log.hand || undefined,
-            score: log.score !== undefined ? log.score : undefined,
-            correct,
-            elbowAngle: log.elbow_angle_deg !== undefined ? Number(log.elbow_angle_deg) : undefined,
-            shoulderAngle: log.shoulder_angle_deg !== undefined ? Number(log.shoulder_angle_deg) : undefined,
-            verticalAngle: log.vertical_angle_deg !== undefined ? Number(log.vertical_angle_deg) : undefined,
-            fruitId: log.fruit_id || undefined,
-            sourceIdx: log.source_idx !== undefined ? log.source_idx : undefined,
-            basketIdx: log.basket_idx !== undefined ? log.basket_idx : undefined,
-            trialDurationSec: log.trial_duration_sec ? parseFloat(log.trial_duration_sec) : undefined,
-            success: log.success !== undefined ? log.success : undefined,
-            aratScore: log.arat_score !== undefined ? log.arat_score : undefined,
-          };
-          Object.keys(entry).forEach(k => entry[k] === undefined && delete entry[k]);
-          return entry;
-        });
-        const sessionMeta = {
-          mode: (assistiveModeLeftRef.current || assistiveModeRightRef.current) ? 'ASSISTIVE' : 'NORMAL',
-          handFunctionLeft: calibrationRef.current.leftCanOpen && calibrationRef.current.leftCanClose ? 'full' : 'limited',
-          handFunctionRight: calibrationRef.current.rightCanOpen && calibrationRef.current.rightCanClose ? 'full' : 'limited',
-        };
-        const trialWindows = [];
-        let currentWindow = null;
-        for (const log of logsRef.current) {
-          if (log.event === 'spawn') {
-            currentWindow = { trialId: log.trial_id, fruitId: log.fruit_id, sourceIdx: log.source_idx, basketIdx: log.basket_idx, startTimestamp: log.timestamp, endTimestamp: null, hand: null, outcome: null };
-          } else if (currentWindow && (log.event === 'drop_success' || log.event === 'drop_miss' || log.event === 'timeout')) {
-            currentWindow.endTimestamp = log.timestamp;
-            currentWindow.hand = log.hand || null;
-            currentWindow.outcome = log.event === 'drop_success' ? 'success' : log.event === 'drop_miss' ? 'miss' : 'timeout';
-            trialWindows.push({ ...currentWindow });
-            currentWindow = null;
-          }
-        }
-        const trials = trialWindows.map(win => ({
-          trialId: win.trialId, fruitId: win.fruitId, sourceIdx: win.sourceIdx, basketIdx: win.basketIdx,
-          hand: win.hand, startTimestamp: win.startTimestamp, endTimestamp: win.endTimestamp, outcome: win.outcome,
-          trajectory: coordinateLogRef.current.filter(pt => pt.timestamp >= win.startTimestamp && pt.timestamp <= (win.endTimestamp ?? Infinity)).map(pt => ({ ...pt })),
-        }));
-        gameSessionBuffer.update({ 
-          sessionScore: scoreRef.current,
-          sessionMeta,
-          playData,
-          trials,
-          coordinates: coordinateLogRef.current.map(p => ({ ...p }))
-        });
-      }} />
+            const playData = logsRef.current.map(log => {
+              let correct = undefined;
+              let responseTimeVal = log.timestamp;
+              if (log.event === 'drop_success') { correct = 1; responseTimeVal = log.trial_duration_sec ? parseFloat(log.trial_duration_sec) : 0; }
+              else if (log.event === 'drop_miss') { correct = -1; responseTimeVal = log.trial_duration_sec ? parseFloat(log.trial_duration_sec) : 0; }
+              else if (log.event === 'timeout') { correct = 0; responseTimeVal = -1; }
+              const entry = {
+                eventName: log.event,
+                responsetime: responseTimeVal,
+                trialId: log.trial_id || undefined,
+                hand: log.hand || undefined,
+                score: log.score !== undefined ? log.score : undefined,
+                correct,
+                elbowAngle: log.elbow_angle_deg !== undefined ? Number(log.elbow_angle_deg) : undefined,
+                shoulderAngle: log.shoulder_angle_deg !== undefined ? Number(log.shoulder_angle_deg) : undefined,
+                verticalAngle: log.vertical_angle_deg !== undefined ? Number(log.vertical_angle_deg) : undefined,
+                fruitId: log.fruit_id || undefined,
+                sourceIdx: log.source_idx !== undefined ? log.source_idx : undefined,
+                basketIdx: log.basket_idx !== undefined ? log.basket_idx : undefined,
+                trialDurationSec: log.trial_duration_sec ? parseFloat(log.trial_duration_sec) : undefined,
+                success: log.success !== undefined ? log.success : undefined,
+                aratScore: log.arat_score !== undefined ? log.arat_score : undefined,
+              };
+              Object.keys(entry).forEach(k => entry[k] === undefined && delete entry[k]);
+              return entry;
+            });
+            const sessionMeta = {
+              mode: (assistiveModeLeftRef.current || assistiveModeRightRef.current) ? 'ASSISTIVE' : 'NORMAL',
+              handFunctionLeft: calibrationRef.current.leftCanOpen && calibrationRef.current.leftCanClose ? 'full' : 'limited',
+              handFunctionRight: calibrationRef.current.rightCanOpen && calibrationRef.current.rightCanClose ? 'full' : 'limited',
+            };
+            const trialWindows = [];
+            let currentWindow = null;
+            for (const log of logsRef.current) {
+              if (log.event === 'spawn') {
+                currentWindow = { trialId: log.trial_id, fruitId: log.fruit_id, sourceIdx: log.source_idx, basketIdx: log.basket_idx, startTimestamp: log.timestamp, endTimestamp: null, hand: null, outcome: null };
+              } else if (currentWindow && (log.event === 'drop_success' || log.event === 'drop_miss' || log.event === 'timeout')) {
+                currentWindow.endTimestamp = log.timestamp;
+                currentWindow.hand = log.hand || null;
+                currentWindow.outcome = log.event === 'drop_success' ? 'success' : log.event === 'drop_miss' ? 'miss' : 'timeout';
+                trialWindows.push({ ...currentWindow });
+                currentWindow = null;
+              }
+            }
+            const trials = trialWindows.map(win => ({
+              trialId: win.trialId, fruitId: win.fruitId, sourceIdx: win.sourceIdx, basketIdx: win.basketIdx,
+              hand: win.hand, startTimestamp: win.startTimestamp, endTimestamp: win.endTimestamp, outcome: win.outcome,
+              trajectory: coordinateLogRef.current.filter(pt => pt.timestamp >= win.startTimestamp && pt.timestamp <= (win.endTimestamp ?? Infinity)).map(pt => ({ ...pt })),
+            }));
+            gameSessionBuffer.update({
+              sessionScore: scoreRef.current,
+              sessionMeta,
+              playData,
+              trials,
+              coordinates: coordinateLogRef.current.map(p => ({ ...p }))
+            });
+          }} />
         </>
       )}
 

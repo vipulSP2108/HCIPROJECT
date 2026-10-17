@@ -176,8 +176,12 @@ const AdminDashboard = () => {
         </div>
 
         {message.text && (
-          <div className={`p-4 rounded-xl flex items-center gap-3 ${message.type === 'error' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-green-50 text-green-700 border-green-200'}`}>
-            <AlertCircle className="w-5 h-5" />
+          <div className={`p-4 rounded-xl flex items-center gap-3 border ${
+            message.type === 'error'
+              ? 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800/60'
+              : 'bg-green-50 dark:bg-emerald-950/40 text-green-700 dark:text-emerald-300 border-green-200 dark:border-emerald-800/60'
+          }`}>
+            <AlertCircle className="w-5 h-5 shrink-0" />
             {message.text}
           </div>
         )}

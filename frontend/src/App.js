@@ -34,6 +34,10 @@ import PatientSetting from "./pages/patient/PatientSetting";
 import GameCalibrationPage from "./pages/game/GameCalibrationPage";
 import GameAnalytics from "./pages/game/BoardDrawingGame/GameAnalytics";
 import AccessibilityWidget from "./components/common/AccessibilityWidget";
+import AssessmentStartPage from "./pages/assessment/AssessmentStartPage";
+import AssessmentRunPage from "./pages/assessment/AssessmentRunPage";
+import AssessmentReportPage from "./pages/assessment/AssessmentReportPage";
+import ClinicalTestPage from "./pages/assessment/ClinicalTestPage";
 
 import NetworkSyncManager from "./components/common/NetworkSyncManager";
 
@@ -44,7 +48,7 @@ function App() {
     <AuthProvider>
       <SettingsProvider>
         <NetworkSyncManager />
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <AccessibilityWidget />
           <Routes>
             <Route path="/analytics" element={<GameAnalytics />} />
@@ -187,6 +191,41 @@ function App() {
               element={
                 <ProtectedRoute allowedTypes={["patient", "caretaker"]}>
                   <GameCalibrationPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* ── Assessment Module ───────────────────────────────────── */}
+            <Route
+              path="/assessment/start"
+              element={
+                <ProtectedRoute allowedTypes={["patient", "doctor", "caretaker"]}>
+                  <AssessmentStartPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessment/run/:id"
+              element={
+                <ProtectedRoute allowedTypes={["patient", "doctor", "caretaker"]}>
+                  <AssessmentRunPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessment/report/:id"
+              element={
+                <ProtectedRoute allowedTypes={["patient", "doctor", "caretaker"]}>
+                  <AssessmentReportPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/assessment/clinical/:id"
+              element={
+                <ProtectedRoute allowedTypes={["patient", "doctor", "caretaker"]}>
+                  <ClinicalTestPage />
                 </ProtectedRoute>
               }
             />

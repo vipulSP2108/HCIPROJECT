@@ -49,6 +49,7 @@ app.use('/api/reminders', require('./routes/reminder.routes'));
 app.use('/api/appointments', require('./routes/appointment.routes'));
 app.use('/api/settings', require('./routes/settings.routes'));
 app.use('/api/patient-config', require('./routes/patientConfig.routes'));
+app.use('/api/assessment',    require('./routes/assessment.routes'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server running' });

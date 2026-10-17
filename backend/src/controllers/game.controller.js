@@ -318,7 +318,8 @@ exports.saveGameSession = async (req, res) => {
       message: 'Game session saved successfully',
       sessionScore,
       totalScore: user.totalScore,
-      level: user.level
+      level: user.level,
+      session: newSession
     });
   } catch (error) {
     console.error('Save session error:', error);

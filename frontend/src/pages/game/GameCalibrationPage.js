@@ -3,18 +3,18 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Hands } from '@mediapipe/hands';
 import { Pose } from '@mediapipe/pose';
 import { Camera } from '@mediapipe/camera_utils';
-import {
-  X,
-  CheckCircle2,
-  ArrowRight,
-  Hand,
-  Target,
-  UserCheck,
+import { 
+  X, 
+  CheckCircle2, 
+  ArrowRight, 
+  Hand, 
+  Target, 
+  UserCheck, 
   Sparkles,
   Play,
   AlertCircle
 } from 'lucide-react';
-import {
+import { 
   CALIBRATION_MIN_SHOULDER_WIDTH,
   CALIBRATION_REACH_TARGET_RADIUS,
   CALIBRATION_REACH_DWELL_MS
@@ -30,6 +30,16 @@ const REACH_TARGETS = [
   { id: 'center', label: 'Center', x: 0.50, y: 0.50, color: '#8B5CF6', instruction: 'Return hand to CENTER circle' }
 ];
 
+// MediaPipe Hand Connection Skeleton Pairs
+const HAND_CONNECTIONS = [
+  [0, 1], [1, 2], [2, 3], [3, 4],
+  [0, 5], [5, 6], [6, 7], [7, 8],
+  [0, 9], [9, 10], [10, 11], [11, 12],
+  [0, 13], [13, 14], [14, 15], [15, 16],
+  [0, 17], [17, 18], [18, 19], [19, 20],
+  [5, 9], [9, 13], [13, 17]
+];
+
 export default function GameCalibrationPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -43,6 +53,7 @@ export default function GameCalibrationPage() {
   const poseRef = useRef(null);
   const animFrameRef = useRef(null);
   const isMountedRef = useRef(true);
+
   // Calibration Settings (Auto-Advance vs Manual Mode)
   const [calibSettings, setCalibSettings] = useState(getCalibrationSettings());
   const calibSettingsRef = useRef(getCalibrationSettings());
@@ -53,7 +64,7 @@ export default function GameCalibrationPage() {
   }, []);
 
   // React state ONLY for high-level phase changes (0: Loading, 1: Positioning, 2: Reach, 3: Grasp, 4: Summary)
-  const [phase, setPhase] = useState(0);
+  const [phase, setPhase] = useState(0); 
   const phaseRef = useRef(0);
   useEffect(() => { phaseRef.current = phase; }, [phase]);
 
@@ -65,13 +76,13 @@ export default function GameCalibrationPage() {
 
   // High-frequency mutable refs (Read/Written at 60 FPS without triggering React re-renders)
   const handStateRef = useRef({
-    Left: { visible: false, pos: null, closed: false },
-    Right: { visible: false, pos: null, closed: false }
+    Left: { visible: false, pos: null, landmarks: null, closed: false },
+    Right: { visible: false, pos: null, landmarks: null, closed: false }
   });
   const poseLandmarksRef = useRef(null);
 
   // Phase 1 (Posture) Mutable Refs
-  const postureStatusRef = useRef({ ok: false, msg: 'Aligning camera...', progress: 0 });
+  const postureStatusRef = useRef({ ok: false, msg: 'Looking for player...', progress: 0 });
   const postureHoldStartRef = useRef(null);
 
   // Phase 2 (Reachability) Mutable Refs
@@ -95,7 +106,7 @@ export default function GameCalibrationPage() {
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
-
+      
       if (type === 'hit') {
         osc.frequency.setValueAtTime(587.33, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
@@ -112,7 +123,7 @@ export default function GameCalibrationPage() {
         osc.start();
         osc.stop(ctx.currentTime + 0.4);
       }
-    } catch (e) { }
+    } catch (e) {}
   }, []);
 
   // Compute final summary
@@ -144,96 +155,129 @@ export default function GameCalibrationPage() {
     sessionStorage.setItem('hci_game_calibration', JSON.stringify(calib));
   }, []);
 
-  // ─── Initialize MediaPipe & Camera (Optimized Resolution 640x480) ───────────
+  // ─── Initialize MediaPipe & Camera ──────────────────────────────────────────
   useEffect(() => {
     isMountedRef.current = true;
 
     const initTracking = async () => {
       if (!videoRef.current) return;
 
-      const hands = new Hands({
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
-      });
-      hands.setOptions({
-        selfieMode: true,
-        maxNumHands: 2,
-        modelComplexity: 0, // Lightweight for fast calibration
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-      });
+      try {
+        const hands = new Hands({
+          locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`,
+        });
+        hands.setOptions({
+          selfieMode: true,
+          maxNumHands: 2,
+          modelComplexity: 1,
+          minDetectionConfidence: 0.5,
+          minTrackingConfidence: 0.5,
+        });
 
-      hands.onResults((results) => {
-        if (!isMountedRef.current) return;
-        const hs = handStateRef.current;
-        hs.Left.visible = false;
-        hs.Right.visible = false;
+        hands.onResults((results) => {
+          if (!isMountedRef.current) return;
+          const hs = handStateRef.current;
+          hs.Left.visible = false;
+          hs.Right.visible = false;
 
-        if (results.multiHandLandmarks && results.multiHandedness) {
-          for (let i = 0; i < results.multiHandLandmarks.length; i++) {
-            const lm = results.multiHandLandmarks[i];
-            const label = results.multiHandedness[i].label; // Correct anatomical hand label in selfieMode
+          if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+            for (let i = 0; i < results.multiHandLandmarks.length; i++) {
+              const lm = results.multiHandLandmarks[i];
+              let label = i === 0 ? 'Right' : 'Left';
+              if (results.multiHandedness && results.multiHandedness[i]) {
+                label = results.multiHandedness[i].label || results.multiHandedness[i].displayName || label;
+              }
 
-            const palmX = (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5;
-            const palmY = (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5;
+              const palmX = (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5;
+              const palmY = (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5;
 
-            // Fist calculation
-            const d8 = Math.hypot(lm[8].x - lm[0].x, lm[8].y - lm[0].y);
-            const d12 = Math.hypot(lm[12].x - lm[0].x, lm[12].y - lm[0].y);
-            const isClosed = d8 < 0.22 && d12 < 0.22;
+              // Fist calculation: fingertip distances to wrist (lm[0])
+              const d8 = Math.hypot(lm[8].x - lm[0].x, lm[8].y - lm[0].y);
+              const d12 = Math.hypot(lm[12].x - lm[0].x, lm[12].y - lm[0].y);
+              const isClosed = d8 < 0.22 && d12 < 0.22;
 
-            hs[label] = {
-              visible: true,
-              pos: { x: palmX, y: palmY },
-              closed: isClosed
-            };
+              hs[label] = {
+                visible: true,
+                pos: { x: palmX, y: palmY },
+                landmarks: lm,
+                closed: isClosed
+              };
+            }
           }
-        }
-      });
+        });
 
-      const pose = new Pose({
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
-      });
-      pose.setOptions({
-        selfieMode: true,
-        modelComplexity: 0, // Lightweight for calibration
-        smoothLandmarks: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-      });
+        const pose = new Pose({
+          locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`,
+        });
+        pose.setOptions({
+          modelComplexity: 0,
+          smoothLandmarks: true,
+          minDetectionConfidence: 0.5,
+          minTrackingConfidence: 0.5,
+          selfieMode: true,
+        });
 
-      pose.onResults((results) => {
-        if (!isMountedRef.current) return;
-        poseLandmarksRef.current = results.poseLandmarks || null;
-      });
+        pose.onResults((results) => {
+          if (!isMountedRef.current) return;
+          poseLandmarksRef.current = results.poseLandmarks || null;
+        });
 
-      handsRef.current = hands;
-      poseRef.current = pose;
+        handsRef.current = hands;
+        poseRef.current = pose;
 
-      // Use standard 640x480 for lightweight, stutter-free processing
-      const cam = new Camera(videoRef.current, {
-        onFrame: async () => {
-          if (!videoRef.current || !isMountedRef.current) return;
-          try {
-            await hands.send({ image: videoRef.current });
-            await pose.send({ image: videoRef.current });
-          } catch (e) { }
-        },
-        width: 640,
-        height: 480
-      });
+        const cam = new Camera(videoRef.current, {
+          onFrame: async () => {
+            if (!videoRef.current || !isMountedRef.current) return;
+            if (videoRef.current.readyState < 2) return;
 
-      await cam.start();
-      cameraRef.current = cam;
-      if (isMountedRef.current) setPhase(1); // Advance to Positioning
+            const h = handsRef.current;
+            const p = poseRef.current;
+
+            if (h) {
+              try {
+                await h.send({ image: videoRef.current });
+              } catch (e) {}
+            }
+            if (p) {
+              try {
+                await p.send({ image: videoRef.current });
+              } catch (e) {}
+            }
+          },
+          width: 640,
+          height: 480
+        });
+
+        await cam.start();
+        cameraRef.current = cam;
+        if (isMountedRef.current) setPhase(1); // Advance to Positioning
+      } catch (err) {
+        console.warn("Camera/MediaPipe initialization error:", err);
+      }
     };
 
     initTracking();
 
     return () => {
       isMountedRef.current = false;
-      if (cameraRef.current) cameraRef.current.stop();
-      if (handsRef.current) handsRef.current.close();
-      if (poseRef.current) poseRef.current.close();
+      if (cameraRef.current) {
+        try { cameraRef.current.stop(); } catch (e) {}
+      }
+      if (videoRef.current && videoRef.current.srcObject) {
+        try {
+          const stream = videoRef.current.srcObject;
+          if (stream.getTracks) {
+            stream.getTracks().forEach((t) => t.stop());
+          }
+          videoRef.current.srcObject = null;
+        } catch (e) {}
+      }
+      if (handsRef.current) {
+        try { handsRef.current.close(); } catch (e) {}
+      }
+      if (poseRef.current) {
+        try { poseRef.current.close(); } catch (e) {}
+      }
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
   }, []);
@@ -262,6 +306,38 @@ export default function GameCalibrationPage() {
       if (hs.Right?.visible && hs.Right.pos) activeHands.push({ ...hs.Right, label: 'Right' });
       if (hs.Left?.visible && hs.Left.pos) activeHands.push({ ...hs.Left, label: 'Left' });
 
+      // ─── Draw Pose Shoulders & Elbows Skeleton ───
+      const pl = poseLandmarksRef.current;
+      if (pl && pl.length > 14) {
+        [
+          [11, "L-Sh"],
+          [12, "R-Sh"],
+          [13, "L-El"],
+          [14, "R-El"],
+        ].forEach(([idx]) => {
+          if (!pl[idx] || pl[idx].visibility < 0.4) return;
+          const px = pl[idx].x * width;
+          const py = pl[idx].y * height;
+          ctx.beginPath();
+          ctx.arc(px, py, 6, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(59, 130, 246, 0.85)";
+          ctx.fill();
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        });
+
+        // Shoulder connection line
+        if (pl[11] && pl[12] && pl[11].visibility > 0.4 && pl[12].visibility > 0.4) {
+          ctx.beginPath();
+          ctx.moveTo(pl[11].x * width, pl[11].y * height);
+          ctx.lineTo(pl[12].x * width, pl[12].y * height);
+          ctx.strokeStyle = "rgba(59, 130, 246, 0.5)";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+      }
+
       // ─── PHASE 1: Distance & Posture Framing ───
       if (currentPhase === 1) {
         const boxW = width * 0.42;
@@ -278,7 +354,6 @@ export default function GameCalibrationPage() {
         ctx.setLineDash([]);
 
         // Evaluate Pose Landmarks directly from ref
-        const pl = poseLandmarksRef.current;
         let currentMidX = 0.5;
         let shDist = 0.35;
         let normDist = 0.5;
@@ -301,22 +376,22 @@ export default function GameCalibrationPage() {
 
             if (!isDistOk) {
               posture.ok = false;
-              posture.msg = shDist < 0.25
-                ? '🔍 Too Far from Lens! Move closer to laptop.'
+              posture.msg = shDist < 0.25 
+                ? '🔍 Too Far from Lens! Move closer to laptop.' 
                 : '⚠️ Too Close to Lens! Step back or push laptop away.';
               posture.progress = 0;
               postureHoldStartRef.current = null;
             } else if (!isXOk) {
               posture.ok = false;
-              posture.msg = currentMidX < 0.40
-                ? '👈 Move laptop/body LEFT to center (X)'
+              posture.msg = currentMidX < 0.40 
+                ? '👈 Move laptop/body LEFT to center (X)' 
                 : '👉 Move laptop/body RIGHT to center (X)';
               posture.progress = 0;
               postureHoldStartRef.current = null;
             } else {
               posture.ok = true;
               const isAuto = calibSettingsRef.current.autoAdvance;
-              posture.msg = isAuto ? '✅ Distance & Position Locked! Hold still...' : '✅ Position Locked! Click "Next Phase" below.';
+              posture.msg = isAuto ? '✅ Distance & Position Locked! Hold still...' : '✅ Position Locked! Click "Next Phase" above.';
 
               if (isAuto) {
                 if (!postureHoldStartRef.current) postureHoldStartRef.current = Date.now();
@@ -586,28 +661,48 @@ export default function GameCalibrationPage() {
         }
       }
 
-      // ─── Draw Hand Cursors in Real Time ───
-      activeHands.forEach(h => {
+      // ─── Render Live Hand Joints & Skeleton ───
+      ["Left", "Right"].forEach(label => {
+        const h = hs[label];
+        if (!h || !h.visible || !h.landmarks) return;
+        const lm = h.landmarks;
+
+        // Draw Skeletal Bone Connections
+        ctx.strokeStyle = h.closed ? 'rgba(239, 68, 68, 0.75)' : 'rgba(52, 211, 153, 0.75)';
+        ctx.lineWidth = 2.5;
+        HAND_CONNECTIONS.forEach(([start, end]) => {
+          if (lm[start] && lm[end]) {
+            ctx.beginPath();
+            ctx.moveTo(lm[start].x * width, lm[start].y * height);
+            ctx.lineTo(lm[end].x * width, lm[end].y * height);
+            ctx.stroke();
+          }
+        });
+
+        // Draw Finger Joints
+        lm.forEach((pt) => {
+          ctx.beginPath();
+          ctx.arc(pt.x * width, pt.y * height, 3, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+        });
+
+        // Palm Reticle & Label
         const hx = h.pos.x * width;
         const hy = h.pos.y * height;
 
         ctx.beginPath();
-        ctx.arc(hx, hy, 26, 0, Math.PI * 2);
-        ctx.fillStyle = h.closed ? 'rgba(239, 68, 68, 0.4)' : 'rgba(59, 130, 246, 0.4)';
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(hx, hy, 14, 0, Math.PI * 2);
-        ctx.fillStyle = h.closed ? '#EF4444' : '#3B82F6';
+        ctx.arc(hx, hy, 16, 0, Math.PI * 2);
+        ctx.fillStyle = h.closed ? 'rgba(239, 68, 68, 0.85)' : 'rgba(16, 185, 129, 0.85)';
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
 
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 12px system-ui';
         ctx.textAlign = 'center';
-        ctx.fillText(`${h.label} ${h.closed ? '✊ (Fist)' : '🖐️ (Open)'}`, hx, hy - 30);
+        ctx.fillText(`${label} ${h.closed ? '✊ (Fist)' : '🖐️ (Open)'}`, hx, hy - 24);
       });
 
       animFrameRef.current = requestAnimationFrame(render);
@@ -631,7 +726,7 @@ export default function GameCalibrationPage() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-black flex flex-col justify-between select-none">
-
+      
       {/* ─── Layer 1: Mirrored Live Camera Underlay ─── */}
       <video
         ref={videoRef}
@@ -662,7 +757,7 @@ export default function GameCalibrationPage() {
                 Calibration • {gameTitle}
               </div>
               <h2 className="text-base md:text-lg font-black leading-tight">
-                {phase === 0 && 'Connecting Camera...'}
+                {phase === 0 && 'Connecting Camera & Models...'}
                 {phase === 1 && 'Step 1: Distance & Alignment'}
                 {phase === 2 && 'Step 2: Reach Corner Targets'}
                 {phase === 3 && 'Step 3: Hand Grasp Test'}

@@ -131,10 +131,10 @@ const CoordinateVisualizer = ({ coordinates }) => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 text-xs font-bold rounded-full">
+          <span className="px-3 py-1 bg-green-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-green-200 dark:border-emerald-800/40 text-xs font-bold rounded-full">
             {coordinates.length} positions
           </span>
-          <span className="px-3 py-1 bg-primary-50 dark:bg-primary-950/30 text-primary-600 dark:text-primary-400 text-xs font-bold rounded-full">
+          <span className="px-3 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 border border-primary-200 dark:border-primary-800/40 text-xs font-bold rounded-full">
             Dynamic Sample Rate
           </span>
         </div>
@@ -1798,21 +1798,21 @@ const PatientAnalytics = () => {
 
                   return (
                     <div className="flex gap-2 text-xs">
-                      <span className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 font-bold rounded-full border dark:border-blue-900/50">
+                      <span className="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-bold rounded-full border border-blue-200 dark:border-blue-800/50">
                         🎯 {total} total
                       </span>
-                      <span className="px-2.5 py-1 bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 font-bold rounded-full border dark:border-green-900/50">
+                      <span className="px-2.5 py-1 bg-green-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-bold rounded-full border border-green-200 dark:border-emerald-800/50">
                         ✓ {correct} correct
                       </span>
-                      <span className="px-2.5 py-1 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 font-bold rounded-full border dark:border-red-900/50">
+                      <span className="px-2.5 py-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 font-bold rounded-full border border-red-200 dark:border-red-800/50">
                         ✗ {incorrect} wrong
                       </span>
                       {!isBoard && timeouts > 0 && (
-                        <span className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 font-bold rounded-full border dark:border-amber-900/50">
+                        <span className="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-bold rounded-full border border-amber-200 dark:border-amber-800/50">
                           ⏳ {timeouts} timeouts
                         </span>
                       )}
-                      <span className="px-2.5 py-1 bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 font-bold rounded-full border dark:border-yellow-900/50">
+                      <span className="px-2.5 py-1 bg-yellow-50 dark:bg-amber-900/25 text-amber-800 dark:text-amber-200 font-bold rounded-full border border-yellow-200 dark:border-amber-800/50">
                         ⭐ {selectedSessionData.sessionScore || 0} score
                       </span>
                     </div>
@@ -1998,7 +1998,7 @@ const PatientAnalytics = () => {
                           key={index}
                           onClick={() => setSelectedSession(index)}
                           className={`border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer ${
-                            selectedSession === index ? 'bg-primary-50/20 dark:bg-primary-950/25 font-semibold' : ''
+                            selectedSession === index ? 'bg-primary-50/40 dark:bg-primary-900/25 font-semibold' : ''
                           }`}
                         >
                           <td className="py-4 px-4 text-sm">

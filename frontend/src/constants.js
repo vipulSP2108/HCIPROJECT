@@ -1,5 +1,5 @@
 // Toggle this to false when pushing to production/Vercel
-export const IS_LOCAL = false;
+export const IS_LOCAL = true;
 
 // ─── Lighting Detection Configuration ────────────────────────────────────────
 // Toggle poor lighting detection on/off globally
@@ -74,8 +74,8 @@ export const FRUIT_BASKET_CALIBRATION_SECONDS = 20;
 export const FRUIT_BASKET_HAND_TEST_DURATION_MS = 5000;
 export const FRUIT_BASKET_GRID_ROWS = 3;
 export const FRUIT_BASKET_GRID_COLS = 3;
-export const FRUIT_BASKET_PICK_DISTANCE = 0.08;
-export const FRUIT_BASKET_DROP_DISTANCE = 0.1;
+export const FRUIT_BASKET_PICK_DISTANCE = 0.05;
+export const FRUIT_BASKET_DROP_DISTANCE = 0.06;
 export const FRUIT_BASKET_SCORE_PER_DROP = 10;
 export const FRUIT_BASKET_SMOOTH_ALPHA = 0.7;
 export const FRUIT_BASKET_STABLE_FRAMES = 2;
@@ -160,5 +160,75 @@ export const TESTING_FRUIT_BASKET_SEQUENCE = [
   { sourceIdx: 0, basketIdx: 3 },
   { sourceIdx: 8, basketIdx: 5 },
   { sourceIdx: 2, basketIdx: 4 },
-  { sourceIdx: 6, basketIdx: 8 }
+  { sourceIdx: 6, basketIdx: 8 },
 ];
+
+// ─── Assessment Module Constants ──────────────────────────────────────────────
+// Phase labels for assessments
+export const ASSESSMENT_PHASES = ['pre', 'ongoing', 'post'];
+export const ASSESSMENT_TRACKS = ['game', 'clinical', 'both'];
+
+// Default game battery prescribed for a Track A assessment
+export const ASSESSMENT_DEFAULT_GAMES = ['piano', 'fruit_basket', 'board_drawing', 'shape_tracing'];
+
+// Track A — composite score weights (must sum to 1.0)
+export const ASSESSMENT_WEIGHT_MOTOR        = 0.35;
+export const ASSESSMENT_WEIGHT_REACTION     = 0.35;
+export const ASSESSMENT_WEIGHT_COORDINATION = 0.30;
+
+// Track A — normalisation ceilings for composite score computation
+export const ASSESSMENT_MAX_ARAT_SCORE = 57;   // ARAT full scale max
+export const ASSESSMENT_MAX_RT_MS      = 1500; // RT above this → score 0
+export const ASSESSMENT_MIN_RT_MS      = 150;  // RT below this → score 100
+
+// Track B — Test 1 (Gross Arm Reach) thresholds
+export const CLINICAL_REACH_TARGET_RADIUS   = 0.065; // normalised canvas radius for anatomical target (tightened from 0.10)
+export const CLINICAL_REACH_FAST_THRESHOLD  = 3000;  // ms → ARAT score 3
+export const CLINICAL_REACH_SLOW_THRESHOLD  = 6000;  // ms → ARAT score 2
+export const CLINICAL_REACH_PARTIAL_RATIO   = 0.50;  // 50% of target radius = partial (score 1)
+export const CLINICAL_REACH_COMP_THRESHOLD  = 15;    // trunk lean degrees → compensation detected
+export const CLINICAL_REACH_ZONES = ['mouth', 'top_head', 'behind_head'];
+
+// Track B — Test 2 (Object Transfer) thresholds
+export const CLINICAL_TRANSFER_DURATION_SEC = 60;    // BBT standard 60-second window
+export const CLINICAL_TRANSFER_ARAT_DIVISOR = 5;     // blocks per ARAT proxy point (0–3)
+export const CLINICAL_TRANSFER_PICK_RADIUS  = 0.065; // normalised pickup precision radius (tightened from 0.14)
+export const CLINICAL_TRANSFER_DWELL_PICK_MS = 280;  // dwell to pick a block
+export const CLINICAL_TRANSFER_DWELL_DROP_MS = 280;  // dwell to drop a block
+export const CLINICAL_TRANSFER_WALL_CLEAR_Y = 0.40;  // normalised Y barrier clearance threshold
+
+// Track B — Test 3 (Finger Spread & Pinch) thresholds
+export const CLINICAL_PINCH_DWELL_MS         = 600;  // required hold duration
+export const CLINICAL_PINCH_CLEAN_THRESHOLD  = 0.04; // normalised tip distance → score 3
+export const CLINICAL_PINCH_PARTIAL_THRESHOLD= 0.08; // normalised tip distance → score 2
+export const CLINICAL_PINCH_ATTEMPT_THRESHOLD= 0.15; // normalised tip distance → score 1
+export const CLINICAL_HAND_SPREAD_MIN        = 0.20; // min spread to count as full open
+export const CLINICAL_PINCH_FINGERS         = ['open', 'index', 'middle', 'ring'];
+
+// Track B — Test 4 (Timed Reaction Strike) thresholds
+export const CLINICAL_REACTION_TRIALS        = 10;   // number of reaction targets
+export const CLINICAL_REACTION_TARGET_RADIUS = 0.052; // normalised canvas target size (tightened from 0.08)
+export const CLINICAL_REACTION_BEST_RT_MS    = 200;  // → normalised score 10
+export const CLINICAL_REACTION_WORST_RT_MS   = 1200; // → normalised score 0
+
+// Track B — Test 5 (ROM Sweep) thresholds (degrees)
+export const CLINICAL_ROM_SHOULDER_FULL      = 120;  // deg → score 3
+export const CLINICAL_ROM_SHOULDER_HALF      = 75;   // deg → score 2
+export const CLINICAL_ROM_SHOULDER_LOW       = 30;   // deg → score 1
+export const CLINICAL_ROM_ELBOW_FULL         = 140;  // deg → score 3
+export const CLINICAL_ROM_ELBOW_HALF         = 90;   // deg → score 2
+export const CLINICAL_ROM_ELBOW_LOW          = 45;   // deg → score 1
+export const CLINICAL_ROM_VERTICAL_FULL      = 65;   // deg → score 3
+export const CLINICAL_ROM_VERTICAL_HALF      = 40;   // deg → score 2
+export const CLINICAL_ROM_VERTICAL_LOW       = 15;   // deg → score 1
+
+// Track B — composite score weights (must sum to 1.0)
+export const CLINICAL_WEIGHT_GROSS           = 0.25;
+export const CLINICAL_WEIGHT_GRASP           = 0.20;
+export const CLINICAL_WEIGHT_PINCH           = 0.25;
+export const CLINICAL_WEIGHT_REACTION        = 0.15;
+export const CLINICAL_WEIGHT_ROM             = 0.15;
+
+// Combined Track A + Track B overall score weights
+export const ASSESSMENT_COMBINED_GAME_WEIGHT     = 0.50;
+export const ASSESSMENT_COMBINED_CLINICAL_WEIGHT = 0.50;

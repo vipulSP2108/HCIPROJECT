@@ -2,7 +2,8 @@ import { Hands } from "@mediapipe/hands";
 import { Pose } from "@mediapipe/pose";
 import { Camera } from "@mediapipe/camera_utils";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { linkGameSession } from "../../../services/assessmentService";
 import { useAuth } from "../../../context/AuthContext";
 import gameSessionBuffer from "../../../services/gameSessionBuffer";
 import offlineBuffer from "../../../services/offlineBuffer";
@@ -259,6 +260,9 @@ const getMinDistanceToShapeOutline = (pos, points) => {
 const BoardDrawingGame = () => {
   const { user, isDarkMode } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const assessmentId = location.state?.assessmentId;
+  const gameType = location.state?.gameType;
 
   // Settings
   const { globalSettings } = useSettings();
@@ -996,9 +1000,13 @@ const BoardDrawingGame = () => {
           continue;
         }
 
+        const palmX = (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5;
+        const palmY = (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5;
+        const fingersX = (lm[4].x + lm[8].x + lm[12].x + lm[16].x + lm[20].x) / 5;
+        const fingersY = (lm[4].y + lm[8].y + lm[12].y + lm[16].y + lm[20].y) / 5;
         const palmCenter = {
-          x: (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5,
-          y: (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5,
+          x: (palmX + fingersX) / 2,
+          y: (palmY + fingersY) / 2,
         };
         const rawPos = { x: palmCenter.x, y: palmCenter.y };
         handState[label].pos = rawPos;
@@ -1492,9 +1500,13 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         ? "rgba(50, 200, 80, 0.9)" // green for can draw
         : "rgba(220, 50, 50, 0.9)"; // red for cannot draw
 
+      const palmX = (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5;
+      const palmY = (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5;
+      const fingersX = (lm[4].x + lm[8].x + lm[12].x + lm[16].x + lm[20].x) / 5;
+      const fingersY = (lm[4].y + lm[8].y + lm[12].y + lm[16].y + lm[20].y) / 5;
       const palmCenter = {
-        x: (lm[0].x + lm[5].x + lm[9].x + lm[13].x + lm[17].x) / 5,
-        y: (lm[0].y + lm[5].y + lm[9].y + lm[13].y + lm[17].y) / 5,
+        x: (palmX + fingersX) / 2,
+        y: (palmY + fingersY) / 2,
       };
 
       const connections = [
@@ -2102,8 +2114,22 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
     persistBoardDrawingBuffer();
     setIsSavingLocal(true);
     try {
-      if (gameSessionBuffer.hasPending()) await gameSessionBuffer.saveAndExit();
-      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      let response;
+      if (gameSessionBuffer.hasPending()) {
+        response = await gameSessionBuffer.saveAndExit();
+      }
+      if (assessmentId && response?.session?._id) {
+        try {
+          await linkGameSession(assessmentId, { gameType: gameType || 'board_drawing', gameSessionId: response.session._id });
+        } catch (linkErr) {
+          console.error('Failed to link session to assessment:', linkErr);
+        }
+      }
+      if (assessmentId) {
+        navigate(`/assessment/run/${assessmentId}`);
+      } else {
+        navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      }
     } catch (err) { 
       console.error("Save failed:", err); 
       const saveOffline = window.confirm(
@@ -2114,7 +2140,11 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         if (payload) offlineBuffer.addSession(payload);
       }
       gameSessionBuffer.discard();
-      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      if (assessmentId) {
+        navigate(`/assessment/run/${assessmentId}`);
+      } else {
+        navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      }
     } finally {
       setIsSavingLocal(false);
     }
@@ -2123,7 +2153,11 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
   const handleExitDiscard = () => {
     setShowExitModal(false);
     gameSessionBuffer.discard();
-    navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+    if (assessmentId) {
+      navigate(`/assessment/run/${assessmentId}`);
+    } else {
+      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+    }
   };
 
   const handleExitCancel = () => {
@@ -2547,7 +2581,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
             {statusMessage.visible && <div style={themeStyles.statusMessage}>{statusMessage.text}</div>}
           </main>
 
-          <SaveExitButton onBeforeSave={() => { finalizeActiveDrawingAttempt(); persistBoardDrawingBuffer(); }} />
+          <SaveExitButton assessmentId={assessmentId} gameType={gameType} onBeforeSave={() => { finalizeActiveDrawingAttempt(); persistBoardDrawingBuffer(); }} />
         </>
       )}
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { linkGameSession } from "../../../services/assessmentService";
 import { useAuth } from "../../../context/AuthContext";
 import { gameService } from "../../../services/gameService";
 import gameSessionBuffer from "../../../services/gameSessionBuffer";
@@ -574,6 +575,9 @@ const PianoReactionGame = () => {
   const { user, isDarkMode } = useAuth();
   const { globalSettings } = useSettings();
   const navigate = useNavigate();
+  const location = useLocation();
+  const assessmentId = location.state?.assessmentId;
+  const gameType = location.state?.gameType;
 
   // Detect screen size
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
@@ -1325,11 +1329,22 @@ const PianoReactionGame = () => {
     setIsSavingLocal(true);
 
     const navigateToDashboard = () => {
-      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      if (assessmentId) {
+        navigate(`/assessment/run/${assessmentId}`);
+      } else {
+        navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+      }
     };
 
     try { 
-      await gameSessionBuffer.saveAndExit(); 
+      const response = await gameSessionBuffer.saveAndExit(); 
+      if (assessmentId && response?.session?._id) {
+        try {
+          await linkGameSession(assessmentId, { gameType: gameType || 'piano', gameSessionId: response.session._id });
+        } catch (linkErr) {
+          console.error('Failed to link session to assessment:', linkErr);
+        }
+      }
       navigateToDashboard();
     } catch (err) { 
       console.error('Save failed:', err); 
@@ -1362,7 +1377,11 @@ const PianoReactionGame = () => {
     }
     
     gameSessionBuffer.discard();
-    navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+    if (assessmentId) {
+      navigate(`/assessment/run/${assessmentId}`);
+    } else {
+      navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+    }
   };
 
   const handleExitCancel = () => {
@@ -1992,7 +2011,7 @@ const PianoReactionGame = () => {
         )}
 
       </div>
-      <SaveExitButton onBeforeSave={handleBeforeSave} onSaveStart={pauseGame} onSaveCancel={resumeGame} />
+      <SaveExitButton assessmentId={assessmentId} gameType={gameType} onBeforeSave={handleBeforeSave} onSaveStart={pauseGame} onSaveCancel={resumeGame} />
       <ExitConfirmModal
         isOpen={showExitModal}
         hasPending={gameSessionBuffer.hasPending()}

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%" style="background:#f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Subtle Clinical Grid -->
+    <pattern id="medGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.8" opacity="0.85"/>
+    </pattern>
+    <!-- Radial Glow for Precision Targets -->
+    <radialGradient id="targetGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#10b981" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blueGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Motion Arrowheads -->
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0284c7"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#10b981"/>
+    </marker>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas & Grid -->
+  <rect width="800" height="600" fill="#f8fafc"/>
+  <rect width="800" height="600" fill="url(#medGrid)"/>
+
+  <!-- Header Action Badge & Titles -->
+  <g transform="translate(400, 38)" text-anchor="middle">
+    <rect x="-160" y="-18" width="320" height="32" rx="16" fill="#ffffff" stroke="#10b981" stroke-width="1.6" filter="url(#cardShadow)"/>
+    <circle cx="-135" cy="-2" r="4.5" fill="#10b981"/>
+    <text x="-120" y="2" font-size="11" font-weight="800" fill="#047857" letter-spacing="1.2" text-anchor="start">WOLF MOTOR FUNCTION TEST (WMFT)</text>
+    
+    <text x="0" y="38" font-size="20" font-weight="900" fill="#0f172a">Timed Reaction Strike</text>
+    <text x='0' y=58 font-size='12' font-weight='600' fill='#64748b'>Wait at center ready origin ➔ Strike peripheral target swiftly as soon as it flashes.</text>
+  </g>
+  <!-- Table / Workspace Plane -->
+  <ellipse cx="400" cy="420" rx="280" ry="70" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.8"/>
+
+  <!-- Center Ready Origin (Starting Point) -->
+  <g transform="translate(320, 420)">
+    <circle r="22" fill="#eff6ff" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4 3"/>
+    <circle r="6" fill="#0284c7"/>
+    <text x="0" y="38" font-size="11" font-weight="800" fill="#0284c7" text-anchor="middle">READY ORIGIN</text>
+    <text x="0" y="52" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="middle">(Wait Here)</text>
+  </g>
+
+  <!-- Flashing Reaction Target (Peripheral Strike Point) -->
+  <g transform="translate(540, 340)">
+    <!-- Concentric Pulse Waves -->
+    <circle r="46" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.35"/>
+    <circle r="34" fill="none" stroke="#ef4444" stroke-width="2" opacity="0.6"/>
+    <circle r="22" fill="#fee2e2" stroke="#ef4444" stroke-width="3"/>
+    <circle r="7" fill="#ef4444"/>
+    <text x="0" y="-54" font-size="12" font-weight="900" fill="#dc2626" text-anchor="middle">⚡ FLASH TARGET</text>
+  </g>
+
+  <!-- Direct Rapid Ballistic Reach Trajectory Line -->
+  <line x1="335" y1="410" x2="520" y2="348" stroke="#0284c7" stroke-width="4.5" stroke-dasharray="8 5" marker-end="url(#arrowBlue)"/>
+
+  <!-- Speed Motion Streaks -->
+  <line x1="370" y1="430" x2="440" y2="405" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+  <line x1="410" y1="365" x2="480" y2="340" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Telemetry Badge: Latency & Speed -->
+  <g transform="translate(425, 275)" filter="url(#cardShadow)">
+    <rect x="-85" y="-16" width="170" height="32" rx="10" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <text x="0" y="4" font-size="11" font-weight="800" fill="#0284c7" text-anchor="middle">FAST BALLISTIC REACH</text>
+  </g>
+  <!-- Clinical Protocol Footer Bar -->
+  <g transform="translate(400, 560)" text-anchor="middle">
+    <rect x="-350" y="-18" width="700" height="36" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2" filter="url(#cardShadow)"/>
+    <circle cx="-328" cy="0" r="5" fill="#10b981"/>
+    <text x="-312" y="4" font-size="11.5" font-weight="700" fill="#334155" text-anchor="start">Measures Reaction Latency & Movement Smoothness (Jerk) • 10 Fast Trials</text>
+    <text x='325' y='4' font-size='11' font-weight='700' fill='#0284c7' text-anchor='end'>MediaPipe Hand Center Velocity</text>
+  </g>
+</svg>

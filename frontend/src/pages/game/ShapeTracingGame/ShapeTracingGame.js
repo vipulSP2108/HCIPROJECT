@@ -2,6 +2,8 @@ import { Hands } from "@mediapipe/hands";
 import { Pose } from "@mediapipe/pose";
 import { Camera } from "@mediapipe/camera_utils";
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { linkGameSession } from "../../../services/assessmentService";
 import { useAuth } from "../../../context/AuthContext";
 import { useSettings } from "../../../context/SettingsContext";
 import gameSessionBuffer from "../../../services/gameSessionBuffer";
@@ -145,6 +147,10 @@ const generateShapePoints = (type, numPoints = CONFIG.NUM_SHAPE_POINTS) => {
 const ShapeTracingGame = () => {
   const { user, isDarkMode } = useAuth();
   const { globalSettings } = useSettings();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const assessmentId = location.state?.assessmentId;
+  const gameType = location.state?.gameType;
   // State Management
   const [isInitialized, setIsInitialized] = useState(false);
   const [calibrationDone, setCalibrationDone] = useState(false);
@@ -1117,6 +1123,12 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
 
   const handleQuitOrBack = async () => {
     if (shapeTimerRef.current) clearTimeout(shapeTimerRef.current);
+    
+    const navigateBack = () => {
+      if (assessmentId) navigate(`/assessment/run/${assessmentId}`);
+      else navigate(user?.type === 'doctor' ? '/doctor/dashboard' : '/patient/dashboard');
+    };
+
     if (gameSessionBuffer.hasPending()) {
       const save = window.confirm("Would you like to SAVE your session progress before leaving?");
       if (save) {
@@ -1133,18 +1145,25 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
           coordinates: coordinateLogRef.current.map(p => ({ ...p }))
         });
         if (gameSessionBuffer.hasPending()) {
-          await gameSessionBuffer.saveAndExit();
+          const response = await gameSessionBuffer.saveAndExit();
+          if (assessmentId && response?.session?._id) {
+            try {
+              await linkGameSession(assessmentId, { gameType: gameType || 'shape_tracing', gameSessionId: response.session._id });
+            } catch (linkErr) {
+              console.error('Failed to link session to assessment:', linkErr);
+            }
+          }
         }
-        window.history.back();
+        navigateBack();
       } else {
         const discard = window.confirm("Are you sure you want to DISCARD your progress and exit? (OK to Discard, Cancel to Stay)");
         if (discard) {
           gameSessionBuffer.discard();
-          window.history.back();
+          navigateBack();
         }
       }
     } else {
-      window.history.back();
+      navigateBack();
     }
   };
 
@@ -1489,7 +1508,7 @@ State: ${isClosed ? "🔴 CLOSED" : "🟢 OPEN"}`);
         exercise focuses on fine motor control and spatial tracing. Try to
         maintain a constant speed while following the green path.
       </div>
-      <SaveExitButton onBeforeSave={() => {
+      <SaveExitButton assessmentId={assessmentId} gameType={gameType} onBeforeSave={() => {
         const playData = logsRef.current.map(log => ({
           eventName: log.event,
           score: log.score,
