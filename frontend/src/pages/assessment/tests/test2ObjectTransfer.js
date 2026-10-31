@@ -128,12 +128,6 @@ export function drawTest2Transfer(
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Partition Label Tag
-  ctx.font = "bold 10px Inter, sans-serif";
-  ctx.fillStyle = wallBlocked ? "#ef4444" : "#fbbf24";
-  ctx.textAlign = "center";
-  ctx.fillText("▲ 15.2 cm PARTITION WALL ▲", midX, wallTopY - 10);
-
   if (wallBlocked) {
     ctx.fillStyle = "rgba(239, 68, 68, 0.95)";
     ctx.beginPath();

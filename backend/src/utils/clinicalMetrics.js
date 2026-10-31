@@ -25,10 +25,24 @@ const PINCH_PARTIAL_DWELL_MS    = 400;
 
 const REACTION_BEST_RT_MS       = 200;
 const REACTION_WORST_RT_MS      = 1200;
+const REACTION_TRIALS           = 10;
 
 const ROM_SHOULDER_THRESHOLDS   = { full: 120, half: 75, low: 30 };  // degrees
 const ROM_ELBOW_THRESHOLDS      = { full: 140, half: 90, low: 45 };
 const ROM_VERTICAL_THRESHOLDS   = { full: 65,  half: 40, low: 15 };
+
+// ─── MCID (Minimal Clinically Important Difference) thresholds ────────────────
+// Source: Beebe & Lang (2009), van der Lee et al. for ARAT, Chen et al. for FMA
+const MCID = {
+  gross_totalScore:          1.0,  // ARAT Gross: 1 pt
+  transfer_blocksTransferred: 5.5, // BBT: 5.5 blocks (Lang et al. 2008)
+  pinch_totalScore:          1.0,  // ARAT Pinch: 1 pt
+  reaction_reactionScore:    0.5,  // WMFT Proxy: 0.5 pts
+  rom_totalScore:            1.0,  // FMA Proximal: ~4° shoulder ≈ 1 pt tier
+  clinical_overallScore:     5.0,  // Overall composite: 5 pts
+};
+
+exports.MCID = MCID;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -138,12 +152,18 @@ const computeTransferMetrics = (test2) => {
   const elbows     = trials.map(t => safeNum(t.elbowAngle)).filter(v => v !== null && v > 0);
   const shoulders  = trials.map(t => safeNum(t.shoulderAngle)).filter(v => v !== null && v > 0);
 
+  const misses     = safeNum(test2.missCount, trials.length - successes.length);
+  const penalty    = safeNum(test2.collisionPenalty, Math.round(misses * 0.1 * 100) / 100);
+  const score      = safeNum(test2.score, Math.max(0, Math.round((blocks - penalty) * 100) / 100));
+
   return {
     transfer_blocksTransferred:  blocks,
+    transfer_score:              score,
+    transfer_collisionPenalty:   penalty,
     transfer_aratProxyScore:     aratProxy,
     transfer_avgPickTime_ms:     mean(pickTimes),
     transfer_avgDropTime_ms:     mean(dropTimes),
-    transfer_missCount:          safeNum(test2.missCount, trials.length - successes.length),
+    transfer_missCount:          misses,
     transfer_elbowAngle_mean:    mean(elbows),
     transfer_shoulderAngle_mean: mean(shoulders),
   };
@@ -174,25 +194,35 @@ const scorePinchAttempt = (attempt) => {
 const computePinchMetrics = (test3) => {
   if (!test3) return {};
 
-  const attempts = test3.pinchAttempts || [];
-  const findFinger = (name) => attempts.find(a => a.finger === name);
+  const attempts    = test3.pinchAttempts || [];
+  const findFinger  = (name) => attempts.find(a => a.finger === name);
+
+  // Open hand spread scored as 0 or 3 (binary — can or cannot spread)
+  const openAttempt   = findFinger('open');
+  const openScore     = openAttempt?.success ? 3 : (test3.handOpenSuccess ? 3 : 0);
 
   const indexAttempt  = findFinger('index');
   const middleAttempt = findFinger('middle');
   const ringAttempt   = findFinger('ring');
+  const pinkyAttempt  = findFinger('pinky');
 
   const indexScore  = scorePinchAttempt(indexAttempt);
   const middleScore = scorePinchAttempt(middleAttempt);
   const ringScore   = scorePinchAttempt(ringAttempt);
-  const total       = indexScore + middleScore + ringScore;
+  const pinkyScore  = scorePinchAttempt(pinkyAttempt);
+
+  // Total: open (0/3) + index (0-3) + middle (0-3) + ring (0-3) + pinky (0-3) = max 15
+  const total = openScore + indexScore + middleScore + ringScore + pinkyScore;
 
   return {
     pinch_handOpenSuccess: Boolean(test3.handOpenSuccess),
     pinch_handOpenSpread:  safeNum(test3.handOpenSpread),
+    pinch_openScore:       openScore,
     pinch_indexScore:      indexScore,
     pinch_middleScore:     middleScore,
     pinch_ringScore:       ringScore,
-    pinch_totalScore:      total,  // 0–9 (3 fingers × 3)
+    pinch_pinkyScore:      pinkyScore,
+    pinch_totalScore:      total,  // 0–15 (5 poses × max 3)
   };
 };
 
@@ -213,19 +243,29 @@ const computeReactionMetrics = (test4) => {
   const smooth    = avgJerk !== null ? clamp(1 / (1 + avgJerk), 0, 1) : null;
 
   const avgRT     = mean(rts);
-  // Normalise RT: BEST_RT → 10, WORST_RT → 0, linear
-  const rtScore   = avgRT !== null
+  // Normalise RT: BEST_RT -> 10, WORST_RT -> 0, linear
+  const rtNorm    = avgRT !== null
     ? clamp(10 * (1 - (avgRT - REACTION_BEST_RT_MS) / (REACTION_WORST_RT_MS - REACTION_BEST_RT_MS)), 0, 10)
+    : null;
+
+  // Final reaction score accounts for both RT quality AND hit rate
+  const hitRate = trials.length > 0 ? hits.length / trials.length : 0;
+  const reactionScore = safeNum(test4.reactionScore, safeNum(test4.score, null)) !== null
+    ? safeNum(test4.reactionScore, safeNum(test4.score, null))
+    : rtNorm !== null
+    ? Math.round(rtNorm * hitRate * 10) / 10
     : null;
 
   return {
     reaction_avgRT_ms:       avgRT,
     reaction_medianRT_ms:    median(rts),
     reaction_p90RT_ms:       percentile(rts, 90),
-    reaction_hitAccuracy:    trials.length > 0 ? hits.length / trials.length : null,
+    reaction_hitAccuracy:    hitRate > 0 ? hitRate : (trials.length > 0 ? hits.length / trials.length : null),
     reaction_movementJerk:   avgJerk,
     reaction_smoothnessScore: smooth,
-    reaction_reactionScore:  rtScore !== null ? Math.round(rtScore * 10) / 10 : null,
+    reaction_reactionScore:  reactionScore,
+    reaction_trialsCompleted: trials.length,
+    reaction_hitsCount:      hits.length,
   };
 };
 
@@ -274,10 +314,22 @@ const CLINICAL_WEIGHTS = {
  * @returns {number|null} clinical overall score 0–100
  */
 const computeClinicalComposite = (m) => {
+  // Normalise each component to 0–1:
+  //   gross:    max 9 pts  (ARAT Gross 3 zones × 3)
+  //   grasp:    max 3 pts  (BBT ARAT proxy)
+  //   pinch:    max 15 pts (5 poses × 3)
+  //   reaction: 0–10 scale → normalise /10
+  //   rom:      max 9 pts  (FMA proximal)
   const grossNorm    = m.gross_totalScore     != null ? m.gross_totalScore / 9    : null;
-  const graspNorm    = m.transfer_aratProxyScore != null ? m.transfer_aratProxyScore / 3 : null;
-  const pinchNorm    = m.pinch_totalScore     != null ? m.pinch_totalScore / 9    : null;
-  const reactionNorm = m.reaction_smoothnessScore != null ? m.reaction_smoothnessScore  : null;
+  const graspNorm    = m.transfer_score       != null
+    ? Math.min(1, m.transfer_score / 15)
+    : m.transfer_aratProxyScore != null
+    ? m.transfer_aratProxyScore / 3
+    : null;
+  const pinchNorm    = m.pinch_totalScore     != null ? m.pinch_totalScore / 15   : null;
+  const reactionNorm = m.reaction_reactionScore != null
+    ? Math.min(1, m.reaction_reactionScore / 10)
+    : null;
   const romNorm      = m.rom_totalScore       != null ? m.rom_totalScore / 9      : null;
 
   const pairs = [
@@ -338,4 +390,38 @@ const computeClinicalMetrics = (clinicalSession) => {
   return { ...raw, clinical_overallScore: composite, clinical_uncappedScore: uncapped };
 };
 
-module.exports = { computeClinicalMetrics };
+// ─── MCID-based Improvement Classifier ───────────────────────────────────────
+
+/**
+ * Classify a delta value against MCID thresholds for a given metric.
+ * Returns a clinically meaningful label for the magnitude of change.
+ *
+ * @param {string} metricKey - key from the MCID map
+ * @param {number} delta     - change value (positive = improvement for most metrics)
+ * @param {boolean} invertDelta - if true, negative delta means improvement (e.g. RT)
+ * @returns {object} { classification, label, isSignificant }
+ */
+const classifyImprovement = (metricKey, delta, invertDelta = false) => {
+  if (delta == null || !Number.isFinite(delta)) {
+    return { classification: 'no_data', label: 'No Data', isSignificant: false };
+  }
+
+  const threshold = MCID[metricKey] || 1.0;
+  const effectiveDelta = invertDelta ? -delta : delta;
+
+  if (effectiveDelta >= threshold * 2) {
+    return { classification: 'meaningful_improvement', label: 'Meaningful Improvement ↑↑', isSignificant: true };
+  }
+  if (effectiveDelta >= threshold) {
+    return { classification: 'slight_improvement',     label: 'Slight Improvement ↑',      isSignificant: true };
+  }
+  if (effectiveDelta > -threshold) {
+    return { classification: 'maintained',             label: 'Maintained →',               isSignificant: false };
+  }
+  if (effectiveDelta > -threshold * 2) {
+    return { classification: 'slight_decline',         label: 'Slight Decline ↓',           isSignificant: false };
+  }
+  return   { classification: 'meaningful_decline',     label: 'Meaningful Decline ↓↓',      isSignificant: true };
+};
+
+module.exports = { computeClinicalMetrics, classifyImprovement, MCID };

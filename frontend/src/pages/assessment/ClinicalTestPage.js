@@ -87,6 +87,8 @@ export default function ClinicalTestPage() {
         durationSec: CLINICAL_TRANSFER_DURATION_SEC,
         blocksTransferred: results.test2_objectTransfer?.blocksTransferred || 0,
         missCount: results.test2_objectTransfer?.missCount || 0,
+        collisionPenalty: results.test2_objectTransfer?.collisionPenalty || 0,
+        score: results.test2_objectTransfer?.score || 0,
         avgPickTime_ms: results.test2_objectTransfer?.avgPickTime_ms || 0,
         avgDropTime_ms: results.test2_objectTransfer?.avgDropTime_ms || 0,
         elbowAngle_mean: results.test2_objectTransfer?.elbowAngle_mean || 0,
@@ -102,6 +104,7 @@ export default function ClinicalTestPage() {
       },
       test4_reactionStrike: {
         trials: results.test4_reactionStrike?.trials || [],
+        trialScores: results.test4_reactionStrike?.trialScores || [],
         avgReactionTime_ms: results.test4_reactionStrike?.avgReactionTime_ms || 0,
         medianRT_ms: results.test4_reactionStrike?.medianRT_ms || 0,
         p90RT_ms: results.test4_reactionStrike?.p90RT_ms || 0,
@@ -109,6 +112,7 @@ export default function ClinicalTestPage() {
         movementJerk: results.test4_reactionStrike?.movementJerk || 0,
         smoothnessScore: results.test4_reactionStrike?.smoothnessScore || 0,
         reactionScore: results.test4_reactionStrike?.reactionScore || 0,
+        score: results.test4_reactionStrike?.score || 0,
       },
       test5_romSweep: {
         maxShoulderAbduction_deg: results.test5_romSweep?.maxShoulderAbduction_deg || 0,
@@ -124,6 +128,7 @@ export default function ClinicalTestPage() {
         totalScore: results.test5_romSweep?.totalScore || 0,
       },
       overallNotes: `Track B Battery completed for ${activeArm} arm. Captured full standard biomechanical datasets.`,
+      activeArm,
     };
 
     try {

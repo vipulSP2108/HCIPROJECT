@@ -7,7 +7,7 @@ import { Award, TrendingUp, Activity, CheckCircle2, AlertCircle, Clock } from 'l
 const PHASE_COLORS  = { pre: '#0e88eb', ongoing: '#f59e0b', post: '#10b981' };
 const PHASE_LABELS  = { pre: 'Pre-Therapy', ongoing: 'Ongoing', post: 'Post-Therapy' };
 
-function MetricBar({ label, value, max = 100, unit = '', color = '#0e88eb', tooltip, deltaValue, invertDelta = false }) {
+function MetricBar({ label, value, max = 100, unit = '', color = '#0e88eb', tooltip, deltaValue, invertDelta = false, mcid }) {
   const pct = Math.min(100, Math.max(0, (value / max) * 100));
   
   let deltaUI = null;
@@ -17,15 +17,35 @@ function MetricBar({ label, value, max = 100, unit = '', color = '#0e88eb', tool
     const dColor = isGood ? 'text-emerald-500' : 'text-red-500';
     const sign = isPositive ? '+' : '';
     deltaUI = (
-      <div className={`text-[10px] font-bold ${dColor} -mt-0.5`}>
+      <div className={`text-[10px] font-bold ${dColor}`}>
         {sign}{typeof deltaValue === 'number' && !Number.isInteger(deltaValue) ? deltaValue.toFixed(1) : deltaValue}{unit}
       </div>
     );
   }
 
+  let mcidBadge = null;
+  if (mcid) {
+    const isMeaningful = mcid.status === 'meaningful_improvement';
+    const isDecline = mcid.status === 'meaningful_decline';
+    const badgeColor = isMeaningful
+      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+      : isDecline
+      ? 'bg-rose-100 text-rose-800 dark:bg-rose-950/70 dark:text-rose-300 border-rose-300 dark:border-rose-800'
+      : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700';
+
+    mcidBadge = (
+      <span
+        className={`px-1.5 py-0.5 rounded text-[9px] font-black border uppercase tracking-wider ${badgeColor}`}
+        title={`MCID Threshold: ≥${mcid.mcidThreshold} | Status: ${mcid.label}`}
+      >
+        {isMeaningful ? '★ MCID Met' : isDecline ? '▼ Decline' : 'Maintained'}
+      </span>
+    );
+  }
+
   return (
     <div className="flex items-center gap-3 py-1.5" title={tooltip}>
-      <div className="w-40 sm:w-48 text-xs font-semibold text-gray-600 dark:text-gray-400 truncate flex-shrink-0">
+      <div className="w-36 sm:w-44 text-xs font-semibold text-gray-600 dark:text-gray-400 truncate flex-shrink-0">
         {label}
       </div>
       <div className="flex-1 h-2.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden p-0.5">
@@ -34,11 +54,14 @@ function MetricBar({ label, value, max = 100, unit = '', color = '#0e88eb', tool
           style={{ width: `${pct}%`, background: color }}
         />
       </div>
-      <div className="w-20 sm:w-24 text-right flex flex-col items-end justify-center h-full">
+      <div className="w-28 sm:w-36 text-right flex flex-col items-end justify-center h-full">
         <div className="text-xs font-bold text-gray-900 dark:text-white leading-tight">
           {value != null ? `${typeof value === 'number' ? (Number.isInteger(value) ? value : value.toFixed(1)) : value}${unit}` : '—'}
         </div>
-        {deltaUI}
+        <div className="flex items-center gap-1.5 mt-0.5">
+          {deltaUI}
+          {mcidBadge}
+        </div>
       </div>
     </div>
   );
@@ -112,6 +135,104 @@ function Section({ title, icon, children, accentColor = '#0e88eb' }) {
   );
 }
 
+function LongitudinalChart({ assessments, currentId }) {
+  const sorted = [...assessments].sort((a, b) => new Date(a.completedAt || a.createdAt) - new Date(b.completedAt || b.createdAt));
+  if (sorted.length < 2) return null;
+
+  const w = 640;
+  const h = 150;
+  const padX = 50;
+  const padY = 26;
+  const innerW = w - padX * 2;
+  const innerH = h - padY * 2;
+
+  const points = sorted.map((s, idx) => {
+    const x = padX + (idx / Math.max(1, sorted.length - 1)) * innerW;
+    const score = s.overallScore != null ? s.overallScore : (s.clinicalMetrics?.clinical_overallScore || 0);
+    const y = h - padY - (Math.min(100, Math.max(0, score)) / 100) * innerH;
+    return { x, y, score, assessment: s, isCurrent: s._id === currentId };
+  });
+
+  const polylineStr = points.map((p) => `${p.x},${p.y}`).join(" ");
+
+  return (
+    <div className="bg-gray-50/80 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-800 p-4 sm:p-5 mb-8 transition-all">
+      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <div className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+          <TrendingUp size={14} className="text-primary-500" />
+          <span>Longitudinal Score Trajectory ({sorted.length} Sessions)</span>
+        </div>
+        <div className="text-[11px] font-semibold text-gray-400">
+          {new Date(sorted[0].completedAt || sorted[0].createdAt).toLocaleDateString()} ➔{" "}
+          {new Date(sorted[sorted.length - 1].completedAt || sorted[sorted.length - 1].createdAt).toLocaleDateString()}
+        </div>
+      </div>
+      <div className="w-full overflow-x-auto">
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full min-w-[480px] h-36">
+          {/* Reference grid lines */}
+          {[0, 25, 50, 75, 100].map((val) => {
+            const y = h - padY - (val / 100) * innerH;
+            return (
+              <g key={val}>
+                <line x1={padX} y1={y} x2={w - padX} y2={y} stroke="rgba(148, 163, 184, 0.18)" strokeDasharray="3 3" />
+                <text x={padX - 8} y={y + 3.5} textAnchor="end" fontSize="9" fill="rgba(148, 163, 184, 0.7)" fontWeight="700">
+                  {val}
+                </text>
+              </g>
+            );
+          })}
+          {/* Connecting gradient line */}
+          <polyline
+            fill="none"
+            stroke="#0e88eb"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            points={polylineStr}
+          />
+          {/* Data nodes */}
+          {points.map((p, idx) => (
+            <g key={p.assessment._id || idx}>
+              {p.isCurrent && (
+                <circle cx={p.x} cy={p.y} r="10" fill="none" stroke="#0e88eb" strokeWidth="2" opacity="0.45" />
+              )}
+              <circle
+                cx={p.x}
+                cy={p.y}
+                r={p.isCurrent ? "6" : "4.5"}
+                fill={p.isCurrent ? "#0e88eb" : "#ffffff"}
+                stroke="#0e88eb"
+                strokeWidth={p.isCurrent ? "3" : "2"}
+              />
+              <text
+                x={p.x}
+                y={p.y - 10}
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="800"
+                fill={p.isCurrent ? "#0e88eb" : "currentColor"}
+                className={p.isCurrent ? "font-black fill-primary-600 dark:fill-primary-400" : "fill-gray-700 dark:fill-gray-300"}
+              >
+                {p.score}
+              </text>
+              <text
+                x={p.x}
+                y={h - 8}
+                textAnchor="middle"
+                fontSize="9"
+                fontWeight="700"
+                fill="rgba(148, 163, 184, 0.85)"
+              >
+                {new Date(p.assessment.completedAt || p.assessment.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+              </text>
+            </g>
+          ))}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export default function AssessmentReportPage() {
   const { id: assessmentId } = useParams();
   const navigate             = useNavigate();
@@ -120,6 +241,7 @@ export default function AssessmentReportPage() {
   const [otherAssess, setOtherAssess] = useState([]);
   const [compareId, setCompareId]     = useState('');
   const [delta, setDelta]             = useState(null);
+  const [mcid, setMcid]               = useState(null);
   const [loading, setLoading]         = useState(true);
   const [error, setError]             = useState('');
 
@@ -145,7 +267,8 @@ export default function AssessmentReportPage() {
     if (!compareId) return;
     try {
       const result = await compareAssessments(compareId, assessmentId);
-      setDelta(result);
+      setDelta(result.delta || {});
+      setMcid(result.mcidClassifications || {});
     } catch (err) {
       console.error(err);
     }
@@ -197,7 +320,7 @@ export default function AssessmentReportPage() {
           {/* Header Metadata Banner */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-100 dark:border-gray-800">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                 <span
                   className="text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full text-white"
                   style={{ background: PHASE_COLORS[assessment.phase] || '#0e88eb' }}
@@ -207,6 +330,11 @@ export default function AssessmentReportPage() {
                 <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                   Track {assessment.track?.toUpperCase()}
                 </span>
+                {(assessment.activeArm || cm.activeArm) && (
+                  <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800/80 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    {assessment.activeArm || cm.activeArm} Arm Assessed
+                  </span>
+                )}
               </div>
               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
                 {assessment.label || 'Assessment Report'}
@@ -236,6 +364,11 @@ export default function AssessmentReportPage() {
             )}
           </div>
 
+          {/* Longitudinal Score Trajectory Graph */}
+          {otherAssess.length > 0 && (
+            <LongitudinalChart assessments={[...otherAssess, assessment]} currentId={assessmentId} />
+          )}
+
           {/* Longitudinal Compare Panel */}
           {otherAssess.length > 0 && (
             <div className="bg-primary-50/60 dark:bg-gray-800/70 border border-primary-200 dark:border-gray-700 rounded-2xl p-4 sm:p-5 mb-8">
@@ -264,9 +397,22 @@ export default function AssessmentReportPage() {
                 </button>
               </div>
               {delta && delta.overallScore_delta != null && (
-                <div className={`mt-3 text-xs sm:text-sm font-bold flex items-center gap-1.5 ${delta.overallScore_delta >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
-                  <TrendingUp size={16} />
-                  <span>Overall score changed by {delta.overallScore_delta >= 0 ? '+' : ''}{delta.overallScore_delta} points</span>
+                <div className="mt-3 pt-3 border-t border-primary-200/60 dark:border-gray-700 flex flex-wrap items-center justify-between gap-2">
+                  <div className={`text-xs sm:text-sm font-bold flex items-center gap-1.5 ${delta.overallScore_delta >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                    <TrendingUp size={16} />
+                    <span>Overall score changed by {delta.overallScore_delta >= 0 ? '+' : ''}{delta.overallScore_delta} points</span>
+                  </div>
+                  {mcid?.clinical_overallScore && (
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                      mcid.clinical_overallScore.status === 'meaningful_improvement'
+                        ? 'bg-emerald-500 text-white'
+                        : mcid.clinical_overallScore.status === 'meaningful_decline'
+                        ? 'bg-rose-500 text-white'
+                        : 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
+                    }`}>
+                      {mcid.clinical_overallScore.label}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
@@ -275,11 +421,52 @@ export default function AssessmentReportPage() {
           {/* Track B: Clinical Battery Results */}
           {hasClinical && (
             <Section title="Standardised Clinical Battery (Track B)" icon="🏥" accentColor="#0e88eb">
-              <MetricBar label="Gross Arm Reach" value={cm.gross_totalScore}              max={9}  color="#0e88eb" tooltip="ARAT Gross Movement proxy (max 9)" />
-              <MetricBar label="Object Transfer"  value={cm.transfer_blocksTransferred}   max={30} color="#f59e0b" unit=" blocks" tooltip="Box-and-Block Test (60s)" />
-              <MetricBar label="Finger Pinch"     value={cm.pinch_totalScore}             max={15} color="#10b981" tooltip="ARAT Pinch proxy (max 15: Open spread + 4 finger pinches)" />
-              <MetricBar label="Reaction Strike"  value={cm.reaction_reactionScore}       max={10} color="#ef4444" tooltip="WMFT timed task proxy (0–10)" />
-              <MetricBar label="ROM Sweep"         value={cm.rom_totalScore}               max={9}  color="#8b5cf6" tooltip="FMA proximal ROM proxy (max 9)" />
+              <MetricBar
+                label="Gross Arm Reach"
+                value={cm.gross_totalScore}
+                max={9}
+                color="#0e88eb"
+                tooltip="ARAT Gross Movement proxy (max 9)"
+                deltaValue={delta?.clinical_gross_totalScore_delta}
+                mcid={mcid?.gross_totalScore}
+              />
+              <MetricBar
+                label="Object Transfer"
+                value={cm.transfer_blocksTransferred}
+                max={30}
+                color="#f59e0b"
+                unit=" blocks"
+                tooltip="Box-and-Block Test (60s)"
+                deltaValue={delta?.clinical_transfer_blocksTransferred_delta}
+                mcid={mcid?.transfer_blocksTransferred}
+              />
+              <MetricBar
+                label="Finger Pinch"
+                value={cm.pinch_totalScore}
+                max={15}
+                color="#10b981"
+                tooltip="ARAT Pinch proxy (max 15: Open spread + 4 finger pinches)"
+                deltaValue={delta?.clinical_pinch_totalScore_delta}
+                mcid={mcid?.pinch_totalScore}
+              />
+              <MetricBar
+                label="Reaction Strike"
+                value={cm.reaction_reactionScore}
+                max={10}
+                color="#ef4444"
+                tooltip="WMFT timed task proxy (0–10)"
+                deltaValue={delta?.clinical_reaction_reactionScore_delta}
+                mcid={mcid?.reaction_reactionScore}
+              />
+              <MetricBar
+                label="ROM Sweep"
+                value={cm.rom_totalScore}
+                max={9}
+                color="#8b5cf6"
+                tooltip="FMA proximal ROM proxy (max 9)"
+                deltaValue={delta?.clinical_rom_totalScore_delta}
+                mcid={mcid?.rom_totalScore}
+              />
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 mt-3 border-t border-gray-200 dark:border-gray-700/60">
                 <RawMetric label="Shoulder ROM" value={cm.rom_maxShoulderAbduction} unit="°" deltaValue={delta?.clinical_rom_maxShoulderAbduction_delta} />
@@ -288,7 +475,7 @@ export default function AssessmentReportPage() {
                 
                 <RawMetric label="Average RT" value={cm.reaction_avgRT_ms} unit=" ms" deltaValue={delta?.clinical_reaction_avgRT_ms_delta} invertDelta />
                 <RawMetric label="Median RT" value={cm.reaction_medianRT_ms} unit=" ms" deltaValue={delta?.clinical_reaction_medianRT_ms_delta} invertDelta />
-                <RawMetric label="Trajectory Jerk" value={cm.reaction_movementJerk} deltaValue={delta?.clinical_reaction_movementJerk_delta} invertDelta />
+                <RawMetric label="Trajectory Jerk" value={cm.reaction_movementJerk || cm.rom_trajectoryJerk} deltaValue={delta?.clinical_reaction_movementJerk_delta || delta?.clinical_rom_trajectoryJerk_delta} invertDelta />
                 
                 <RawMetric label="Avg Pick Time" value={cm.transfer_avgPickTime_ms} unit=" ms" deltaValue={delta?.clinical_transfer_avgPickTime_ms_delta} invertDelta />
                 <RawMetric label="Avg Drop Time" value={cm.transfer_avgDropTime_ms} unit=" ms" deltaValue={delta?.clinical_transfer_avgDropTime_ms_delta} invertDelta />

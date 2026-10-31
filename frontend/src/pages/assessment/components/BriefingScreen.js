@@ -91,7 +91,7 @@ export default function BriefingScreen({
 
               <span className="px-2.5 py-1.5 rounded-xl bg-primary-50 dark:bg-primary-950/40 text-xs font-black text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800/60 shadow-sm flex items-center gap-1">
                 <Award size={13} />
-                <span>Max {test.maxScore} pts</span>
+                <span>{test.maxScore ? `Max ${test.maxScore} pts` : "Uncapped Scoring"}</span>
               </span>
             </div>
           </div>

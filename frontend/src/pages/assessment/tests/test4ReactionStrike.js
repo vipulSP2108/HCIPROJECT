@@ -50,14 +50,21 @@ export function drawTest4Reaction(ctx, w, h, targetPos, trialIdx, trialsTotal, i
   ctx.fillText(trialText, w * 0.5, h * 0.05 + 11);
 
   if (hitMsg) {
-    ctx.font = "bold 18px Inter, sans-serif";
-    ctx.fillStyle = "#10b981";
-    ctx.shadowColor = "#10b981";
-    ctx.shadowBlur = 14;
+    const badgeText = `⚡ STRIKE! ${hitMsg}`;
+    ctx.font = "bold 12px Inter, sans-serif";
+    const bW = ctx.measureText(badgeText).width + 20;
+    ctx.fillStyle = "rgba(16, 185, 129, 0.92)";
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(w * 0.5 - bW / 2, h * 0.11, bW, 24, 6);
+    } else {
+      ctx.rect(w * 0.5 - bW / 2, h * 0.11, bW, 24);
+    }
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
-    ctx.textBaseline = "alphabetic";
-    ctx.fillText(hitMsg, w * 0.5, h * 0.28);
-    ctx.shadowBlur = 0;
+    ctx.textBaseline = "middle";
+    ctx.fillText(badgeText, w * 0.5, h * 0.11 + 12);
   }
 
   ctx.restore();

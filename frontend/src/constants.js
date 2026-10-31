@@ -203,7 +203,8 @@ export const CLINICAL_PINCH_CLEAN_THRESHOLD  = 0.04; // normalised tip distance 
 export const CLINICAL_PINCH_PARTIAL_THRESHOLD= 0.08; // normalised tip distance → score 2
 export const CLINICAL_PINCH_ATTEMPT_THRESHOLD= 0.15; // normalised tip distance → score 1
 export const CLINICAL_HAND_SPREAD_MIN        = 0.20; // min spread to count as full open
-export const CLINICAL_PINCH_FINGERS         = ['open', 'index', 'middle', 'ring'];
+export const CLINICAL_PINCH_FINGERS         = ['open', 'index', 'middle', 'ring', 'pinky']; // 5 poses total, max 15pts
+export const CLINICAL_PINCH_MAX_SCORE        = 15;   // 5 poses × 3 pts each
 
 // Track B — Test 4 (Timed Reaction Strike) thresholds
 export const CLINICAL_REACTION_TRIALS        = 10;   // number of reaction targets
@@ -232,3 +233,12 @@ export const CLINICAL_WEIGHT_ROM             = 0.15;
 // Combined Track A + Track B overall score weights
 export const ASSESSMENT_COMBINED_GAME_WEIGHT     = 0.50;
 export const ASSESSMENT_COMBINED_CLINICAL_WEIGHT = 0.50;
+
+// ─── MCID (Minimal Clinically Important Difference) for frontend badges ───────
+// Source: Beebe & Lang (2009), van der Lee et al., Chen et al. for FMA
+export const CLINICAL_MCID_GROSS_SCORE         = 1;    // ARAT Gross: 1 pt
+export const CLINICAL_MCID_BLOCKS_TRANSFERRED  = 5.5;  // BBT: 5.5 blocks (Lang et al.)
+export const CLINICAL_MCID_PINCH_SCORE         = 1;    // ARAT Pinch: 1 pt
+export const CLINICAL_MCID_REACTION_SCORE      = 0.5;  // WMFT Proxy: 0.5 pts
+export const CLINICAL_MCID_ROM_SCORE           = 1;    // FMA Proximal: ~1 pt tier (~4°)
+export const CLINICAL_MCID_OVERALL_SCORE       = 5;    // Overall composite: 5 pts

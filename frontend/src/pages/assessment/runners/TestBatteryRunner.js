@@ -95,6 +95,8 @@ export default function TestBatteryRunner({
   const [usingMouseFallback, setUsingMouseFallback] = useState(false);
   const [telemetry, setTelemetry] = useState({ shoulder: 0, elbow: 0, vertical: 0, lean: 0, comp: false, fps: 30 });
   const [currentResult, setCurrentResult] = useState(null);
+  const [t2LiveStats, setT2LiveStats] = useState({ transfers: 0, misses: 0 });
+  const [t4LiveStats, setT4LiveStats] = useState({ trialIdx: 0, lastRT: null, hits: 0, lastScore: null });
 
   const stageContainerRef = useRef(null);
   const videoRef = useRef(null);
@@ -146,6 +148,7 @@ export default function TestBatteryRunner({
   const t2TrialsRef = useRef([]);
   const t2WallBlockedRef = useRef(false);
   const t2CrossedDividerRef = useRef(false);
+  const t2MissesRef = useRef(0);
 
   // Test 3 refs
   const t3PoseIdxRef = useRef(0);
@@ -164,6 +167,7 @@ export default function TestBatteryRunner({
   const t4PrevSpeedRef = useRef(0);
   const t4PrevAccelRef = useRef(0);
   const t4JerksRef = useRef([]);
+  const t4TrialJerksRef = useRef([]);
 
   // Test 5 refs
   const t5PhaseRef = useRef("cw_straight");
@@ -375,6 +379,8 @@ export default function TestBatteryRunner({
     t2TrialsRef.current = [];
     t2WallBlockedRef.current = false;
     t2CrossedDividerRef.current = false;
+    t2MissesRef.current = 0;
+    setT2LiveStats({ transfers: 0, misses: 0 });
 
     // Reset Test 3
     t3PoseIdxRef.current = 0;
@@ -393,6 +399,8 @@ export default function TestBatteryRunner({
     t4PrevSpeedRef.current = 0;
     t4PrevAccelRef.current = 0;
     t4JerksRef.current = [];
+    t4TrialJerksRef.current = [];
+    setT4LiveStats({ trialIdx: 0, lastRT: null, hits: 0, lastScore: null });
 
     // Reset Test 5
     t5PhaseRef.current = "cw_straight";
@@ -554,6 +562,9 @@ export default function TestBatteryRunner({
     } else if (test.id === "test2_objectTransfer") {
       const blocks = t2TransfersRef.current;
       const trials = t2TrialsRef.current;
+      const misses = t2MissesRef.current;
+      const collisionPenalty = parseFloat((misses * 0.1).toFixed(2));
+      const finalScore = parseFloat(Math.max(0, blocks - collisionPenalty).toFixed(2));
       const aratProxy = blocks >= 8 ? 3 : blocks >= 4 ? 2 : blocks >= 1 ? 1 : 0;
       const pickTimes = trials.map((t) => t.pickTime_ms).filter(Boolean);
       const dropTimes = trials.map((t) => t.dropTime_ms).filter(Boolean);
@@ -563,14 +574,16 @@ export default function TestBatteryRunner({
       resultObj = {
         durationSec: CLINICAL_TRANSFER_DURATION_SEC,
         blocksTransferred: blocks,
-        missCount: 0,
+        rawScore: blocks,
+        missCount: misses,
+        collisionPenalty,
         avgPickTime_ms: avgPick,
         avgDropTime_ms: avgDrop,
         elbowAngle_mean: Math.round(telemetryRef.current.elbow || 95),
         shoulderAngle_mean: Math.round(telemetryRef.current.shoulder || 65),
         aratProxyScore: aratProxy,
         trials,
-        score: aratProxy,
+        score: finalScore,
       };
     } else if (test.id === "test3_pinch") {
       const attempts = t3AttemptsRef.current;
@@ -597,15 +610,30 @@ export default function TestBatteryRunner({
         ? t4JerksRef.current.reduce((a, b) => a + b, 0) / t4JerksRef.current.length
         : 0.12;
       const smooth = clamp(1 / (1 + avgJerk * 10), 0, 1);
-      const speedScore = clamp(
-        10 * (1 - (avgRT - CLINICAL_REACTION_BEST_RT_MS) / (CLINICAL_REACTION_WORST_RT_MS - CLINICAL_REACTION_BEST_RT_MS)),
-        1,
-        10
-      );
-      const finalScore = Math.round(speedScore * (hits.length / Math.max(1, CLINICAL_REACTION_TRIALS)));
+
+      // Continuous per-trial scoring without arbitrary ceilings:
+      // Each successful strike awards reaction time points (up to 1.0) + smoothness points (up to 0.5)
+      const trialScores = trials.map((t) => {
+        if (!t.hit) return 0;
+        if (typeof t.score === "number") return t.score;
+        const rt = t.reactionTime_ms;
+        const reactionBonus =
+          rt <= 200
+            ? 1.0
+            : rt <= 400
+            ? 1.0 - ((rt - 200) / 200) * 0.3
+            : rt <= 800
+            ? 0.7 - ((rt - 400) / 400) * 0.4
+            : Math.max(0, 0.3 - ((rt - 800) / 400) * 0.3);
+        const jerk = t.trajectoryJerk ?? 0.1;
+        const smoothBonus = clamp(0.5 * (1 - jerk * 6), 0, 0.5);
+        return parseFloat((reactionBonus + smoothBonus).toFixed(2));
+      });
+      const finalScore = parseFloat(trialScores.reduce((a, b) => a + b, 0).toFixed(2));
 
       resultObj = {
         trials,
+        trialScores,
         avgReactionTime_ms: avgRT,
         medianRT_ms: medianRT,
         p90RT_ms: p90RT,
@@ -639,6 +667,14 @@ export default function TestBatteryRunner({
         ? Math.round(spdSamples.reduce((a, b) => a + b, 0) / spdSamples.length)
         : 45;
 
+      let computedJerk = 0.14;
+      if (spdSamples.length >= 8) {
+        const meanSpd = spdSamples.reduce((a, b) => a + b, 0) / spdSamples.length;
+        const variance = spdSamples.reduce((a, b) => a + Math.pow(b - meanSpd, 2), 0) / spdSamples.length;
+        const stdDev = Math.sqrt(variance);
+        computedJerk = Math.round(Math.min(0.95, Math.max(0.04, stdDev / Math.max(1, meanSpd))) * 100) / 100;
+      }
+
       const arcScore = coveragePct >= 95 ? 3 : coveragePct >= 75 ? 2 : coveragePct >= 50 ? 1 : 0;
       const pathScore = pathSimilarityPct >= 85 ? 3 : pathSimilarityPct >= 70 ? 2 : pathSimilarityPct >= 50 ? 1 : 0;
       const bioScore =
@@ -646,7 +682,7 @@ export default function TestBatteryRunner({
         (el >= CLINICAL_ROM_ELBOW_FULL ? 1 : 0) +
         (vt >= CLINICAL_ROM_VERTICAL_FULL ? 1 : 0);
       const lapBonus = cumulativeDeg >= 720 ? 2 : cumulativeDeg >= 360 ? 1 : 0;
-      const totalScore = Math.min(9, arcScore + pathScore + bioScore + lapBonus);
+      const totalScore = Math.min(9, Math.max(0, arcScore + pathScore + bioScore + lapBonus));
 
       resultObj = {
         maxShoulderAbduction_deg: sh,
@@ -661,7 +697,7 @@ export default function TestBatteryRunner({
         pathScore,
         bioScore,
         lapBonus,
-        trajectoryJerk: 0.15,
+        trajectoryJerk: computedJerk,
         sweepDuration_ms: (test.duration - timeLeft) * 1000,
         totalScore,
         score: totalScore,
@@ -1372,6 +1408,7 @@ export default function TestBatteryRunner({
                 t2PickStartRef.current = null;
               }
             } else {
+              const prevBlocked = t2WallBlockedRef.current;
               if (handScrX >= 0.46 && handScrX <= 0.54) {
                 if (handScrY > CLINICAL_TRANSFER_WALL_CLEAR_Y) {
                   t2WallBlockedRef.current = true;
@@ -1389,6 +1426,11 @@ export default function TestBatteryRunner({
                 t2WallBlockedRef.current = false;
               }
 
+              if (!prevBlocked && t2WallBlockedRef.current) {
+                t2MissesRef.current += 1;
+                setT2LiveStats((s) => ({ ...s, misses: t2MissesRef.current }));
+              }
+
               const insideTargetBin =
                 handScrX >= 0.62 && handScrX <= 0.88 && handScrY >= 0.5 && handScrY <= 0.82;
 
@@ -1398,6 +1440,7 @@ export default function TestBatteryRunner({
                 if (dropProg >= 1) {
                   playAudioFeedback("hit");
                   t2TransfersRef.current += 1;
+                  setT2LiveStats((s) => ({ ...s, transfers: t2TransfersRef.current }));
                   t2TrialsRef.current.push({
                     success: true,
                     pickTime_ms: 280,
@@ -1533,6 +1576,7 @@ export default function TestBatteryRunner({
               const accel = (speed - t4PrevSpeedRef.current) / (dt || 0.033);
               const jerk = Math.abs(accel - t4PrevAccelRef.current);
               t4JerksRef.current.push(jerk);
+              t4TrialJerksRef.current.push(jerk);
               t4PrevSpeedRef.current = speed;
               t4PrevAccelRef.current = accel;
             }
@@ -1542,12 +1586,35 @@ export default function TestBatteryRunner({
               const rt = Date.now() - t4SpawnTimeRef.current;
               playAudioFeedback("hit");
               t4IsHitRef.current = true;
-              t4HitMsgRef.current = `+${rt} ms ⚡`;
+              t4HitMsgRef.current = `${rt}ms`;
+
+              const trialJerk = t4TrialJerksRef.current.length
+                ? t4TrialJerksRef.current.reduce((a, b) => a + b, 0) / t4TrialJerksRef.current.length
+                : 0.12;
+
+              const reactionBonus =
+                rt <= 200
+                  ? 1.0
+                  : rt <= 400
+                  ? 1.0 - ((rt - 200) / 200) * 0.3
+                  : rt <= 800
+                  ? 0.7 - ((rt - 400) / 400) * 0.4
+                  : Math.max(0, 0.3 - ((rt - 800) / 400) * 0.3);
+              const smoothBonus = clamp(0.5 * (1 - trialJerk * 6), 0, 0.5);
+              const trialScore = parseFloat((reactionBonus + smoothBonus).toFixed(2));
 
               t4TrialsRef.current.push({
                 hit: true,
                 reactionTime_ms: rt,
-                trajectoryJerk: 0.1,
+                trajectoryJerk: parseFloat(trialJerk.toFixed(3)),
+                score: trialScore,
+              });
+
+              setT4LiveStats({
+                trialIdx: trIdx,
+                lastRT: rt,
+                hits: t4TrialsRef.current.filter((t) => t.hit).length,
+                lastScore: trialScore,
               });
 
               t4TargetPosRef.current = null;
@@ -1556,11 +1623,13 @@ export default function TestBatteryRunner({
                 t4HitMsgRef.current = "";
                 if (trIdx < CLINICAL_REACTION_TRIALS - 1) {
                   t4TrialIdxRef.current = trIdx + 1;
+                  t4TrialJerksRef.current = [];
                   t4TargetPosRef.current = {
                     x: 0.22 + Math.random() * 0.56,
                     y: 0.26 + Math.random() * 0.44,
                   };
                   t4SpawnTimeRef.current = Date.now();
+                  setT4LiveStats((s) => ({ ...s, trialIdx: trIdx + 1 }));
                 } else {
                   finalizeCurrentTestRef.current?.();
                 }
@@ -1753,6 +1822,9 @@ export default function TestBatteryRunner({
               t2WallBlocked={t2WallBlockedRef.current}
               t2HeldBlock={t2HeldBlockRef.current}
               t2CrossedDivider={t2CrossedDividerRef.current}
+              t2Transfers={t2LiveStats.transfers}
+              t2Misses={t2LiveStats.misses}
+              t4LiveStats={t4LiveStats}
               t3PoseIdx={t3PoseIdxRef.current}
               t5Phase={t5PhaseRef.current}
               isDrawerOpen={isDrawerOpen}

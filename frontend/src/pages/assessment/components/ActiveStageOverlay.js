@@ -36,6 +36,9 @@ export default function ActiveStageOverlay({
   t2WallBlocked = false,
   t2HeldBlock = false,
   t2CrossedDivider = false,
+  t2Transfers = 0,
+  t2Misses = 0,
+  t4LiveStats = { trialIdx: 0, lastRT: null, hits: 0, lastScore: null },
   t3PoseIdx = 0,
   t5Phase = "straight",
   isDrawerOpen = false,
@@ -220,41 +223,136 @@ export default function ActiveStageOverlay({
           </div>
         )}
 
-        {/* RIGHT: Biomechanical Telemetry HUD */}
-        <div
-          style={{
-            ...S.floatingModule,
-            position: "static",
-            pointerEvents: "auto",
-            borderRadius: "14px",
-            background: "rgba(8, 12, 24, 0.9)",
-            border: "1px solid rgba(255, 255, 255, 0.14)",
-          }}
-        >
+        {/* RIGHT: Test-Specific Live Metrics HUD (Clean & simple, no angle clutter on Track B) */}
+        {test.id === "test2_objectTransfer" ? (
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "7px 14px",
-              fontFamily: "monospace",
-              fontSize: "0.78rem",
+              ...S.floatingModule,
+              position: "static",
+              pointerEvents: "auto",
+              borderRadius: "14px",
+              background: "rgba(8, 12, 24, 0.92)",
+              border: "1.5px solid rgba(245, 158, 11, 0.35)",
+              boxShadow: "0 4px 20px rgba(245, 158, 11, 0.2)",
             }}
           >
-            <div>
-              <span style={{ color: "#94a3b8" }}>Sh:</span> <b style={{ color: "#f8fafc" }}>{telemetry.shoulder}°</b>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "8px 16px",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ fontSize: "1rem" }}>📦</span>
+                <span style={{ color: "#94a3b8" }}>Transferred:</span>
+                <b style={{ color: "#fbbf24", fontSize: "0.98rem" }}>{t2Transfers}</b>
+              </div>
+              <span style={{ color: "#334155" }}>|</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ fontSize: "0.95rem" }}>🚫</span>
+                <span style={{ color: "#94a3b8" }}>Divider Hits:</span>
+                <b style={{ color: t2Misses > 0 ? "#f87171" : "#10b981" }}>
+                  {t2Misses} {t2Misses > 0 ? `(-${(t2Misses * 0.1).toFixed(1)})` : ""}
+                </b>
+              </div>
+              <span style={{ color: "#334155" }}>|</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ fontSize: "0.95rem" }}>⭐</span>
+                <span style={{ color: "#94a3b8" }}>Score:</span>
+                <b style={{ color: "#34d399", fontSize: "1rem" }}>
+                  {Math.max(0, t2Transfers - t2Misses * 0.1).toFixed(1)}
+                </b>
+              </div>
             </div>
-            <div>
-              <span style={{ color: "#94a3b8" }}>El:</span> <b style={{ color: "#f8fafc" }}>{telemetry.elbow}°</b>
-            </div>
-            <div>
-              <span style={{ color: telemetry.comp ? "#ef4444" : "#10b981", fontWeight: 700 }}>
-                Trunk: {telemetry.lean}° {telemetry.comp && "⚠"}
-              </span>
-            </div>
-            <div style={{ color: "#64748b" }}>{telemetry.fps} FPS</div>
           </div>
-        </div>
+        ) : test.id === "test4_reactionStrike" ? (
+          <div
+            style={{
+              ...S.floatingModule,
+              position: "static",
+              pointerEvents: "auto",
+              borderRadius: "14px",
+              background: "rgba(8, 12, 24, 0.92)",
+              border: "1.5px solid rgba(239, 68, 68, 0.35)",
+              boxShadow: "0 4px 20px rgba(239, 68, 68, 0.2)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "8px 16px",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ fontSize: "1rem" }}>⚡</span>
+                <span style={{ color: "#94a3b8" }}>Reach:</span>
+                <b style={{ color: "#f8fafc", fontSize: "0.98rem" }}>
+                  {Math.min(10, (t4LiveStats?.trialIdx ?? 0) + 1)} / 10
+                </b>
+              </div>
+              <span style={{ color: "#334155" }}>|</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ fontSize: "0.95rem" }}>⏱</span>
+                <span style={{ color: "#94a3b8" }}>Last RT:</span>
+                <b style={{ color: t4LiveStats?.lastRT ? "#38bdf8" : "#64748b" }}>
+                  {t4LiveStats?.lastRT ? `${t4LiveStats.lastRT} ms` : "Ready"}
+                </b>
+              </div>
+              <span style={{ color: "#334155" }}>|</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ fontSize: "0.95rem" }}>🎯</span>
+                <span style={{ color: "#94a3b8" }}>Hits:</span>
+                <b style={{ color: "#10b981", fontSize: "0.98rem" }}>
+                  {t4LiveStats?.hits ?? 0}
+                </b>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Biomechanical Telemetry HUD (Relevant for Test 1, 3, 5 joint posture) */
+          <div
+            style={{
+              ...S.floatingModule,
+              position: "static",
+              pointerEvents: "auto",
+              borderRadius: "14px",
+              background: "rgba(8, 12, 24, 0.9)",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "7px 14px",
+                fontFamily: "monospace",
+                fontSize: "0.78rem",
+              }}
+            >
+              <div>
+                <span style={{ color: "#94a3b8" }}>Sh:</span> <b style={{ color: "#f8fafc" }}>{telemetry.shoulder}°</b>
+              </div>
+              <div>
+                <span style={{ color: "#94a3b8" }}>El:</span> <b style={{ color: "#f8fafc" }}>{telemetry.elbow}°</b>
+              </div>
+              <div>
+                <span style={{ color: telemetry.comp ? "#ef4444" : "#10b981", fontWeight: 700 }}>
+                  Trunk: {telemetry.lean}° {telemetry.comp && "⚠"}
+                </span>
+              </div>
+              <div style={{ color: "#64748b" }}>{telemetry.fps} FPS</div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Dynamic Objective Banner floating directly under the top HUD capsule */}

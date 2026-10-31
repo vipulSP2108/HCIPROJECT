@@ -100,13 +100,37 @@ export default function ClinicalIntroScreen({
                     </div>
                   </div>
                   <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-                    <div className="text-right">
+                    <div className="text-right flex flex-col items-end">
                       <div className="text-xs font-black" style={{ color: t.color }}>
-                        {hasResult ? `${results[t.id]?.score || 0} / ${t.maxScore} pts` : t.scale}
+                        {hasResult
+                          ? t.maxScore
+                            ? `${results[t.id]?.score || 0} / ${t.maxScore} pts`
+                            : `${results[t.id]?.score || 0} pts`
+                          : t.scale}
                       </div>
-                      <div className="text-[11px] text-gray-400 font-medium">
-                        {hasResult ? "Completed" : `~${t.duration}s timed`}
-                      </div>
+                      {hasResult ? (
+                        <div className="w-20 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-1.5">
+                          <div
+                            className="h-full rounded-full transition-all duration-300"
+                            style={{
+                              width: `${Math.min(
+                                100,
+                                Math.max(
+                                  8,
+                                  Math.round(
+                                    ((results[t.id]?.score || 0) / (t.maxScore || (t.id === "test2_objectTransfer" ? 20 : 15))) * 100
+                                  )
+                                )
+                              )}%`,
+                              background: t.color,
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="text-[11px] text-gray-400 font-medium mt-0.5">
+                          ~{t.duration}s timed
+                        </div>
+                      )}
                     </div>
                     <button
                       type="button"

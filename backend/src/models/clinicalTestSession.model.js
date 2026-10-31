@@ -21,7 +21,7 @@ const objectTransferTrialSchema = new mongoose.Schema({
 }, { _id: false });
 
 const pinchAttemptSchema = new mongoose.Schema({
-  finger:        { type: String },   // 'open' | 'index' | 'middle' | 'ring'
+  finger:        { type: String },   // 'open' | 'index' | 'middle' | 'ring' | 'pinky'
   success:       { type: Boolean },
   accuracy:      { type: Number },   // normalised tip distance, lower = better
   dwellActual_ms:{ type: Number },
@@ -32,6 +32,7 @@ const reactionTrialSchema = new mongoose.Schema({
   reactionTime_ms:  { type: Number },
   hit:              { type: Boolean },
   trajectoryJerk:   { type: Number },
+  score:            { type: Number },
 }, { _id: false });
 
 // ─── Main schema ─────────────────────────────────────────────────────────────
@@ -39,6 +40,7 @@ const reactionTrialSchema = new mongoose.Schema({
 const clinicalTestSessionSchema = new mongoose.Schema({
   user:        { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   phase:       { type: String, enum: ['pre', 'ongoing', 'post'], required: true },
+  activeArm:   { type: String, enum: ['Left', 'Right'], default: 'Left' }, // which arm was assessed
   startedAt:   { type: Date, default: Date.now },
   completedAt: { type: Date },
 
@@ -54,6 +56,8 @@ const clinicalTestSessionSchema = new mongoose.Schema({
     trials:              [objectTransferTrialSchema],
     blocksTransferred:   { type: Number },  // raw BBT count
     missCount:           { type: Number },
+    collisionPenalty:    { type: Number },
+    score:               { type: Number },
     avgPickTime_ms:      { type: Number },
     avgDropTime_ms:      { type: Number },
     elbowAngle_mean:     { type: Number },
@@ -61,24 +65,27 @@ const clinicalTestSessionSchema = new mongoose.Schema({
     aratProxyScore:      { type: Number },  // 0–3
   },
 
-  // ── Test 3: Finger Spread & Pinch (ARAT Pinch proxy, max 12 pts) ──────────
+  // ── Test 3: Finger Spread & Pinch (ARAT Pinch proxy, max 15 pts) ──────────
+  // Scoring: open spread (0–3) + index (0–3) + middle (0–3) + ring (0–3) + pinky (0–3) = 15
   test3_pinch: {
     handOpenSuccess:    { type: Boolean },
     handOpenSpread:     { type: Number },   // normalised mean spread 0–1
     pinchAttempts:      [pinchAttemptSchema],
-    totalScore:         { type: Number },   // 0–12
+    totalScore:         { type: Number },   // 0–15
   },
 
   // ── Test 4: Timed Reaction Strike (WMFT timed tasks proxy) ───────────────
   test4_reactionStrike: {
     trials:               [reactionTrialSchema],
+    trialScores:          [{ type: Number }],
     avgReactionTime_ms:   { type: Number },
     medianRT_ms:          { type: Number },
     p90RT_ms:             { type: Number },
     hitAccuracy:          { type: Number },  // 0–1
     movementJerk:         { type: Number },
     smoothnessScore:      { type: Number },  // 0–1
-    reactionScore:        { type: Number },  // 0–10 normalised
+    reactionScore:        { type: Number },  // continuous reaction score
+    score:                { type: Number },
   },
 
   // ── Test 5: ROM Sweep (FMA proximal upper extremity proxy, max 9 pts) ──────

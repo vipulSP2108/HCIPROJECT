@@ -5,8 +5,8 @@ const FruitBasketSession  = require('../models/fruitBasketSession.model');
 const BoardDrawingSession = require('../models/boardDrawingSession.model');
 const PianoSession        = require('../models/pianoSession.model');
 
-const { computeGameMetrics }      = require('../utils/assessmentMetrics');
-const { computeClinicalMetrics }  = require('../utils/clinicalMetrics');
+const { computeGameMetrics }                     = require('../utils/assessmentMetrics');
+const { computeClinicalMetrics, classifyImprovement, MCID } = require('../utils/clinicalMetrics');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -106,11 +106,13 @@ exports.saveClinicalSession = async (req, res) => {
       test3_pinch,
       test4_reactionStrike,
       test5_romSweep,
+      activeArm,
     } = req.body;
 
     const clinicalSession = await ClinicalTestSession.create({
       user:                req.user._id,
       phase:               assessment.phase,
+      activeArm:           activeArm || 'Left',
       completedAt:         new Date(),
       test1_grossReach,
       test2_objectTransfer,
@@ -321,11 +323,28 @@ exports.compareAssessments = async (req, res) => {
       ? (safeNum(assessB.overallScore) - safeNum(assessA.overallScore))
       : null;
 
+    // ── MCID-based clinical improvement classifications ────────────────────────
+    const mcidClassifications = {};
+    const clinicalMetricKeys = [
+      { key: 'gross_totalScore',           field: 'clinical_gross_totalScore_delta',           invert: false },
+      { key: 'transfer_blocksTransferred', field: 'clinical_transfer_blocksTransferred_delta',  invert: false },
+      { key: 'pinch_totalScore',           field: 'clinical_pinch_totalScore_delta',            invert: false },
+      { key: 'reaction_reactionScore',     field: 'clinical_reaction_reactionScore_delta',      invert: false },
+      { key: 'rom_totalScore',             field: 'clinical_rom_totalScore_delta',              invert: false },
+      { key: 'clinical_overallScore',      field: 'clinical_clinical_overallScore_delta',       invert: false },
+    ];
+    clinicalMetricKeys.forEach(({ key, field, invert }) => {
+      if (delta[field] != null) {
+        mcidClassifications[key] = classifyImprovement(key, delta[field], invert);
+      }
+    });
+
     res.json({
       success: true,
       assessmentA: { _id: assessA._id, phase: assessA.phase, label: assessA.label, completedAt: assessA.completedAt, overallScore: assessA.overallScore },
       assessmentB: { _id: assessB._id, phase: assessB.phase, label: assessB.label, completedAt: assessB.completedAt, overallScore: assessB.overallScore },
       delta,
+      mcidClassifications,
     });
   } catch (err) {
     console.error('[compareAssessments]', err);
