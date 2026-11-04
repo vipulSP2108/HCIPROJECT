@@ -128,51 +128,54 @@ for attempt in t3_attempts:
 
 ---
 
-## 6. Automated Analytics Pipeline & 5 Demo Clinical Cohort
+## 6. Real Patient Study Protocol & Analytics Pipeline
 
-LimbPlay features an automated, end-to-end data processing pipeline located in `analytics/pipeline/`.
+LimbPlay features a standardized **5-Day Longitudinal Study Protocol** (documented in [`analytics/STUDY_PROTOCOL.md`](file:///Users/aai/Desktop/HCIPROJECT/analytics/STUDY_PROTOCOL.md)).
 
-### 6.1 Backend User-Wise Storage Architecture
-All raw kinematics datasets are automatically written directly to disk organized **user-wise**:
+### 6.1 Real Study Patient Accounts
+Four dedicated, clean patient accounts are configured for real human participant trials:
+
+| Study ID | Email Login | Password | Account State |
+| :--- | :--- | :--- | :--- |
+| **Patient 1** | `patient1@demo.com` (or `patent1@demo.com`) | `patient1@demo.com` (or `patent1@demo.com`) | Clean / Empty (Ready for study) |
+| **Patient 2** | `patient2@demo.com` (or `patent2@demo.com`) | `patient2@demo.com` (or `patent2@demo.com`) | Clean / Empty (Ready for study) |
+| **Patient 3** | `patient3@demo.com` (or `patent3@demo.com`) | `patient3@demo.com` (or `patent3@demo.com`) | Clean / Empty (Ready for study) |
+| **Patient 4** | `patient4@demo.com` (or `patent4@demo.com`) | `patient4@demo.com` (or `patent4@demo.com`) | Clean / Empty (Ready for study) |
+
+*Setup / Reset Study Accounts script*:
+```bash
+npm --prefix backend run setup:study
+# or: node backend/scripts/setup_real_study_patients.js
+```
+
+### 6.2 The 1 + 5 Longitudinal Testing Schedule
+Across the 5-day study period, each patient completes:
+* **Track B Clinical Assessments (Tasks / Track 2)**: **6 sessions total (1 + 5)**:
+  * **1 Baseline Pre-Test**: Administered at the very beginning of the trial on Day 1 before any gameplay.
+  * **5 End-of-Day Batteries**: Administered at the conclusion of each day's therapy session (Days 1, 2, 3, 4, 5).
+* **Track A Rehabilitation Games**: **5+ sessions total**:
+  * Daily gameplay across Piano, Fruit Basket, Shape Tracing, and Board Drawing.
+
+### 6.3 Backend User-Wise Storage Architecture
+All raw kinematics datasets collected from real participants are automatically saved directly to server disk organized **user-wise**:
 ```
 backend/data/user_files/
-├── <userId_1>/
-│   ├── TrackB_Kinematics_Matrix_Left_2026-10-28_06-31-26.json
-│   ├── TrackB_Kinematics_Matrix_Left_2026-10-28_06-31-26.csv
-│   ├── TrackB_Kinematics_Matrix_Left_2026-11-03_06-31-26.json
-│   ├── TrackB_Kinematics_Matrix_Left_2026-11-03_06-31-26.csv
+├── <userId>/
+│   ├── TrackB_Kinematics_Matrix_<Arm>_<Timestamp>.json
+│   ├── TrackB_Kinematics_Matrix_<Arm>_<Timestamp>.csv
 │   ├── latest_matrix.json
 │   ├── latest_matrix.csv
 │   └── files_index.json
 ```
 
-### 6.2 The 5 Demo Patients Seeded for Analytics
-
-| Patient Name | Email | Password | Diagnosis | Clinical Neurorehabilitation Profile |
-| :--- | :--- | :--- | :--- | :--- |
-| **Robert Chen** | `robert.chen@demo.com` | `Password123!` | Subacute Right MCA Ischemic Stroke (Left Hemiparesis) | **Classic Motor Recovery**: 3 sessions (Pre, Ongoing, Post). Shows marked reduction in movement time (2983ms -> 1203ms), elimination of wall collisions, and stable endurance ($FI = 1.0$). |
-| **Maria Rodriguez** | `maria.rodriguez@demo.com` | `Password123!` | Chronic Left Basal Ganglia Hemorrhage (Right Hemiparesis) | **The Scalar Score Fallacy Benchmark**: Day 1: 15 transfers (clean); Day 2: 16 transfers (+1 nominal score, but 6 collisions, high jerk); Day 3: 14 transfers (clean, smooth $0.91$, genuine recovery). |
-| **David Kim** | `david.kim@demo.com` | `Password123!` | Cervical Spondylotic Myelopathy & Distal Finger Spasticity | **Selective Distal Paresis**: Preserved gross reach ($9/9$ pts), but marked Distal Bradykinesia Index ($BI = 2.41$) with severe hesitation in Ring & Pinky opposition. |
-| **Eleanor Vance** | `eleanor.vance@demo.com` | `Password123!` | Right ACA Stroke with Shoulder Girdle Paresis | **Proximal Restriction**: Pristine fine distal pinch ($18.5$ pts, $5/5$ rapid touches), but coronal sweep elevation restricted to $82^\circ$ shoulder abduction ($54\%$ arc). |
-| **Marcus Washington** | `marcus.washington@demo.com` | `Password123!` | Moderate TBI with Intention Tremor & Initiation Latency | **Initiation & Tremor Dynamics**: High reaction initiation latency ($1050\text{ ms} \to 710\text{ ms}$) and terminal oscillatory submovements ($19 \to 6$). |
-
-### 6.3 Executing the Pipeline
-
-To re-seed demo data and run the automated analytics pipeline:
+### 6.4 Running the Analytics Pipeline
+Whenever study participants complete test sessions, run the analytics pipeline to generate individual clinical progression reports and cohort comparison tables:
 ```bash
-# 1. Seed/Reset Demo Cohort (creates users & multi-session clinical records in MongoDB and saves matrix files)
-npm --prefix backend run seed:demo
-
-# 2. Run the Analytics Pipeline (generates individual Markdown/JSON reports & Cohort matrix)
+# Process all real study participants and generate reports:
 npm --prefix backend run analytics
-# or directly:
+# or:
 node analytics/pipeline/run_pipeline.js
-
-# 3. Optional: Run the Python Kinematics Processing Engine
-python3 analytics/pipeline/process_individual_analytics.py
 ```
-
-### 6.4 Generated Clinical Reports Output
 The pipeline generates:
 * **Cohort Comparative Matrix**: [`analytics/reports/cohort_comparative_matrix.md`](file:///Users/aai/Desktop/HCIPROJECT/analytics/reports/cohort_comparative_matrix.md) and [`.csv`](file:///Users/aai/Desktop/HCIPROJECT/analytics/reports/cohort_comparative_matrix.csv)
 * **Individual Patient Reports**:

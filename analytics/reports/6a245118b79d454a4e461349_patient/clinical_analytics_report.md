@@ -3,7 +3,7 @@
 **Patient**: Anonymous (demo.patient@gmail.com)  
 **Diagnosis**: Motor Paresis  
 **Assessed Arm**: Left Arm | **Total Recorded Sessions**: 5  
-**Report Generated**: 11/4/2026, 12:03:20 PM  
+**Report Generated**: 11/4/2026, 12:14:56 PM  
 
 ## 1. Executive Summary & Recovery Trajectory
 
