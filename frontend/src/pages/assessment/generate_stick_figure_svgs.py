@@ -234,14 +234,14 @@ def make_t2_demo():
   <!-- Central 15 cm Partition Wall Barrier -->
   <rect x="388" y="270" width="24" height="170" rx="4" fill="#334155" stroke="#0f172a" stroke-width="2"/>
   <!-- Height Dimension Callout -->
-  <line x1="375" y1="270" x2="375" y2="440" stroke="#ef4444" stroke-width="2.2" stroke-dasharray="4 3"/>
-  <polygon points="375,270 371,280 379,280" fill="#ef4444"/>
-  <polygon points="375,440 371,430 379,430" fill="#ef4444"/>
-  <rect x="305" y="340" width="62" height="24" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="336" y="356" font-size="11" font-weight="900" fill="#b91c1c" text-anchor="middle">15 CM</text>
+  <line x1="375" y1="270" x2="375" y2="440" stroke="#0e88eb" stroke-width="2.2" stroke-dasharray="4 3"/>
+  <polygon points="375,270 371,280 379,280" fill="#0e88eb"/>
+  <polygon points="375,440 371,430 379,430" fill="#0e88eb"/>
+  <rect x="305" y="340" width="62" height="24" rx="6" fill="#f0f7ff" stroke="#0e88eb" stroke-width="1.5"/>
+  <text x="336" y="356" font-size="11" font-weight="900" fill="#0284c7" text-anchor="middle">15 CM</text>
 
-  <!-- Amber Block in Left Bin -->
-  <rect x="230" y="392" width="40" height="36" rx="6" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+  <!-- Block in Left Bin (Unified Brand Blue) -->
+  <rect x="230" y="392" width="40" height="36" rx="6" fill="#0e88eb" stroke="#0284c7" stroke-width="2"/>
   <text x="250" y="414" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">BLOCK</text>
 
   <!-- Parabolic Clearance Trajectory (Lift OVER Partition) -->
@@ -445,12 +445,12 @@ def make_t4_demo():
 
   <!-- Flashing Reaction Target (Peripheral Strike Point) -->
   <g transform="translate(540, 340)">
-    <!-- Concentric Pulse Waves -->
-    <circle r="46" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.35"/>
-    <circle r="34" fill="none" stroke="#ef4444" stroke-width="2" opacity="0.6"/>
-    <circle r="22" fill="#fee2e2" stroke="#ef4444" stroke-width="3"/>
-    <circle r="7" fill="#ef4444"/>
-    <text x="0" y="-54" font-size="12" font-weight="900" fill="#dc2626" text-anchor="middle">⚡ FLASH TARGET</text>
+    <!-- Concentric Pulse Waves (Unified Brand Blue) -->
+    <circle r="46" fill="none" stroke="#0e88eb" stroke-width="1.5" opacity="0.35"/>
+    <circle r="34" fill="none" stroke="#0e88eb" stroke-width="2" opacity="0.6"/>
+    <circle r="22" fill="#e0effe" stroke="#0e88eb" stroke-width="3"/>
+    <circle r="7" fill="#0e88eb"/>
+    <text x="0" y="-54" font-size="12" font-weight="900" fill="#0284c7" text-anchor="middle">⚡ FLASH TARGET</text>
   </g>
 
   <!-- Direct Rapid Ballistic Reach Trajectory Line -->

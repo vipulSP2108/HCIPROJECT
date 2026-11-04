@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAssessment, compareAssessments, listAssessments } from '../../services/assessmentService';
 import AssessmentTopBar from './AssessmentTopBar';
-import { Award, TrendingUp, Activity, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { Award, TrendingUp, Activity, CheckCircle2, AlertCircle, Clock, Download } from 'lucide-react';
+import { downloadTrackBMatrixCSV, downloadTrackBMatrixJSON } from './utils/exportClinicalMatrix';
 
 const PHASE_COLORS  = { pre: '#0e88eb', ongoing: '#f59e0b', post: '#10b981' };
 const PHASE_LABELS  = { pre: 'Pre-Therapy', ongoing: 'Ongoing', post: 'Post-Therapy' };
@@ -480,6 +481,47 @@ export default function AssessmentReportPage() {
                 <RawMetric label="Avg Pick Time" value={cm.transfer_avgPickTime_ms} unit=" ms" deltaValue={delta?.clinical_transfer_avgPickTime_ms_delta} invertDelta />
                 <RawMetric label="Avg Drop Time" value={cm.transfer_avgDropTime_ms} unit=" ms" deltaValue={delta?.clinical_transfer_avgDropTime_ms_delta} invertDelta />
                 <RawMetric label="Transfer Misses" value={cm.transfer_missCount} deltaValue={delta?.clinical_transfer_missCount_delta} invertDelta />
+
+                <RawMetric label="Move Time (MT)" value={cm.reaction_avgCompletionTime_ms || cm.gross_avgCompletionTime_ms || cm.transfer_avgCompletionTime_ms} unit=" ms" invertDelta />
+                <RawMetric label="Hand Velocity" value={cm.reaction_avgVelocity || cm.gross_avgVelocity || cm.transfer_avgVelocity} unit=" u/s" />
+                <RawMetric label="Trajectory Smoothness" value={cm.reaction_smoothnessScore != null ? Math.round(cm.reaction_smoothnessScore * 100) : cm.gross_trajectorySmoothness != null ? Math.round(cm.gross_trajectorySmoothness * 100) : null} unit="%" />
+                <RawMetric label="Corrective Movements" value={(cm.reaction_correctiveMovements || 0) + (cm.gross_correctiveMovements || 0) + (cm.transfer_correctiveMovements || 0)} invertDelta />
+              </div>
+
+              {/* Action Buttons: Export Track B Matrix for Team Sharing */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 mt-3 border-t border-gray-200 dark:border-gray-700/60">
+                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+                  <Download size={14} className="text-sky-500" />
+                  <span>Clinical Kinematics Matrix:</span>
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => downloadTrackBMatrixCSV(assessment.clinicalSessionData || {
+                      test1_grossReach: { score: cm.gross_totalScore, avgCompletionTime_ms: cm.gross_avgCompletionTime_ms, avgVelocity: cm.gross_avgVelocity, peakVelocity: cm.gross_peakVelocity, trajectorySmoothness: cm.gross_trajectorySmoothness, totalCorrectiveMovements: cm.gross_correctiveMovements },
+                      test2_objectTransfer: { score: cm.transfer_score, blocksTransferred: cm.transfer_blocksTransferred, missCount: cm.transfer_missCount, avgCompletionTime_ms: cm.transfer_avgCompletionTime_ms, avgVelocity: cm.transfer_avgVelocity, peakVelocity: cm.transfer_peakVelocity, trajectorySmoothness: cm.transfer_trajectorySmoothness, totalCorrectiveMovements: cm.transfer_correctiveMovements },
+                      test3_pinch: { score: cm.pinch_totalScore, handOpenSuccess: cm.pinch_handOpenSuccess, avgCompletionTime_ms: cm.pinch_avgCompletionTime_ms, avgVelocity: cm.pinch_avgVelocity, trajectorySmoothness: cm.pinch_trajectorySmoothness, totalCorrectiveMovements: cm.pinch_correctiveMovements },
+                      test4_reactionStrike: { score: cm.reaction_reactionScore, avgReactionTime_ms: cm.reaction_avgRT_ms, avgCompletionTime_ms: cm.reaction_avgCompletionTime_ms, avgVelocity: cm.reaction_avgVelocity, peakVelocity: cm.reaction_peakVelocity, smoothnessScore: cm.reaction_smoothnessScore, totalCorrectiveMovements: cm.reaction_correctiveMovements },
+                      test5_romSweep: { score: cm.rom_totalScore, circleCoveragePct: cm.rom_circleCoveragePct, cumulativeDegreesSwept: cm.rom_cumulativeDeg, lapsCompleted: cm.rom_lapsCompleted, pathSimilarityPct: cm.rom_pathSimilarityPct, avgAngularSpeed_deg_s: cm.rom_avgAngularSpeed, avgVelocity: cm.rom_avgVelocity, peakVelocity: cm.rom_peakVelocity, trajectoryJerk: cm.rom_trajectoryJerk, trajectorySmoothness: cm.rom_trajectorySmoothness, correctiveMovements: cm.rom_correctiveMovements, maxShoulderAbduction_deg: cm.rom_maxShoulderAbduction, maxElbowExtension_deg: cm.rom_maxElbowExtension, maxVerticalAngle_deg: cm.rom_maxVerticalAngle },
+                    }, assessment.activeArm || cm.activeArm || "Left", { assessmentId, phase: assessment.phase, overallScore: cm.clinical_overallScore })}
+                    className="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    📥 Download Matrix (Excel CSV)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => downloadTrackBMatrixJSON(assessment.clinicalSessionData || {
+                      test1_grossReach: { score: cm.gross_totalScore, avgCompletionTime_ms: cm.gross_avgCompletionTime_ms, avgVelocity: cm.gross_avgVelocity, peakVelocity: cm.gross_peakVelocity, trajectorySmoothness: cm.gross_trajectorySmoothness, totalCorrectiveMovements: cm.gross_correctiveMovements },
+                      test2_objectTransfer: { score: cm.transfer_score, blocksTransferred: cm.transfer_blocksTransferred, missCount: cm.transfer_missCount, avgCompletionTime_ms: cm.transfer_avgCompletionTime_ms, avgVelocity: cm.transfer_avgVelocity, peakVelocity: cm.transfer_peakVelocity, trajectorySmoothness: cm.transfer_trajectorySmoothness, totalCorrectiveMovements: cm.transfer_correctiveMovements },
+                      test3_pinch: { score: cm.pinch_totalScore, handOpenSuccess: cm.pinch_handOpenSuccess, avgCompletionTime_ms: cm.pinch_avgCompletionTime_ms, avgVelocity: cm.pinch_avgVelocity, trajectorySmoothness: cm.pinch_trajectorySmoothness, totalCorrectiveMovements: cm.pinch_correctiveMovements },
+                      test4_reactionStrike: { score: cm.reaction_reactionScore, avgReactionTime_ms: cm.reaction_avgRT_ms, avgCompletionTime_ms: cm.reaction_avgCompletionTime_ms, avgVelocity: cm.reaction_avgVelocity, peakVelocity: cm.reaction_peakVelocity, smoothnessScore: cm.reaction_smoothnessScore, totalCorrectiveMovements: cm.reaction_correctiveMovements },
+                      test5_romSweep: { score: cm.rom_totalScore, circleCoveragePct: cm.rom_circleCoveragePct, cumulativeDegreesSwept: cm.rom_cumulativeDeg, lapsCompleted: cm.rom_lapsCompleted, pathSimilarityPct: cm.rom_pathSimilarityPct, avgAngularSpeed_deg_s: cm.rom_avgAngularSpeed, avgVelocity: cm.rom_avgVelocity, peakVelocity: cm.rom_peakVelocity, trajectoryJerk: cm.rom_trajectoryJerk, trajectorySmoothness: cm.rom_trajectorySmoothness, correctiveMovements: cm.rom_correctiveMovements, maxShoulderAbduction_deg: cm.rom_maxShoulderAbduction, maxElbowExtension_deg: cm.rom_maxElbowExtension, maxVerticalAngle_deg: cm.rom_maxVerticalAngle },
+                    }, assessment.activeArm || cm.activeArm || "Left", { assessmentId, phase: assessment.phase, overallScore: cm.clinical_overallScore })}
+                    className="px-3 py-1.5 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-sky-600 dark:text-sky-300 font-bold text-xs rounded-xl border border-sky-300 dark:border-sky-700 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    📄 Raw Dataset (JSON)
+                  </button>
+                </div>
               </div>
             </Section>
           )}

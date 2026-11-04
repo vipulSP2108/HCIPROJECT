@@ -35,13 +35,13 @@ export function drawTest2Transfer(
   }
   ctx.fillStyle = "rgba(15, 23, 42, 0.7)";
   ctx.fill();
-  ctx.strokeStyle = !heldBlock ? "rgba(245, 158, 11, 0.7)" : "rgba(255, 255, 255, 0.18)";
+  ctx.strokeStyle = !heldBlock ? (testColor ? testColor + "b3" : "rgba(14, 136, 235, 0.7)") : "rgba(255, 255, 255, 0.18)";
   ctx.lineWidth = !heldBlock ? 2.5 : 1.5;
   ctx.stroke();
 
   // Left Bin Header Badge
   ctx.font = "bold 11px Inter, sans-serif";
-  ctx.fillStyle = !heldBlock ? "#f59e0b" : "#94a3b8";
+  ctx.fillStyle = !heldBlock ? (testColor || "#0e88eb") : "#94a3b8";
   ctx.textAlign = "left";
   ctx.fillText("📦 SOURCE BIN (LEFT)", leftBoxX + 12, leftBoxY + 22);
 
@@ -104,13 +104,13 @@ export function drawTest2Transfer(
     wallGrad.addColorStop(0.5, "rgba(248, 113, 113, 1)");
     wallGrad.addColorStop(1, "rgba(239, 68, 68, 0.95)");
   } else {
-    wallGrad.addColorStop(0, "rgba(245, 158, 11, 0.45)");
-    wallGrad.addColorStop(0.5, "rgba(251, 191, 36, 0.85)");
-    wallGrad.addColorStop(1, "rgba(245, 158, 11, 0.45)");
+    wallGrad.addColorStop(0, "rgba(14, 136, 235, 0.45)");
+    wallGrad.addColorStop(0.5, "rgba(56, 169, 248, 0.85)");
+    wallGrad.addColorStop(1, "rgba(14, 136, 235, 0.45)");
   }
   ctx.fillStyle = wallGrad;
   ctx.fill();
-  ctx.strokeStyle = wallBlocked ? "#ef4444" : "rgba(245, 158, 11, 0.9)";
+  ctx.strokeStyle = wallBlocked ? "#ef4444" : (testColor ? testColor + "e6" : "rgba(14, 136, 235, 0.9)");
   ctx.lineWidth = 2;
   ctx.stroke();
 
@@ -122,7 +122,7 @@ export function drawTest2Transfer(
     ? "#ef4444"
     : crossedDivider
     ? "rgba(16, 185, 129, 0.8)"
-    : "rgba(245, 158, 11, 0.8)";
+    : (testColor ? testColor + "cc" : "rgba(14, 136, 235, 0.8)");
   ctx.lineWidth = 2;
   ctx.setLineDash([5, 4]);
   ctx.stroke();
@@ -154,10 +154,10 @@ export function drawTest2Transfer(
   }
 
   const blockSize = 34;
-  ctx.shadowColor = wallBlocked ? "#ef4444" : heldBlock ? "#10b981" : "#f59e0b";
+  ctx.shadowColor = wallBlocked ? "#ef4444" : heldBlock ? "#10b981" : (testColor || "#0e88eb");
   ctx.shadowBlur = heldBlock ? 20 : 10;
 
-  ctx.fillStyle = wallBlocked ? "#ef4444" : heldBlock ? "#10b981" : "#f59e0b";
+  ctx.fillStyle = wallBlocked ? "#ef4444" : heldBlock ? "#10b981" : (testColor || "#0e88eb");
   ctx.beginPath();
   if (ctx.roundRect) {
     ctx.roundRect(bx - blockSize / 2, by - blockSize / 2, blockSize, blockSize, 6);

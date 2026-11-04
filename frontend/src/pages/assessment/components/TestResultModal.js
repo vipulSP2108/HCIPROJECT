@@ -1,8 +1,9 @@
 // TestResultModal.js - Auto-Transition Results Modal after completing a test
 
 import React from "react";
-import { Clock, Play, Pause } from "lucide-react";
+import { Clock, Play, Pause, Download } from "lucide-react";
 import { S } from "../constants/clinicalTestBattery";
+import { downloadTrackBMatrixCSV } from "../utils/exportClinicalMatrix";
 
 export default function TestResultModal({
   test,
@@ -63,10 +64,7 @@ export default function TestResultModal({
             padding: "12px 20px",
             marginBottom: "1.25rem",
             width: "100%",
-            maxWidth: "460px",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: "10px",
+            maxWidth: "480px",
             textAlign: "center",
             fontSize: "0.85rem",
           }}
@@ -79,29 +77,73 @@ export default function TestResultModal({
             const b = findZone("behind_head");
             return (
               <>
-                <div>
-                  <span style={{ color: "#94a3b8", display: "block", fontSize: "0.7rem", fontWeight: 700 }}>
-                    1. MOUTH REACH
-                  </span>
-                  <span style={{ color: m.score === 3 ? "#34d399" : m.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.1rem" }}>
-                    {m.score ?? 0} / 3 pts
-                  </span>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr 1fr",
+                    gap: "10px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div>
+                    <span style={{ color: "#94a3b8", display: "block", fontSize: "0.7rem", fontWeight: 700 }}>
+                      1. MOUTH REACH
+                    </span>
+                    <span style={{ color: m.score === 3 ? "#34d399" : m.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.1rem" }}>
+                      {m.score ?? 0} / 3 pts
+                    </span>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", display: "block", fontSize: "0.7rem", fontWeight: 700 }}>
+                      2. TOP OF HEAD
+                    </span>
+                    <span style={{ color: t.score === 3 ? "#34d399" : t.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.1rem" }}>
+                      {t.score ?? 0} / 3 pts
+                    </span>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", display: "block", fontSize: "0.7rem", fontWeight: 700 }}>
+                      3. BEHIND HEAD
+                    </span>
+                    <span style={{ color: b.score === 3 ? "#34d399" : b.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.1rem" }}>
+                      {b.score ?? 0} / 3 pts
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <span style={{ color: "#94a3b8", display: "block", fontSize: "0.7rem", fontWeight: 700 }}>
-                    2. TOP OF HEAD
-                  </span>
-                  <span style={{ color: t.score === 3 ? "#34d399" : t.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.1rem" }}>
-                    {t.score ?? 0} / 3 pts
-                  </span>
-                </div>
-                <div>
-                  <span style={{ color: "#94a3b8", display: "block", fontSize: "0.7rem", fontWeight: 700 }}>
-                    3. BEHIND HEAD
-                  </span>
-                  <span style={{ color: b.score === 3 ? "#34d399" : b.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.1rem" }}>
-                    {b.score ?? 0} / 3 pts
-                  </span>
+
+                <div
+                  style={{
+                    borderTop: "1px solid rgba(14, 136, 235, 0.25)",
+                    paddingTop: "8px",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "8px",
+                    textAlign: "left",
+                    fontSize: "0.78rem",
+                  }}
+                >
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>COMPLETION TIME</span>
+                    <div style={{ color: "#38bdf8", fontWeight: 800 }}>{currentResult.avgCompletionTime_ms ?? 0} ms</div>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>HAND VELOCITY</span>
+                    <div style={{ color: "#fbbf24", fontWeight: 800 }}>
+                      {currentResult.avgVelocity ?? 0} u/s <span style={{ fontSize: "0.7rem", color: "#64748b" }}>(Peak: {currentResult.peakVelocity ?? 0})</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>TRAJECTORY SMOOTHNESS</span>
+                    <div style={{ color: "#c084fc", fontWeight: 800 }}>
+                      {Math.round((currentResult.trajectorySmoothness || 0.8) * 100)}%
+                    </div>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>CORRECTIVE MOVEMENTS</span>
+                    <div style={{ color: (currentResult.totalCorrectiveMovements || 0) === 0 ? "#34d399" : "#fbbf24", fontWeight: 800 }}>
+                      {currentResult.totalCorrectiveMovements ?? 0} submovements
+                    </div>
+                  </div>
                 </div>
               </>
             );
@@ -118,7 +160,7 @@ export default function TestResultModal({
             padding: "12px 20px",
             marginBottom: "1.25rem",
             width: "100%",
-            maxWidth: "460px",
+            maxWidth: "480px",
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "10px",
@@ -144,13 +186,37 @@ export default function TestResultModal({
           </div>
           <div>
             <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
-              AVG PICK / DROP SPEED
+              TRANSPORT TIME (ONSET-TO-OFFSET)
             </span>
             <span style={{ color: "#38bdf8", fontWeight: 900, fontSize: "0.95rem" }}>
-              {currentResult.avgPickTime_ms ?? 0}ms / {currentResult.avgDropTime_ms ?? 0}ms
+              {currentResult.avgCompletionTime_ms ?? 0} ms
             </span>
           </div>
           <div>
+            <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
+              HAND VELOCITY
+            </span>
+            <span style={{ color: "#fbbf24", fontWeight: 900, fontSize: "0.95rem" }}>
+              {currentResult.avgVelocity ?? 0} u/s <span style={{ fontSize: "0.7rem", color: "#64748b" }}>(Peak: {currentResult.peakVelocity ?? 0})</span>
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
+              TRAJECTORY SMOOTHNESS
+            </span>
+            <span style={{ color: "#c084fc", fontWeight: 900, fontSize: "0.95rem" }}>
+              {Math.round((currentResult.trajectorySmoothness || 0.85) * 100)}%
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
+              CORRECTIVE ADJUSTMENTS
+            </span>
+            <span style={{ color: (currentResult.totalCorrectiveMovements || 0) === 0 ? "#34d399" : "#fbbf24", fontWeight: 900, fontSize: "0.95rem" }}>
+              {currentResult.totalCorrectiveMovements ?? 0} adjustments
+            </span>
+          </div>
+          <div style={{ gridColumn: "span 2", borderTop: "1px solid rgba(245, 158, 11, 0.2)", paddingTop: "6px" }}>
             <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
               FINAL SCORE (UNCAPPED)
             </span>
@@ -170,10 +236,7 @@ export default function TestResultModal({
             padding: "12px 20px",
             marginBottom: "1.25rem",
             width: "100%",
-            maxWidth: "460px",
-            display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)",
-            gap: "8px",
+            maxWidth: "480px",
             textAlign: "center",
             fontSize: "0.85rem",
           }}
@@ -181,22 +244,67 @@ export default function TestResultModal({
           {(() => {
             const atts = currentResult.pinchAttempts || [];
             const findScore = (f) => atts.find((a) => a.finger === f)?.score ?? (f === "open" && currentResult.handOpenSuccess ? 3 : 0);
-            return [
-              { label: "Open", score: findScore("open") },
-              { label: "Index", score: findScore("index") },
-              { label: "Middle", score: findScore("middle") },
-              { label: "Ring", score: findScore("ring") },
-              { label: "Pinky", score: findScore("pinky") },
-            ].map((item) => (
-              <div key={item.label}>
-                <span style={{ color: "#94a3b8", display: "block", fontSize: "0.68rem", fontWeight: 700 }}>
-                  {item.label}
-                </span>
-                <span style={{ color: item.score === 3 ? "#34d399" : item.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.05rem" }}>
-                  {item.score}/3
-                </span>
-              </div>
-            ));
+            return (
+              <>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(5, 1fr)",
+                    gap: "8px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  {[
+                    { label: "Open", score: findScore("open") },
+                    { label: "Index", score: findScore("index") },
+                    { label: "Middle", score: findScore("middle") },
+                    { label: "Ring", score: findScore("ring") },
+                    { label: "Pinky", score: findScore("pinky") },
+                  ].map((item) => (
+                    <div key={item.label}>
+                      <span style={{ color: "#94a3b8", display: "block", fontSize: "0.68rem", fontWeight: 700 }}>
+                        {item.label}
+                      </span>
+                      <span style={{ color: item.score >= 3 ? "#34d399" : item.score > 0 ? "#fbbf24" : "#f87171", fontWeight: 900, fontSize: "1.05rem" }}>
+                        {item.score} pts
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  style={{
+                    borderTop: "1px solid rgba(16, 185, 129, 0.25)",
+                    paddingTop: "8px",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "8px",
+                    textAlign: "left",
+                    fontSize: "0.78rem",
+                  }}
+                >
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>CLOSURE TIME</span>
+                    <div style={{ color: "#38bdf8", fontWeight: 800 }}>{currentResult.avgCompletionTime_ms ?? 0} ms</div>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>PINCH SMOOTHNESS</span>
+                    <div style={{ color: "#c084fc", fontWeight: 800 }}>
+                      {Math.round((currentResult.trajectorySmoothness || 0.88) * 100)}%
+                    </div>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>PINCH VELOCITY</span>
+                    <div style={{ color: "#fbbf24", fontWeight: 800 }}>{currentResult.avgVelocity ?? 0} u/s</div>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8", fontSize: "0.68rem", fontWeight: 700 }}>CORRECTIVE ADJUSTMENTS</span>
+                    <div style={{ color: (currentResult.totalCorrectiveMovements || 0) === 0 ? "#34d399" : "#fbbf24", fontWeight: 800 }}>
+                      {currentResult.totalCorrectiveMovements ?? 0} adjustments
+                    </div>
+                  </div>
+                </div>
+              </>
+            );
           })()}
         </div>
       )}
@@ -204,13 +312,13 @@ export default function TestResultModal({
       {test.id === "test4_reactionStrike" && (
         <div
           style={{
-            background: "rgba(239, 68, 68, 0.08)",
-            border: "1px solid rgba(239, 68, 68, 0.3)",
+            background: "rgba(14, 136, 235, 0.08)",
+            border: "1px solid rgba(14, 136, 235, 0.3)",
             borderRadius: "14px",
             padding: "12px 20px",
             marginBottom: "1.25rem",
             width: "100%",
-            maxWidth: "460px",
+            maxWidth: "480px",
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "10px",
@@ -228,18 +336,18 @@ export default function TestResultModal({
           </div>
           <div>
             <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
-              SUCCESSFUL REACHES
+              MOVEMENT COMPLETION TIME
             </span>
             <span style={{ color: "#34d399", fontWeight: 900, fontSize: "1.15rem" }}>
-              {currentResult.trials?.filter((t) => t.hit).length ?? 0} / {currentResult.trials?.length ?? 10} hits
+              {currentResult.avgCompletionTime_ms ?? currentResult.avgReactionTime_ms ?? 0} ms
             </span>
           </div>
           <div>
             <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
-              MEDIAN RT
+              HAND VELOCITY
             </span>
             <span style={{ color: "#fbbf24", fontWeight: 900, fontSize: "1.05rem" }}>
-              {currentResult.medianRT_ms ?? 0} ms
+              {currentResult.avgVelocity ?? 0} u/s <span style={{ fontSize: "0.7rem", color: "#64748b" }}>(Peak: {currentResult.peakVelocity ?? 0})</span>
             </span>
           </div>
           <div>
@@ -250,8 +358,24 @@ export default function TestResultModal({
               {Math.round((currentResult.smoothnessScore || 0) * 100)}%
             </span>
           </div>
+          <div>
+            <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
+              CORRECTIVE SUBMOVEMENTS
+            </span>
+            <span style={{ color: (currentResult.totalCorrectiveMovements || 0) === 0 ? "#34d399" : "#fbbf24", fontWeight: 900, fontSize: "1.05rem" }}>
+              {currentResult.totalCorrectiveMovements ?? 0} corrections
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
+              SUCCESSFUL REACHES
+            </span>
+            <span style={{ color: "#38bdf8", fontWeight: 900, fontSize: "1.05rem" }}>
+              {currentResult.trials?.filter((t) => t.hit).length ?? 0} / {currentResult.trials?.length ?? 10} hits
+            </span>
+          </div>
           {currentResult.trials && currentResult.trials.length > 0 && (
-            <div style={{ gridColumn: "span 2", marginTop: "4px", paddingTop: "8px", borderTop: "1px solid rgba(239, 68, 68, 0.2)" }}>
+            <div style={{ gridColumn: "span 2", marginTop: "4px", paddingTop: "8px", borderTop: "1px solid rgba(14, 136, 235, 0.2)" }}>
               <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#94a3b8", marginBottom: "6px" }}>
                 PER-REACH SCORES (RT SPEED + SMOOTHNESS):
               </div>
@@ -268,7 +392,7 @@ export default function TestResultModal({
                       border: `1px solid ${t.hit ? "#10b981" : "#ef4444"}`,
                       color: t.hit ? "#34d399" : "#f87171",
                     }}
-                    title={t.hit ? `Hit in ${t.reactionTime_ms}ms` : "Missed"}
+                    title={t.hit ? `Hit in ${t.reactionTime_ms}ms (MT: ${t.completionTime_ms ?? t.reactionTime_ms}ms, ${t.correctiveMovements || 0} corrections)` : "Missed"}
                   >
                     #{i + 1}: {t.hit ? `+${t.score ?? 1.0}` : "0"}
                   </div>
@@ -288,7 +412,7 @@ export default function TestResultModal({
             padding: "12px 20px",
             marginBottom: "1.25rem",
             width: "100%",
-            maxWidth: "460px",
+            maxWidth: "480px",
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: "10px",
@@ -328,6 +452,22 @@ export default function TestResultModal({
               {currentResult.avgAngularSpeed_deg_s ?? 45}°/s · {currentResult.trajectoryJerk ?? 0.14} jerk
             </span>
           </div>
+          <div>
+            <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
+              SWEEP SMOOTHNESS
+            </span>
+            <span style={{ color: "#34d399", fontWeight: 900, fontSize: "1.05rem" }}>
+              {Math.round((currentResult.trajectorySmoothness || 0.85) * 100)}%
+            </span>
+          </div>
+          <div>
+            <span style={{ color: "#94a3b8", display: "block", fontSize: "0.72rem", fontWeight: 700 }}>
+              CORRECTIVE HESITATIONS
+            </span>
+            <span style={{ color: (currentResult.correctiveMovements || 0) === 0 ? "#34d399" : "#fbbf24", fontWeight: 900, fontSize: "1.05rem" }}>
+              {currentResult.correctiveMovements ?? 0} pauses
+            </span>
+          </div>
           {currentResult.lapBonus > 0 && (
             <div
               style={{
@@ -365,7 +505,7 @@ export default function TestResultModal({
         </span>
       </div>
 
-      <div style={{ display: "flex", gap: "10px" }}>
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
         <button
           style={{ ...S.primaryBtn(test.accentGrad), padding: "8px 22px", fontSize: "0.88rem", width: "auto" }}
           onClick={() => onComplete(test.id, currentResult)}
@@ -387,6 +527,25 @@ export default function TestResultModal({
         >
           {isPaused ? <Play size={14} /> : <Pause size={14} />}
           <span>{isPaused ? "Resume" : "Pause"}</span>
+        </button>
+        <button
+          style={{
+            ...S.secondaryBtn,
+            padding: "8px 14px",
+            fontSize: "0.85rem",
+            width: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            background: "rgba(14, 136, 235, 0.15)",
+            borderColor: "rgba(14, 136, 235, 0.4)",
+            color: "#38bdf8",
+          }}
+          onClick={() => downloadTrackBMatrixCSV({ [test.id]: currentResult }, "AssessedArm", { testId: test.id })}
+          title="Download Current Test Metrics CSV"
+        >
+          <Download size={14} />
+          <span>Export Matrix</span>
         </button>
       </div>
     </div>

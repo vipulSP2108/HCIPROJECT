@@ -1,6 +1,8 @@
 import React from "react";
 import AssessmentTopBar from "../AssessmentTopBar";
 import { CLINICAL_TESTS } from "../constants/clinicalTestBattery";
+import { downloadTrackBMatrixCSV, downloadTrackBMatrixJSON } from "../utils/exportClinicalMatrix";
+import { saveMatrixFilesToServer } from "../../../services/assessmentService";
 
 export default function ClinicalSummaryScreen({
   assessmentId,
@@ -185,6 +187,10 @@ export default function ClinicalSummaryScreen({
                           </b>
                         </span>
                       ))}
+                      <span>Time: <b className="text-sky-500 font-bold">{res.avgCompletionTime_ms ?? 0}ms</b></span>
+                      <span>Speed: <b className="text-amber-500 font-bold">{res.avgVelocity ?? 0} u/s</b></span>
+                      <span>Smooth: <b className="text-purple-400 font-bold">{Math.round((res.trajectorySmoothness || 0.8) * 100)}%</b></span>
+                      <span>Corrections: <b className="text-emerald-500 font-bold">{res.totalCorrectiveMovements ?? 0}</b></span>
                     </div>
                   )}
 
@@ -193,8 +199,13 @@ export default function ClinicalSummaryScreen({
                     <div className="text-[11px] text-gray-500 dark:text-gray-400 flex flex-wrap gap-x-3 gap-y-1 font-medium pl-8">
                       <span>Transfers: <b className="text-emerald-500 font-bold">{res.blocksTransferred ?? 0} blocks</b></span>
                       <span>Collisions: <b className={res.missCount ? "text-rose-500 font-bold" : "text-emerald-500 font-bold"}>{res.missCount ?? 0} {res.missCount ? `(-${(res.missCount * 0.1).toFixed(1)} pts)` : ""}</b></span>
-                      <span>Score: <b className="text-amber-500 font-bold">{res.score ?? 0} pts</b></span>
-                      <span>Avg Speed: <b className="text-sky-500 font-bold">{res.avgPickTime_ms ?? 0}ms</b></span>
+                      <span>First Transfer: <b className="text-sky-500 font-bold">{res.firstTransferLatency_sec ?? 0}s</b></span>
+                      <span>Steady State: <b className="text-emerald-500 font-bold">{res.steadyStateAvgDuration_sec ?? 0}s</b></span>
+                      <span>Fatigue: <b className="text-purple-400 font-bold">{res.fatigueIndex ?? 1.0}</b></span>
+                      <span>Transport Time: <b className="text-sky-500 font-bold">{res.avgCompletionTime_ms ?? 0}ms</b></span>
+                      <span>Speed: <b className="text-amber-500 font-bold">{res.avgVelocity ?? 0} u/s</b></span>
+                      <span>Smooth: <b className="text-purple-400 font-bold">{Math.round((res.trajectorySmoothness || 0.85) * 100)}%</b></span>
+                      <span>Corrections: <b className="text-emerald-500 font-bold">{res.totalCorrectiveMovements ?? 0}</b></span>
                     </div>
                   )}
 
@@ -204,9 +215,15 @@ export default function ClinicalSummaryScreen({
                       <span>Spread: <b className={res.handOpenSuccess ? "text-emerald-500 font-bold" : "text-amber-500 font-bold"}>{res.handOpenSuccess ? "Full" : "Partial"}</b></span>
                       {res.pinchAttempts?.map((pa) => (
                         <span key={pa.finger}>
-                          {pa.finger}: <b className={pa.score === 3 ? "text-emerald-500 font-bold" : "text-amber-500 font-bold"}>{pa.score}/3</b>
+                          {pa.finger}: <b className={pa.score >= 3 ? "text-emerald-500 font-bold" : "text-amber-500 font-bold"}>{pa.score} pts</b>
                         </span>
                       ))}
+                      <span>Touch Latency: <b className="text-sky-500 font-bold">{res.avgTimeToTouch_ms ?? 0}ms</b></span>
+                      {res.totalSpeedBonus ? (
+                        <span>Speed Bonus: <b className="text-emerald-500 font-bold">+{res.totalSpeedBonus} pts</b></span>
+                      ) : null}
+                      <span>Smooth: <b className="text-purple-400 font-bold">{Math.round((res.trajectorySmoothness || 0.88) * 100)}%</b></span>
+                      <span>Corrections: <b className="text-sky-400 font-bold">{res.totalCorrectiveMovements ?? 0}</b></span>
                     </div>
                   )}
 
@@ -215,19 +232,22 @@ export default function ClinicalSummaryScreen({
                     <div className="text-[11px] text-gray-500 dark:text-gray-400 flex flex-wrap gap-x-3 gap-y-1 font-medium pl-8">
                       <span>Score: <b className="text-amber-500 font-bold">{res.score ?? 0} pts</b></span>
                       <span>Reaches: <b className="text-emerald-500 font-bold">{res.trials?.filter(t => t.hit).length ?? 0}/{res.trials?.length ?? 10} hits</b></span>
-                      <span>Avg RT: <b className="text-sky-500 font-bold">{res.avgReactionTime_ms ?? 0} ms</b></span>
-                      <span>Smoothness: <b className="text-purple-400 font-bold">{Math.round((res.smoothnessScore || 0) * 100)}%</b></span>
+                      <span>Reaction: <b className="text-sky-500 font-bold">{res.avgReactionTime_ms ?? 0} ms</b></span>
+                      <span>Move Time: <b className="text-emerald-500 font-bold">{res.avgCompletionTime_ms ?? 0} ms</b></span>
+                      <span>Speed: <b className="text-amber-500 font-bold">{res.avgVelocity ?? 0} u/s</b></span>
+                      <span>Smooth: <b className="text-purple-400 font-bold">{Math.round((res.smoothnessScore || 0) * 100)}%</b></span>
+                      <span>Corrections: <b className="text-sky-400 font-bold">{res.totalCorrectiveMovements ?? 0}</b></span>
                     </div>
                   )}
 
                   {/* Test 5 Details */}
                   {t.id === "test5_romSweep" && res && (
                     <div className="text-[11px] text-gray-500 dark:text-gray-400 flex flex-wrap gap-x-3 gap-y-1 font-medium pl-8">
-                      <span>Coverage: <b className="text-emerald-500 font-bold">{res.circleCoveragePct ?? 100}%</b> (360° Base)</span>
+                      <span>Coverage: <b className="text-emerald-500 font-bold">{res.circleCoveragePct ?? 100}%</b></span>
                       <span>Total: <b className="text-sky-500 font-bold">{res.cumulativeDegreesSwept ?? 360}°</b> ({res.lapsCompleted ?? 1.0} Laps)</span>
-                      <span>Path Match: <b className="text-purple-400 font-bold">{res.pathSimilarityPct ?? 90}%</b></span>
                       <span>Speed: <b className="text-amber-500 font-bold">{res.avgAngularSpeed_deg_s ?? 45}°/s</b></span>
-                      <span>Jerk: <b className="text-sky-400 font-bold">{res.trajectoryJerk ?? 0.14}</b></span>
+                      <span>Smooth: <b className="text-purple-400 font-bold">{Math.round((res.trajectorySmoothness || 0.85) * 100)}%</b></span>
+                      <span>Hesitations: <b className="text-sky-400 font-bold">{res.correctiveMovements ?? 0}</b></span>
                     </div>
                   )}
                 </div>
@@ -236,6 +256,51 @@ export default function ClinicalSummaryScreen({
           </div>
 
           {saveError && <div className="mb-4 text-xs font-bold text-red-500">{saveError}</div>}
+
+          {/* Download Matrix Action Bar for Team Sharing */}
+          <div className="bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800/60 rounded-2xl p-4 mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-black uppercase tracking-wider text-sky-800 dark:text-sky-300">
+                📊 Shareable Track B Kinematics Matrix
+              </span>
+              <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400">
+                Ready for Clinical Review
+              </span>
+            </div>
+            <p className="text-[11px] text-gray-600 dark:text-gray-400 mb-3">
+              Export the complete biomechanical dataset including movement completion times, hand velocities, trajectory smoothness, and corrective submovements.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  downloadTrackBMatrixCSV(results, activeArm, { assessmentId });
+                  if (assessmentId) {
+                    saveMatrixFilesToServer(assessmentId, { results, activeArm }).catch((e) =>
+                      console.warn("[ClinicalSummary] Matrix file sync:", e.message)
+                    );
+                  }
+                }}
+                className="py-2.5 px-3 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl shadow-md transition-all active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                📥 Download Matrix (Excel CSV)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  downloadTrackBMatrixJSON(results, activeArm, { assessmentId });
+                  if (assessmentId) {
+                    saveMatrixFilesToServer(assessmentId, { results, activeArm }).catch((e) =>
+                      console.warn("[ClinicalSummary] Matrix file sync:", e.message)
+                    );
+                  }
+                }}
+                className="py-2.5 px-3 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-sky-600 dark:text-sky-300 font-bold text-xs rounded-xl border border-sky-300 dark:border-sky-700 transition-all active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                📄 Download Raw Matrix (JSON)
+              </button>
+            </div>
+          </div>
 
           <button
             type="button"

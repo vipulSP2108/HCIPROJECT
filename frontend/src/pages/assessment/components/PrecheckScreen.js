@@ -82,12 +82,12 @@ export default function PrecheckScreen({
             <div className="text-emerald-400 font-black text-sm flex items-center justify-center gap-2">
               <CheckCircle2 size={18} />
               <span>
-                STEP 2: EXTEND {activeArm.toUpperCase()} ARM STRAIGHT TO THE{" "}
+                STEP 2: REACH {activeArm.toUpperCase()} ARM TO THE{" "}
                 {String(activeArm).toLowerCase() === "left" ? "LEFT ⬅️" : "RIGHT ➡️"}
               </span>
             </div>
             <div className="text-xs text-gray-200 mt-1">
-              Reach your wrist into the outer target box with a straight arm to measure full reach and divide it into 3 exercise circles (3/3, 2/3, 1/3)
+              Reach your active wrist into the outer target box to calibrate your coronal sweep reach
             </div>
           </div>
         )}
@@ -154,7 +154,7 @@ export default function PrecheckScreen({
                 {romCalibStep >= 3
                   ? `Arm Reach: ${Math.round(radiusVal || 0)}px (3/3: ${Math.round(radiusVal || 0)}px · 2/3: ${Math.round((radiusVal || 0) * 2 / 3)}px · 1/3: ${Math.round((radiusVal || 0) / 3)}px)`
                   : romCalibStep === 2
-                  ? `Hold wrist in outer box with straight arm`
+                  ? `Hold active wrist in target box`
                   : `Unlocks after Step 1 is locked`}
               </div>
             </div>

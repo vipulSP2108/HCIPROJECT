@@ -4,7 +4,6 @@ import React from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Compass,
   Clock,
   Award,
   Info,
@@ -69,20 +68,16 @@ export default function BriefingScreen({
                 <span>{cameraReady ? "Live Camera Active" : "Initializing AI Camera..."}</span>
               </span>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setIsBriefingPaused(true);
-                  onOpenCalibration?.();
-                }}
-                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 transition-all cursor-pointer shadow-sm"
-                title="Check camera tilt and body framing"
+              <span
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border shadow-sm ${
+                  livePosture?.postureOk
+                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                    : "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30"
+                }`}
               >
-                <Compass size={13} className="text-sky-500" />
-                <span>Tilt: {Math.abs(livePosture.tiltDeg || 0)}°</span>
-                <span className="text-[10px] text-gray-400">•</span>
-                <span className="text-sky-500 font-bold">Calibrate</span>
-              </button>
+                <span className={`w-2 h-2 rounded-full ${livePosture?.postureOk ? "bg-emerald-500" : "bg-sky-500"}`} />
+                <span>{livePosture?.postureOk ? "Position Aligned" : "Sit Centered"}</span>
+              </span>
 
               <span className="px-2.5 py-1.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 shadow-sm flex items-center gap-1">
                 <Clock size={12} className="text-gray-400" />

@@ -303,15 +303,15 @@ def render_t2_demo():
     # Central 15cm Partition Wall Barrier
     draw.rounded_rectangle([775, 540, 825, 880], radius=8, fill="#334155", outline="#0f172a", width=4)
     # Height Clearance Dimension Marker
-    draw.line([(750, 540), (750, 880)], fill="#ef4444", width=4)
-    draw.polygon([(750, 540), (742, 560), (758, 560)], fill="#ef4444")
-    draw.polygon([(750, 880), (742, 860), (758, 860)], fill="#ef4444")
+    draw.line([(750, 540), (750, 880)], fill="#0e88eb", width=4)
+    draw.polygon([(750, 540), (742, 560), (758, 560)], fill="#0e88eb")
+    draw.polygon([(750, 880), (742, 860), (758, 860)], fill="#0e88eb")
     # 15 cm Tag Badge
-    draw.rounded_rectangle([610, 680, 735, 730], radius=12, fill="#fef2f2", outline="#ef4444", width=3)
-    draw.text((672, 705), "15 CM", font=font_badge, fill="#b91c1c", anchor="mm")
+    draw.rounded_rectangle([610, 680, 735, 730], radius=12, fill="#f0f7ff", outline="#0e88eb", width=3)
+    draw.text((672, 705), "15 CM", font=font_badge, fill="#0284c7", anchor="mm")
 
-    # Amber Block in Left Bin
-    draw.rounded_rectangle([460, 784, 540, 856], radius=12, fill="#f59e0b", outline="#d97706", width=4)
+    # Block in Left Bin (Unified Brand Blue)
+    draw.rounded_rectangle([460, 784, 540, 856], radius=12, fill="#0e88eb", outline="#0284c7", width=4)
     draw.text((500, 820), "BLOCK", font=font_badge, fill="#ffffff", anchor="mm")
 
     # Parabolic Lift-Over-Barrier Trajectory
@@ -482,12 +482,12 @@ def render_t4_demo():
     draw.text((640, 915), "READY ORIGIN", font=font_card_title, fill="#0284c7", anchor="mm")
     draw.text((640, 945), "(Wait Here)", font=font_sub, fill="#64748b", anchor="mm")
 
-    # Flashing reaction target
-    draw.ellipse([988, 608, 1172, 792], fill="#fee2e2", outline="#ef4444", width=6)
-    draw.ellipse([960, 580, 1200, 820], outline="#ef4444", width=4)
-    draw.ellipse([930, 550, 1230, 850], outline="#ef4444", width=3)
-    draw.ellipse([1066, 686, 1094, 714], fill="#ef4444")
-    draw.text((1080, 570), "⚡ FLASH TARGET", font=font_title, fill="#dc2626", anchor="mm")
+    # Flashing reaction target (Unified Brand Blue)
+    draw.ellipse([988, 608, 1172, 792], fill="#e0effe", outline="#0e88eb", width=6)
+    draw.ellipse([960, 580, 1200, 820], outline="#0e88eb", width=4)
+    draw.ellipse([930, 550, 1230, 850], outline="#0e88eb", width=3)
+    draw.ellipse([1066, 686, 1094, 714], fill="#0e88eb")
+    draw.text((1080, 570), "⚡ FLASH TARGET", font=font_title, fill="#0284c7", anchor="mm")
 
     # Direct ballistic reach stroke
     draw_dashed_curve(draw, [(660, 820), (840, 760), (1040, 710)], color="#0284c7", width=9)

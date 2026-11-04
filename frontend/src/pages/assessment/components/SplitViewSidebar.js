@@ -82,10 +82,10 @@ export default function SplitViewSidebar({
             <>
               <Zap size={14} className="text-purple-400" />
               <span>
-                {(t5Phase === "straight" || t5Phase === "cw_straight") && "Trajectory 1/6: CW ↻ Straight Arm"}
+                {(t5Phase === "straight" || t5Phase === "cw_straight") && "Trajectory 1/6: CW ↻ Full Reach"}
                 {t5Phase === "cw_slight_bend" && "Trajectory 2/6: CW ↻ Slight Bend"}
                 {t5Phase === "cw_folded" && "Trajectory 3/6: CW ↻ Folded Elbow"}
-                {t5Phase === "ccw_straight" && "Trajectory 4/6: CCW ↺ Straight Arm"}
+                {t5Phase === "ccw_straight" && "Trajectory 4/6: CCW ↺ Full Reach"}
                 {t5Phase === "ccw_slight_bend" && "Trajectory 5/6: CCW ↺ Slight Bend"}
                 {t5Phase === "ccw_folded" && "Trajectory 6/6: CCW ↺ Folded Elbow"}
               </span>
@@ -126,23 +126,21 @@ export default function SplitViewSidebar({
 
       <div style={{ height: "1px", background: "rgba(255,255,255,0.08)", margin: "2px 0" }} />
 
-      {/* Live telemetry */}
+      {/* Live posture & tracking status (Simplified, no confusing angle clutter) */}
       <div
         style={{
           background: "rgba(255,255,255,0.04)",
           borderRadius: "10px",
           padding: "0.75rem",
-          fontFamily: "monospace",
         }}
       >
-        <div style={{ fontSize: "0.65rem", color: "#64748b", marginBottom: "6px", fontWeight: 700 }}>
-          LIVE BIOMECHANICS
+        <div style={{ fontSize: "0.65rem", color: "#64748b", marginBottom: "6px", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+          Motion Tracking
         </div>
         {[
-          ["Shoulder", telemetry.shoulder + "°"],
-          ["Elbow", telemetry.elbow + "°"],
-          ["Trunk Lean", telemetry.lean + "°"],
-          ["FPS", telemetry.fps],
+          ["Posture Status", telemetry.comp ? "Lean Detected ⚠️" : "Aligned ✓"],
+          ["AI Tracking", "Active 🟢"],
+          ["Frame Rate", `${telemetry.fps} FPS`],
         ].map(([k, v]) => (
           <div
             key={k}
@@ -155,12 +153,14 @@ export default function SplitViewSidebar({
             }}
           >
             <span>{k}</span>
-            <span style={{ color: "#f1f5f9", fontWeight: 700 }}>{v}</span>
+            <span style={{ color: k === "Posture Status" && telemetry.comp ? "#ef4444" : "#f1f5f9", fontWeight: 700 }}>
+              {v}
+            </span>
           </div>
         ))}
         {telemetry.comp && (
           <div style={{ color: "#ef4444", fontSize: "0.72rem", marginTop: "4px", fontWeight: 700 }}>
-            ⚠ Compensation detected
+            ⚠️ Trunk compensation detected - sit upright
           </div>
         )}
       </div>

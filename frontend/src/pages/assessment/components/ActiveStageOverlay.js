@@ -317,15 +317,15 @@ export default function ActiveStageOverlay({
             </div>
           </div>
         ) : (
-          /* Biomechanical Telemetry HUD (Relevant for Test 1, 3, 5 joint posture) */
+          /* Simplified Biomechanical Posture Indicator (No confusing angle clutter) */
           <div
             style={{
               ...S.floatingModule,
               position: "static",
               pointerEvents: "auto",
               borderRadius: "14px",
-              background: "rgba(8, 12, 24, 0.9)",
-              border: "1px solid rgba(255, 255, 255, 0.14)",
+              background: telemetry.comp ? "rgba(239, 68, 68, 0.2)" : "rgba(8, 12, 24, 0.9)",
+              border: telemetry.comp ? "1.5px solid #ef4444" : "1px solid rgba(255, 255, 255, 0.14)",
             }}
           >
             <div
@@ -334,22 +334,22 @@ export default function ActiveStageOverlay({
                 alignItems: "center",
                 gap: "8px",
                 padding: "7px 14px",
-                fontFamily: "monospace",
                 fontSize: "0.78rem",
+                fontWeight: 700,
               }}
             >
-              <div>
-                <span style={{ color: "#94a3b8" }}>Sh:</span> <b style={{ color: "#f8fafc" }}>{telemetry.shoulder}°</b>
-              </div>
-              <div>
-                <span style={{ color: "#94a3b8" }}>El:</span> <b style={{ color: "#f8fafc" }}>{telemetry.elbow}°</b>
-              </div>
-              <div>
-                <span style={{ color: telemetry.comp ? "#ef4444" : "#10b981", fontWeight: 700 }}>
-                  Trunk: {telemetry.lean}° {telemetry.comp && "⚠"}
-                </span>
-              </div>
-              <div style={{ color: "#64748b" }}>{telemetry.fps} FPS</div>
+              {telemetry.comp ? (
+                <div style={{ color: "#fca5a5", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <span>⚠️</span>
+                  <span>Trunk Lean - Sit Upright</span>
+                </div>
+              ) : (
+                <div style={{ color: "#34d399", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+                  <span>Posture Aligned</span>
+                </div>
+              )}
+              <div style={{ color: "#64748b", fontFamily: "monospace", fontSize: "0.7rem" }}>{telemetry.fps} FPS</div>
             </div>
           </div>
         )}
@@ -534,10 +534,10 @@ export default function ActiveStageOverlay({
         >
           <Zap size={16} style={{ color: test.color }} />
           <span>
-            {(t5Phase === "straight" || t5Phase === "cw_straight") && "Trajectory 1/6: Clockwise ↻ · Straight Arm (Wide 180° Sweep)"}
+            {(t5Phase === "straight" || t5Phase === "cw_straight") && "Trajectory 1/6: Clockwise ↻ · Full Reach (Wide Coronal Sweep)"}
             {t5Phase === "cw_slight_bend" && "Trajectory 2/6: Clockwise ↻ · Slight Elbow Bend (Mid ~120° Sweep)"}
             {t5Phase === "cw_folded" && "Trajectory 3/6: Clockwise ↻ · Folded Elbow (Compact ~65° Circle)"}
-            {t5Phase === "ccw_straight" && "Trajectory 4/6: Anti-Clockwise ↺ · Straight Arm (Wide 180° Sweep)"}
+            {t5Phase === "ccw_straight" && "Trajectory 4/6: Anti-Clockwise ↺ · Full Reach (Wide Coronal Sweep)"}
             {t5Phase === "ccw_slight_bend" && "Trajectory 5/6: Anti-Clockwise ↺ · Slight Elbow Bend (Mid ~120° Sweep)"}
             {t5Phase === "ccw_folded" && "Trajectory 6/6: Anti-Clockwise ↺ · Folded Elbow (Compact ~65° Circle)"}
           </span>

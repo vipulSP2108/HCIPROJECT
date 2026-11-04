@@ -12,7 +12,7 @@ export function drawTest4Reaction(ctx, w, h, targetPos, trialIdx, trialsTotal, i
     const pulse = Math.sin(Date.now() / 180);
     const auraR = r * (1.35 + 0.1 * pulse);
     const auraG = ctx.createRadialGradient(tx, ty, r * 0.3, tx, ty, auraR);
-    auraG.addColorStop(0, "rgba(239,68,68,0.35)");
+    auraG.addColorStop(0, "rgba(14,136,235,0.35)");
     auraG.addColorStop(1, "transparent");
     ctx.beginPath();
     ctx.arc(tx, ty, auraR, 0, Math.PI * 2);
@@ -21,8 +21,8 @@ export function drawTest4Reaction(ctx, w, h, targetPos, trialIdx, trialsTotal, i
 
     ctx.beginPath();
     ctx.arc(tx, ty, r, 0, Math.PI * 2);
-    ctx.fillStyle = isHit ? "#10b981" : "#ef4444";
-    ctx.shadowColor = isHit ? "#10b981" : "#ef4444";
+    ctx.fillStyle = isHit ? "#10b981" : (testColor || "#0e88eb");
+    ctx.shadowColor = isHit ? "#10b981" : (testColor || "#0e88eb");
     ctx.shadowBlur = 20;
     ctx.fill();
     ctx.shadowBlur = 0;

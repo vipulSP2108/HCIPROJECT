@@ -4,13 +4,12 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { saveClinicalSession } from "../../services/assessmentService";
-import GameCalibrationModal from "../../components/common/GameCalibrationModal";
-
 import { CLINICAL_TESTS, emptyPayload } from "./constants/clinicalTestBattery";
 import { CLINICAL_TRANSFER_DURATION_SEC } from "../../constants";
 import ClinicalIntroScreen from "./components/ClinicalIntroScreen";
 import ClinicalSummaryScreen from "./components/ClinicalSummaryScreen";
 import TestBatteryRunner from "./runners/TestBatteryRunner";
+import ClinicalCalibrationModal from "./components/ClinicalCalibrationModal";
 
 export default function ClinicalTestPage() {
   const { id: assessmentId } = useParams();
@@ -82,6 +81,11 @@ export default function ClinicalTestPage() {
       test1_grossReach: {
         zones: results.test1_grossReach?.zones || [],
         totalScore: results.test1_grossReach?.totalScore || 0,
+        avgCompletionTime_ms: results.test1_grossReach?.avgCompletionTime_ms || 0,
+        avgVelocity: results.test1_grossReach?.avgVelocity || 0,
+        peakVelocity: results.test1_grossReach?.peakVelocity || 0,
+        trajectorySmoothness: results.test1_grossReach?.trajectorySmoothness || 0,
+        totalCorrectiveMovements: results.test1_grossReach?.totalCorrectiveMovements || 0,
       },
       test2_objectTransfer: {
         durationSec: CLINICAL_TRANSFER_DURATION_SEC,
@@ -91,6 +95,11 @@ export default function ClinicalTestPage() {
         score: results.test2_objectTransfer?.score || 0,
         avgPickTime_ms: results.test2_objectTransfer?.avgPickTime_ms || 0,
         avgDropTime_ms: results.test2_objectTransfer?.avgDropTime_ms || 0,
+        avgCompletionTime_ms: results.test2_objectTransfer?.avgCompletionTime_ms || 0,
+        avgVelocity: results.test2_objectTransfer?.avgVelocity || 0,
+        peakVelocity: results.test2_objectTransfer?.peakVelocity || 0,
+        trajectorySmoothness: results.test2_objectTransfer?.trajectorySmoothness || 0,
+        totalCorrectiveMovements: results.test2_objectTransfer?.totalCorrectiveMovements || 0,
         elbowAngle_mean: results.test2_objectTransfer?.elbowAngle_mean || 0,
         shoulderAngle_mean: results.test2_objectTransfer?.shoulderAngle_mean || 0,
         aratProxyScore: results.test2_objectTransfer?.aratProxyScore || 0,
@@ -101,6 +110,10 @@ export default function ClinicalTestPage() {
         handOpenSpread: results.test3_pinch?.handOpenSpread || 0.28,
         pinchAttempts: results.test3_pinch?.pinchAttempts || [],
         totalScore: results.test3_pinch?.totalScore || 0,
+        avgCompletionTime_ms: results.test3_pinch?.avgCompletionTime_ms || 0,
+        avgVelocity: results.test3_pinch?.avgVelocity || 0,
+        trajectorySmoothness: results.test3_pinch?.trajectorySmoothness || 0,
+        totalCorrectiveMovements: results.test3_pinch?.totalCorrectiveMovements || 0,
       },
       test4_reactionStrike: {
         trials: results.test4_reactionStrike?.trials || [],
@@ -108,9 +121,13 @@ export default function ClinicalTestPage() {
         avgReactionTime_ms: results.test4_reactionStrike?.avgReactionTime_ms || 0,
         medianRT_ms: results.test4_reactionStrike?.medianRT_ms || 0,
         p90RT_ms: results.test4_reactionStrike?.p90RT_ms || 0,
+        avgCompletionTime_ms: results.test4_reactionStrike?.avgCompletionTime_ms || 0,
+        avgVelocity: results.test4_reactionStrike?.avgVelocity || 0,
+        peakVelocity: results.test4_reactionStrike?.peakVelocity || 0,
         hitAccuracy: results.test4_reactionStrike?.hitAccuracy || 0,
         movementJerk: results.test4_reactionStrike?.movementJerk || 0,
         smoothnessScore: results.test4_reactionStrike?.smoothnessScore || 0,
+        totalCorrectiveMovements: results.test4_reactionStrike?.totalCorrectiveMovements || 0,
         reactionScore: results.test4_reactionStrike?.reactionScore || 0,
         score: results.test4_reactionStrike?.score || 0,
       },
@@ -123,7 +140,11 @@ export default function ClinicalTestPage() {
         lapsCompleted: results.test5_romSweep?.lapsCompleted || 1.0,
         pathSimilarityPct: results.test5_romSweep?.pathSimilarityPct || 90,
         avgAngularSpeed_deg_s: results.test5_romSweep?.avgAngularSpeed_deg_s || 45,
+        avgVelocity: results.test5_romSweep?.avgVelocity || 0,
+        peakVelocity: results.test5_romSweep?.peakVelocity || 0,
         trajectoryJerk: results.test5_romSweep?.trajectoryJerk || 0.15,
+        trajectorySmoothness: results.test5_romSweep?.trajectorySmoothness || 0.85,
+        correctiveMovements: results.test5_romSweep?.correctiveMovements || 0,
         sweepDuration_ms: results.test5_romSweep?.sweepDuration_ms || 0,
         totalScore: results.test5_romSweep?.totalScore || 0,
       },
@@ -142,69 +163,76 @@ export default function ClinicalTestPage() {
     }
   };
 
-  if (phase === "intro") {
-    return (
-      <ClinicalIntroScreen
-        assessmentId={assessmentId}
-        activeArm={activeArm}
-        setActiveArm={setActiveArm}
-        results={results}
-        completedTestIds={completedTestIds}
-        saving={saving}
-        handleSaveAndReturn={handleSaveAndReturn}
-        onStartSingleTest={(idx) => {
-          setCurrentTestIdx(idx);
-          setIsGlobalRun(false);
-          setPhase("running");
-        }}
-        onStartBattery={() => {
-          const firstUnfinished = CLINICAL_TESTS.findIndex((t) => !completedTestIds.has(t.id));
-          setCurrentTestIdx(firstUnfinished !== -1 ? firstUnfinished : 0);
-          setIsGlobalRun(true);
-          setPhase("running");
-        }}
-        onOpenCalibration={() => setIsCalibrationModalOpen(true)}
-        onNavigateHub={() => navigate(assessmentId ? `/assessment/run/${assessmentId}` : "/patient/dashboard")}
-      />
-    );
-  }
+  const startBattery = () => {
+    setIsCalibrationModalOpen(false);
+    const firstUnfinished = CLINICAL_TESTS.findIndex((t) => !completedTestIds.has(t.id));
+    setCurrentTestIdx(firstUnfinished !== -1 ? firstUnfinished : 0);
+    setIsGlobalRun(true);
+    setPhase("running");
+  };
 
-  if (phase === "summary") {
-    return (
-      <ClinicalSummaryScreen
-        assessmentId={assessmentId}
-        activeArm={activeArm}
-        results={results}
-        saving={saving}
-        saveError={saveError}
-        handleSaveAndReturn={handleSaveAndReturn}
-        onReviewRetry={() => setPhase("intro")}
-      />
-    );
-  }
+  const startSingleTest = (idx) => {
+    setIsCalibrationModalOpen(false);
+    setCurrentTestIdx(idx);
+    setIsGlobalRun(false);
+    setPhase("running");
+  };
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-black select-none fixed inset-0 z-50">
-      <TestBatteryRunner
-        test={currentTest}
-        allTests={CLINICAL_TESTS}
-        currentTestIdx={currentTestIdx}
-        onSelectTest={(idx) => setCurrentTestIdx(idx)}
-        activeArm={activeArm}
-        onChangeActiveArm={(arm) => setActiveArm(arm)}
-        onExit={() => setPhase("intro")}
-        onComplete={handleTestComplete}
-        onSkip={() => handleTestComplete(currentTest.id, { score: 0 })}
-        onOpenCalibration={() => setIsCalibrationModalOpen(true)}
-      />
+    <>
+      {phase === "intro" && (
+        <ClinicalIntroScreen
+          assessmentId={assessmentId}
+          activeArm={activeArm}
+          setActiveArm={setActiveArm}
+          results={results}
+          completedTestIds={completedTestIds}
+          saving={saving}
+          handleSaveAndReturn={handleSaveAndReturn}
+          onStartSingleTest={startSingleTest}
+          onStartBattery={startBattery}
+          onOpenCalibration={() => setIsCalibrationModalOpen(true)}
+          onNavigateHub={() => navigate(assessmentId ? `/assessment/run/${assessmentId}` : "/patient/dashboard")}
+        />
+      )}
 
-      <GameCalibrationModal
-        isOpen={isCalibrationModalOpen}
-        onClose={() => setIsCalibrationModalOpen(false)}
-        onComplete={() => setIsCalibrationModalOpen(false)}
-        isDarkMode={true}
-        gameTitle="Clinical Assessment Battery"
-      />
-    </div>
+      {phase === "summary" && (
+        <ClinicalSummaryScreen
+          assessmentId={assessmentId}
+          activeArm={activeArm}
+          results={results}
+          saving={saving}
+          saveError={saveError}
+          handleSaveAndReturn={handleSaveAndReturn}
+          onReviewRetry={() => setPhase("intro")}
+        />
+      )}
+
+      {phase === "running" && (
+        <div className="w-screen h-screen overflow-hidden bg-black select-none fixed inset-0 z-50">
+          <TestBatteryRunner
+            test={currentTest}
+            allTests={CLINICAL_TESTS}
+            currentTestIdx={currentTestIdx}
+            onSelectTest={(idx) => setCurrentTestIdx(idx)}
+            activeArm={activeArm}
+            onChangeActiveArm={(arm) => setActiveArm(arm)}
+            onExit={() => setPhase("intro")}
+            onComplete={handleTestComplete}
+            onSkip={() => handleTestComplete(currentTest.id, { score: 0 })}
+            onOpenCalibration={() => setIsCalibrationModalOpen(true)}
+          />
+        </div>
+      )}
+
+      {/* Standalone Camera, Tilt & Centering Calibration Modal */}
+      {isCalibrationModalOpen && (
+        <ClinicalCalibrationModal
+          isOpen={isCalibrationModalOpen}
+          onClose={() => setIsCalibrationModalOpen(false)}
+          onStartBattery={startBattery}
+        />
+      )}
+    </>
   );
 }

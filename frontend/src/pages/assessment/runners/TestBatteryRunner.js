@@ -30,6 +30,7 @@ import {
 import { CLINICAL_TESTS, S } from "../constants/clinicalTestBattery";
 import { playAudioFeedback } from "../utils/audioFeedback";
 import { ptDist, vecSub, vecAngle, clamp } from "../utils/vectorMath";
+import { KinematicTaskBuffer } from "../utils/kinematicsEngine";
 import {
   drawClinicalStageBackground,
   drawHolographicAvatar,
@@ -138,6 +139,7 @@ export default function TestBatteryRunner({
   const t1HoldStartRef = useRef(null);
   const t1ZonesDoneRef = useRef({});
   const t1RecordedZonesRef = useRef([]);
+  const t1KinematicsRef = useRef(new KinematicTaskBuffer(384));
 
   // Test 2 refs
   const t2TransfersRef = useRef(0);
@@ -149,12 +151,17 @@ export default function TestBatteryRunner({
   const t2WallBlockedRef = useRef(false);
   const t2CrossedDividerRef = useRef(false);
   const t2MissesRef = useRef(0);
+  const t2TrialWallBouncesRef = useRef(0);
+  const t2CycleStartRef = useRef(null);
+  const t2PickTsRef = useRef(null);
+  const t2KinematicsRef = useRef(new KinematicTaskBuffer(384));
 
   // Test 3 refs
   const t3PoseIdxRef = useRef(0);
   const t3PoseStartRef = useRef(Date.now());
   const t3HoldStartRef = useRef(null);
   const t3AttemptsRef = useRef([]);
+  const t3KinematicsRef = useRef(new KinematicTaskBuffer(384));
 
   // Test 4 refs
   const t4TrialIdxRef = useRef(0);
@@ -168,6 +175,7 @@ export default function TestBatteryRunner({
   const t4PrevAccelRef = useRef(0);
   const t4JerksRef = useRef([]);
   const t4TrialJerksRef = useRef([]);
+  const t4KinematicsRef = useRef(new KinematicTaskBuffer(384));
 
   // Test 5 refs
   const t5PhaseRef = useRef("cw_straight");
@@ -369,6 +377,7 @@ export default function TestBatteryRunner({
     t1HoldStartRef.current = null;
     t1ZonesDoneRef.current = {};
     t1RecordedZonesRef.current = [];
+    t1KinematicsRef.current?.reset?.();
 
     // Reset Test 2
     t2TransfersRef.current = 0;
@@ -380,6 +389,10 @@ export default function TestBatteryRunner({
     t2WallBlockedRef.current = false;
     t2CrossedDividerRef.current = false;
     t2MissesRef.current = 0;
+    t2TrialWallBouncesRef.current = 0;
+    t2CycleStartRef.current = Date.now();
+    t2PickTsRef.current = null;
+    t2KinematicsRef.current?.reset?.();
     setT2LiveStats({ transfers: 0, misses: 0 });
 
     // Reset Test 3
@@ -387,6 +400,7 @@ export default function TestBatteryRunner({
     t3PoseStartRef.current = Date.now();
     t3HoldStartRef.current = null;
     t3AttemptsRef.current = [];
+    t3KinematicsRef.current?.reset?.();
 
     // Reset Test 4
     t4TrialIdxRef.current = 0;
@@ -400,6 +414,7 @@ export default function TestBatteryRunner({
     t4PrevAccelRef.current = 0;
     t4JerksRef.current = [];
     t4TrialJerksRef.current = [];
+    t4KinematicsRef.current?.reset?.();
     setT4LiveStats({ trialIdx: 0, lastRT: null, hits: 0, lastScore: null });
 
     // Reset Test 5
@@ -530,6 +545,18 @@ export default function TestBatteryRunner({
       t5AngleSectorsRef.current = new Set();
       t5KinematicsRef.current = { prevAngle: null, cumulativeDeg: 0, accuracySamples: [], speedSamples: [] };
       t5PhaseRef.current = "cw_straight";
+
+      const nowTs = Date.now();
+      if (test.id === "test1_grossReach") {
+        t1ZoneStartRef.current = nowTs;
+        t1KinematicsRef.current.startTask(nowTs);
+      } else if (test.id === "test2_objectTransfer") {
+        t2CycleStartRef.current = nowTs;
+        t2PickTsRef.current = null;
+      } else if (test.id === "test3_pinch") {
+        t3PoseStartRef.current = nowTs;
+        t3KinematicsRef.current.startTask(nowTs);
+      }
       return;
     }
     const timer = setTimeout(() => {
@@ -537,7 +564,7 @@ export default function TestBatteryRunner({
       setCountdown((c) => c - 1);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [step, countdown, test.duration]);
+  }, [step, countdown, test.duration, test.id]);
 
   // ── Finalize Current Test Calculation ──
   const finalizeCurrentTest = useCallback(() => {
@@ -554,9 +581,30 @@ export default function TestBatteryRunner({
       const bZone = findZone("behind_head");
       const totalScore = (mZone.score || 0) + (tZone.score || 0) + (bZone.score || 0);
 
+      const validZones = zones.filter((z) => z.completionTime_ms != null);
+      const avgCompletionTime_ms = validZones.length
+        ? Math.round(validZones.reduce((a, b) => a + b.completionTime_ms, 0) / validZones.length)
+        : Math.round(zones.reduce((a, b) => a + (b.latency_ms || 2000), 0) / Math.max(1, zones.length));
+      const avgVels = validZones.map((z) => z.avgVelocity).filter((v) => typeof v === "number");
+      const avgVelocity = avgVels.length
+        ? parseFloat((avgVels.reduce((a, b) => a + b, 0) / avgVels.length).toFixed(2))
+        : 0.18;
+      const peakVels = validZones.map((z) => z.peakVelocity).filter((v) => typeof v === "number");
+      const peakVelocity = peakVels.length ? Math.max(...peakVels) : 0.45;
+      const smooths = validZones.map((z) => z.trajectorySmoothness).filter((s) => typeof s === "number");
+      const avgSmoothness = smooths.length
+        ? parseFloat((smooths.reduce((a, b) => a + b, 0) / smooths.length).toFixed(2))
+        : 0.82;
+      const totalCorrectiveMovements = zones.reduce((a, b) => a + (b.correctiveMovements || 0), 0);
+
       resultObj = {
         zones: [mZone, tZone, bZone],
         totalScore,
+        avgCompletionTime_ms,
+        avgVelocity,
+        peakVelocity,
+        trajectorySmoothness: avgSmoothness,
+        totalCorrectiveMovements,
         score: totalScore,
       };
     } else if (test.id === "test2_objectTransfer") {
@@ -566,10 +614,42 @@ export default function TestBatteryRunner({
       const collisionPenalty = parseFloat((misses * 0.1).toFixed(2));
       const finalScore = parseFloat(Math.max(0, blocks - collisionPenalty).toFixed(2));
       const aratProxy = blocks >= 8 ? 3 : blocks >= 4 ? 2 : blocks >= 1 ? 1 : 0;
-      const pickTimes = trials.map((t) => t.pickTime_ms).filter(Boolean);
-      const dropTimes = trials.map((t) => t.dropTime_ms).filter(Boolean);
+      const pickTimes = trials.map((t) => t.reachToPick_ms || t.pickTime_ms).filter(Boolean);
+      const dropTimes = trials.map((t) => t.transitTime_ms || t.dropTime_ms).filter(Boolean);
       const avgPick = pickTimes.length ? Math.round(pickTimes.reduce((a, b) => a + b, 0) / pickTimes.length) : 450;
       const avgDrop = dropTimes.length ? Math.round(dropTimes.reduce((a, b) => a + b, 0) / dropTimes.length) : 400;
+
+      const compTimes = trials.map((t) => t.totalTransferCycle_ms || t.completionTime_ms).filter(Boolean);
+      const avgCompletionTime_ms = compTimes.length
+        ? Math.round(compTimes.reduce((a, b) => a + b, 0) / compTimes.length)
+        : avgPick + avgDrop;
+
+      const transferDurations_sec = trials.map((t) =>
+        parseFloat(((t.totalTransferCycle_ms || t.completionTime_ms || 1000) / 1000).toFixed(2))
+      );
+      const firstTransferLatency_sec = transferDurations_sec[0] || 0;
+      const steadyStateTransfers = transferDurations_sec.slice(1);
+      const steadyStateAvgDuration_sec = steadyStateTransfers.length
+        ? parseFloat((steadyStateTransfers.reduce((a, b) => a + b, 0) / steadyStateTransfers.length).toFixed(2))
+        : firstTransferLatency_sec;
+
+      const firstHalf = transferDurations_sec.slice(0, Math.ceil(transferDurations_sec.length / 2));
+      const secondHalf = transferDurations_sec.slice(Math.ceil(transferDurations_sec.length / 2));
+      const avgFirst = firstHalf.length ? firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length : 1;
+      const avgSecond = secondHalf.length ? secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length : 1;
+      const fatigueIndex = parseFloat((avgSecond / Math.max(0.1, avgFirst)).toFixed(2));
+
+      const avgVels = trials.map((t) => t.avgVelocity).filter((v) => typeof v === "number");
+      const avgVelocity = avgVels.length
+        ? parseFloat((avgVels.reduce((a, b) => a + b, 0) / avgVels.length).toFixed(2))
+        : 0.22;
+      const peakVels = trials.map((t) => t.peakVelocity).filter((v) => typeof v === "number");
+      const peakVelocity = peakVels.length ? Math.max(...peakVels) : 0.52;
+      const smooths = trials.map((t) => t.trajectorySmoothness).filter((s) => typeof s === "number");
+      const avgSmoothness = smooths.length
+        ? parseFloat((smooths.reduce((a, b) => a + b, 0) / smooths.length).toFixed(2))
+        : 0.85;
+      const totalCorrectiveMovements = trials.reduce((a, b) => a + (b.correctiveMovements || 0), 0) + misses;
 
       resultObj = {
         durationSec: CLINICAL_TRANSFER_DURATION_SEC,
@@ -579,6 +659,15 @@ export default function TestBatteryRunner({
         collisionPenalty,
         avgPickTime_ms: avgPick,
         avgDropTime_ms: avgDrop,
+        avgCompletionTime_ms,
+        transferDurations_sec,
+        firstTransferLatency_sec,
+        steadyStateAvgDuration_sec,
+        fatigueIndex,
+        avgVelocity,
+        peakVelocity,
+        trajectorySmoothness: avgSmoothness,
+        totalCorrectiveMovements,
         elbowAngle_mean: Math.round(telemetryRef.current.elbow || 95),
         shoulderAngle_mean: Math.round(telemetryRef.current.shoulder || 65),
         aratProxyScore: aratProxy,
@@ -587,14 +676,39 @@ export default function TestBatteryRunner({
       };
     } else if (test.id === "test3_pinch") {
       const attempts = t3AttemptsRef.current;
-      const totalScore = attempts.reduce((sum, a) => sum + (a.score || 0), 0);
+      const totalScore = parseFloat(attempts.reduce((sum, a) => sum + (a.score || 0), 0).toFixed(1));
+      const totalSpeedBonus = parseFloat(attempts.reduce((sum, a) => sum + (a.speedBonus || 0), 0).toFixed(1));
       const openAttempt = attempts.find((a) => a.finger === "open");
+
+      const compTimes = attempts.map((a) => a.completionTime_ms).filter(Boolean);
+      const avgCompletionTime_ms = compTimes.length
+        ? Math.round(compTimes.reduce((a, b) => a + b, 0) / compTimes.length)
+        : 850;
+      const touchTimes = attempts.map((a) => a.timeToTouch_ms).filter(Boolean);
+      const avgTimeToTouch_ms = touchTimes.length
+        ? Math.round(touchTimes.reduce((a, b) => a + b, 0) / touchTimes.length)
+        : avgCompletionTime_ms;
+      const avgVels = attempts.map((a) => a.avgVelocity).filter((v) => typeof v === "number");
+      const avgVelocity = avgVels.length
+        ? parseFloat((avgVels.reduce((a, b) => a + b, 0) / avgVels.length).toFixed(2))
+        : 0.12;
+      const smooths = attempts.map((a) => a.trajectorySmoothness).filter((s) => typeof s === "number");
+      const avgSmoothness = smooths.length
+        ? parseFloat((smooths.reduce((a, b) => a + b, 0) / smooths.length).toFixed(2))
+        : 0.88;
+      const totalCorrectiveMovements = attempts.reduce((a, b) => a + (b.correctiveMovements || 0), 0);
 
       resultObj = {
         handOpenSuccess: openAttempt ? openAttempt.success : totalScore > 0,
         handOpenSpread: openAttempt ? openAttempt.accuracy : 0.22,
         pinchAttempts: attempts,
         totalScore,
+        totalSpeedBonus,
+        avgCompletionTime_ms,
+        avgTimeToTouch_ms,
+        avgVelocity,
+        trajectorySmoothness: avgSmoothness,
+        totalCorrectiveMovements,
         score: totalScore,
       };
     } else if (test.id === "test4_reactionStrike") {
@@ -610,6 +724,22 @@ export default function TestBatteryRunner({
         ? t4JerksRef.current.reduce((a, b) => a + b, 0) / t4JerksRef.current.length
         : 0.12;
       const smooth = clamp(1 / (1 + avgJerk * 10), 0, 1);
+
+      const compTimes = hits.map((t) => t.completionTime_ms).filter(Boolean);
+      const avgCompletionTime_ms = compTimes.length
+        ? Math.round(compTimes.reduce((a, b) => a + b, 0) / compTimes.length)
+        : avgRT;
+      const avgVels = hits.map((t) => t.avgVelocity).filter((v) => typeof v === "number");
+      const avgVelocity = avgVels.length
+        ? parseFloat((avgVels.reduce((a, b) => a + b, 0) / avgVels.length).toFixed(2))
+        : 0.35;
+      const peakVels = hits.map((t) => t.peakVelocity).filter((v) => typeof v === "number");
+      const peakVelocity = peakVels.length ? Math.max(...peakVels) : 0.72;
+      const smooths = hits.map((t) => t.trajectorySmoothness).filter((s) => typeof s === "number");
+      const avgSmoothness = smooths.length
+        ? parseFloat((smooths.reduce((a, b) => a + b, 0) / smooths.length).toFixed(2))
+        : Math.round(smooth * 100) / 100;
+      const totalCorrectiveMovements = trials.reduce((a, b) => a + (b.correctiveMovements || 0), 0);
 
       // Continuous per-trial scoring without arbitrary ceilings:
       // Each successful strike awards reaction time points (up to 1.0) + smoothness points (up to 0.5)
@@ -637,9 +767,13 @@ export default function TestBatteryRunner({
         avgReactionTime_ms: avgRT,
         medianRT_ms: medianRT,
         p90RT_ms: p90RT,
+        avgCompletionTime_ms,
+        avgVelocity,
+        peakVelocity,
         hitAccuracy: hitAcc,
         movementJerk: Math.round(avgJerk * 100) / 100,
-        smoothnessScore: Math.round(smooth * 100) / 100,
+        smoothnessScore: avgSmoothness,
+        totalCorrectiveMovements,
         reactionScore: finalScore,
         score: finalScore,
       };
@@ -666,6 +800,7 @@ export default function TestBatteryRunner({
       const avgAngularSpeed = spdSamples.length
         ? Math.round(spdSamples.reduce((a, b) => a + b, 0) / spdSamples.length)
         : 45;
+      const peakAngularSpeed = spdSamples.length ? Math.round(Math.max(...spdSamples)) : 65;
 
       let computedJerk = 0.14;
       if (spdSamples.length >= 8) {
@@ -673,6 +808,11 @@ export default function TestBatteryRunner({
         const variance = spdSamples.reduce((a, b) => a + Math.pow(b - meanSpd, 2), 0) / spdSamples.length;
         const stdDev = Math.sqrt(variance);
         computedJerk = Math.round(Math.min(0.95, Math.max(0.04, stdDev / Math.max(1, meanSpd))) * 100) / 100;
+      }
+      const romSmoothness = clamp(parseFloat((1 / (1 + computedJerk * 4)).toFixed(2)), 0.1, 1.0);
+      let speedHesitations = 0;
+      for (let i = 1; i < spdSamples.length; i++) {
+        if (spdSamples[i] < spdSamples[i - 1] * 0.6) speedHesitations++;
       }
 
       const arcScore = coveragePct >= 95 ? 3 : coveragePct >= 75 ? 2 : coveragePct >= 50 ? 1 : 0;
@@ -693,11 +833,15 @@ export default function TestBatteryRunner({
         lapsCompleted: lapsCompleted,
         pathSimilarityPct: pathSimilarityPct,
         avgAngularSpeed_deg_s: avgAngularSpeed,
+        avgVelocity: avgAngularSpeed,
+        peakVelocity: peakAngularSpeed,
         arcScore,
         pathScore,
         bioScore,
         lapBonus,
         trajectoryJerk: computedJerk,
+        trajectorySmoothness: romSmoothness,
+        correctiveMovements: speedHesitations,
         sweepDuration_ms: (test.duration - timeLeft) * 1000,
         totalScore,
         score: totalScore,
@@ -794,11 +938,13 @@ export default function TestBatteryRunner({
   // Spawn initial reaction target
   useEffect(() => {
     if (test.id === "test4_reactionStrike" && step === "active") {
+      const nowTs = Date.now();
       t4TargetPosRef.current = {
         x: 0.25 + Math.random() * 0.5,
         y: 0.28 + Math.random() * 0.45,
       };
-      t4SpawnTimeRef.current = Date.now();
+      t4SpawnTimeRef.current = nowTs;
+      t4KinematicsRef.current.startTask(nowTs);
     }
   }, [test.id, step]);
 
@@ -1223,10 +1369,11 @@ export default function TestBatteryRunner({
             else if (isLeft && single.x < 0.62) wr = single;
           }
 
-          // Check that arm is straight (elbow angle >= 148°)
-          const isArmStraight = usingMouseFallback || (elbowAngle >= 148);
+          // Extended arm constraint disabled (as requested: remove concept of extended arm)
+          const REQUIRE_EXTENDED_ARM = false;
+          const isArmStraight = REQUIRE_EXTENDED_ARM ? (usingMouseFallback || (elbowAngle >= 148)) : true;
 
-          // ONLY wrist landmark is allowed to complete calibration (no elbow fallback)
+          // Wrist landmark completes calibration without requiring extended elbow
           let isWrInGate = false;
           if (wr) {
             const wx = wr.x * w;
@@ -1321,6 +1468,7 @@ export default function TestBatteryRunner({
 
             let holdProgress = 0;
             if (activeHandPoint) {
+              t1KinematicsRef.current.feed(activeHandPoint.x, activeHandPoint.y);
               let d = ptDist(activeHandPoint, targetCoord);
               if (activeHand) {
                 if (activePalmCenter) d = Math.min(d, ptDist(activePalmCenter, targetCoord));
@@ -1336,7 +1484,8 @@ export default function TestBatteryRunner({
 
                 if (holdProgress >= 1) {
                   playAudioFeedback("hit");
-                  const lat = Date.now() - t1ZoneStartRef.current;
+                  const nowTs = Date.now();
+                  const lat = nowTs - t1ZoneStartRef.current;
                   const score =
                     lat <= CLINICAL_REACH_FAST_THRESHOLD && !compDetected
                       ? 3
@@ -1344,10 +1493,24 @@ export default function TestBatteryRunner({
                       ? 2
                       : 1;
 
+                  const t1Kin = t1KinematicsRef.current.finalizeTask({
+                    completionTimestamp: nowTs,
+                    targetCoord,
+                  });
+
                   t1RecordedZonesRef.current.push({
                     zone: currentZone.id,
                     success: true,
                     latency_ms: lat,
+                    completionTime_ms: t1Kin.completionTime_ms,
+                    reactionLatency_ms: t1Kin.reactionLatency_ms,
+                    avgVelocity: t1Kin.avgVelocity,
+                    peakVelocity: t1Kin.peakVelocity,
+                    trajectorySmoothness: t1Kin.trajectorySmoothness,
+                    correctiveMovements: t1Kin.correctiveMovements,
+                    pathLength: t1Kin.pathLength,
+                    directnessRatio: t1Kin.directnessRatio,
+                    downsampledPath: t1Kin.downsampledPath,
                     shoulderAngle,
                     elbowAngle,
                     compensationDetected: compDetected,
@@ -1357,8 +1520,10 @@ export default function TestBatteryRunner({
 
                   if (zIdx < zonesList.length - 1) {
                     t1ZoneIdxRef.current = zIdx + 1;
-                    t1ZoneStartRef.current = Date.now();
+                    const nextTs = Date.now();
+                    t1ZoneStartRef.current = nextTs;
                     t1HoldStartRef.current = null;
+                    t1KinematicsRef.current.startTask(nextTs);
                   } else {
                     finalizeCurrentTestRef.current?.();
                   }
@@ -1399,15 +1564,20 @@ export default function TestBatteryRunner({
                 pickProg = clamp((Date.now() - t2PickStartRef.current) / CLINICAL_TRANSFER_DWELL_PICK_MS, 0, 1);
                 if (pickProg >= 1) {
                   playAudioFeedback("tick");
+                  const pickTs = Date.now();
                   t2HeldBlockRef.current = true;
                   t2CrossedDividerRef.current = false;
                   t2WallBlockedRef.current = false;
                   t2PickStartRef.current = null;
+                  t2TrialWallBouncesRef.current = 0;
+                  t2PickTsRef.current = pickTs;
+                  t2KinematicsRef.current.startTask(pickTs);
                 }
               } else {
                 t2PickStartRef.current = null;
               }
             } else {
+              t2KinematicsRef.current.feed(handScrX, handScrY);
               const prevBlocked = t2WallBlockedRef.current;
               if (handScrX >= 0.46 && handScrX <= 0.54) {
                 if (handScrY > CLINICAL_TRANSFER_WALL_CLEAR_Y) {
@@ -1428,6 +1598,7 @@ export default function TestBatteryRunner({
 
               if (!prevBlocked && t2WallBlockedRef.current) {
                 t2MissesRef.current += 1;
+                t2TrialWallBouncesRef.current += 1;
                 setT2LiveStats((s) => ({ ...s, misses: t2MissesRef.current }));
               }
 
@@ -1439,19 +1610,51 @@ export default function TestBatteryRunner({
                 dropProg = clamp((Date.now() - t2DropStartRef.current) / CLINICAL_TRANSFER_DWELL_DROP_MS, 0, 1);
                 if (dropProg >= 1) {
                   playAudioFeedback("hit");
+                  const dropTs = Date.now();
+                  const t2Kin = t2KinematicsRef.current.finalizeTask({
+                    completionTimestamp: dropTs,
+                    extraCorrections: t2TrialWallBouncesRef.current,
+                  });
+
+                  const reachToPick_ms = t2PickTsRef.current && t2CycleStartRef.current
+                    ? Math.max(100, t2PickTsRef.current - t2CycleStartRef.current)
+                    : 300;
+                  const transitTime_ms = t2PickTsRef.current
+                    ? Math.max(100, dropTs - t2PickTsRef.current)
+                    : t2Kin.completionTime_ms;
+                  const totalTransferCycle_ms = t2CycleStartRef.current
+                    ? Math.max(200, dropTs - t2CycleStartRef.current)
+                    : reachToPick_ms + transitTime_ms;
+
                   t2TransfersRef.current += 1;
                   setT2LiveStats((s) => ({ ...s, transfers: t2TransfersRef.current }));
                   t2TrialsRef.current.push({
+                    transferIdx: t2TransfersRef.current,
                     success: true,
-                    pickTime_ms: 280,
-                    dropTime_ms: 280,
+                    reachToPick_ms: Math.round(reachToPick_ms),
+                    transitTime_ms: Math.round(transitTime_ms),
+                    totalTransferCycle_ms: Math.round(totalTransferCycle_ms),
+                    pickTime_ms: Math.round(reachToPick_ms),
+                    dropTime_ms: Math.round(transitTime_ms),
+                    completionTime_ms: t2Kin.completionTime_ms,
+                    avgVelocity: t2Kin.avgVelocity,
+                    peakVelocity: t2Kin.peakVelocity,
+                    trajectorySmoothness: t2Kin.trajectorySmoothness,
+                    correctiveMovements: t2Kin.correctiveMovements,
+                    wallCollisions: t2TrialWallBouncesRef.current,
+                    pathLength: t2Kin.pathLength,
+                    directnessRatio: t2Kin.directnessRatio,
+                    downsampledPath: t2Kin.downsampledPath,
                     elbowAngle,
                     shoulderAngle,
                   });
                   t2HeldBlockRef.current = false;
                   t2CrossedDividerRef.current = false;
                   t2WallBlockedRef.current = false;
+                  t2TrialWallBouncesRef.current = 0;
                   t2DropStartRef.current = null;
+                  t2PickTsRef.current = null;
+                  t2CycleStartRef.current = Date.now();
                   t2BlockPosRef.current = {
                     x: 0.15 + Math.random() * 0.18,
                     y: 0.54 + Math.random() * 0.22,
@@ -1480,6 +1683,9 @@ export default function TestBatteryRunner({
         } else if (test.id === "test3_pinch") {
           const pIdx = t3PoseIdxRef.current;
           const poseItem = test.poses[pIdx];
+          if (!poseItem) {
+            return;
+          }
 
           let distVal = 0.25;
           let conditionMet = false;
@@ -1526,13 +1732,40 @@ export default function TestBatteryRunner({
             conditionMet = true;
           }
 
+          const feedPt = activeHandLandmarks ? (pIdx === 0 ? activeHandLandmarks[8] : activeHandLandmarks[4]) : activeHandPoint;
+          if (feedPt) {
+            t3KinematicsRef.current.feed(feedPt.x, feedPt.y);
+          }
+
           let holdProg = 0;
           if (conditionMet) {
             if (!t3HoldStartRef.current) t3HoldStartRef.current = Date.now();
             holdProg = clamp((Date.now() - t3HoldStartRef.current) / CLINICAL_PINCH_DWELL_MS, 0, 1);
             if (holdProg >= 1) {
               playAudioFeedback("hit");
-              const score =
+              const nowTs = Date.now();
+              const t3Kin = t3KinematicsRef.current.finalizeTask({
+                completionTimestamp: nowTs,
+              });
+
+              const touchLatency_ms = t3PoseStartRef.current
+                ? Math.max(200, Date.now() - t3PoseStartRef.current)
+                : 850;
+
+              let speedBonus = 0;
+              let speedRating = "normal";
+              if (touchLatency_ms <= 1200) {
+                speedBonus = 1.0;
+                speedRating = "rapid";
+              } else if (touchLatency_ms <= 2500) {
+                speedBonus = 0.5;
+                speedRating = "fluid";
+              } else {
+                speedBonus = 0.0;
+                speedRating = "delayed";
+              }
+
+              const baseScore =
                 pIdx === 0
                   ? distVal >= 0.22
                     ? 3
@@ -1543,19 +1776,34 @@ export default function TestBatteryRunner({
                   ? 2
                   : 1;
 
+              const totalPoseScore = parseFloat((baseScore + speedBonus).toFixed(1));
+
               t3AttemptsRef.current.push({
                 finger: poseItem.id,
+                label: poseItem.label,
                 success: true,
                 accuracy: distVal,
                 dwellActual_ms: CLINICAL_PINCH_DWELL_MS,
-                score,
+                completionTime_ms: t3Kin.completionTime_ms,
+                timeToTouch_ms: Math.round(touchLatency_ms),
+                speedBonus,
+                speedRating,
+                avgVelocity: t3Kin.avgVelocity,
+                peakVelocity: t3Kin.peakVelocity,
+                trajectorySmoothness: t3Kin.trajectorySmoothness,
+                correctiveMovements: t3Kin.correctiveMovements,
+                baseScore,
+                score: totalPoseScore,
               });
 
+              t3HoldStartRef.current = null;
               if (pIdx < test.poses.length - 1) {
                 t3PoseIdxRef.current = pIdx + 1;
-                t3PoseStartRef.current = Date.now();
-                t3HoldStartRef.current = null;
+                const nextTs = Date.now();
+                t3PoseStartRef.current = nextTs;
+                t3KinematicsRef.current.startTask(nextTs);
               } else {
+                t3PoseIdxRef.current = test.poses.length;
                 finalizeCurrentTestRef.current?.();
               }
             }
@@ -1569,6 +1817,7 @@ export default function TestBatteryRunner({
           const trIdx = t4TrialIdxRef.current;
 
           if (currentTarget && activeHandPoint) {
+            t4KinematicsRef.current.feed(activeHandPoint.x, activeHandPoint.y);
             const d = ptDist(activeHandPoint, currentTarget);
 
             if (t4PrevWristRef.current) {
@@ -1583,10 +1832,16 @@ export default function TestBatteryRunner({
             t4PrevWristRef.current = activeHandPoint;
 
             if (d < CLINICAL_REACTION_TARGET_RADIUS) {
-              const rt = Date.now() - t4SpawnTimeRef.current;
+              const nowTs = Date.now();
+              const rt = nowTs - t4SpawnTimeRef.current;
               playAudioFeedback("hit");
               t4IsHitRef.current = true;
               t4HitMsgRef.current = `${rt}ms`;
+
+              const t4Kin = t4KinematicsRef.current.finalizeTask({
+                completionTimestamp: nowTs,
+                targetCoord: currentTarget,
+              });
 
               const trialJerk = t4TrialJerksRef.current.length
                 ? t4TrialJerksRef.current.reduce((a, b) => a + b, 0) / t4TrialJerksRef.current.length
@@ -1606,6 +1861,15 @@ export default function TestBatteryRunner({
               t4TrialsRef.current.push({
                 hit: true,
                 reactionTime_ms: rt,
+                initiationTime_ms: t4Kin.reactionLatency_ms,
+                completionTime_ms: t4Kin.completionTime_ms,
+                avgVelocity: t4Kin.avgVelocity,
+                peakVelocity: t4Kin.peakVelocity,
+                trajectorySmoothness: t4Kin.trajectorySmoothness,
+                correctiveMovements: t4Kin.correctiveMovements,
+                pathLength: t4Kin.pathLength,
+                directnessRatio: t4Kin.directnessRatio,
+                downsampledPath: t4Kin.downsampledPath,
                 trajectoryJerk: parseFloat(trialJerk.toFixed(3)),
                 score: trialScore,
               });
@@ -1624,11 +1888,13 @@ export default function TestBatteryRunner({
                 if (trIdx < CLINICAL_REACTION_TRIALS - 1) {
                   t4TrialIdxRef.current = trIdx + 1;
                   t4TrialJerksRef.current = [];
+                  const spawnTs = Date.now();
                   t4TargetPosRef.current = {
                     x: 0.22 + Math.random() * 0.56,
                     y: 0.26 + Math.random() * 0.44,
                   };
-                  t4SpawnTimeRef.current = Date.now();
+                  t4SpawnTimeRef.current = spawnTs;
+                  t4KinematicsRef.current.startTask(spawnTs);
                   setT4LiveStats((s) => ({ ...s, trialIdx: trIdx + 1 }));
                 } else {
                   finalizeCurrentTestRef.current?.();

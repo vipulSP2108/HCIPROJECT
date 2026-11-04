@@ -182,23 +182,22 @@ export function drawTest5ROM(
     dHand = Math.hypot(handX - cx, handY - cy);
 
     if (corridor === "straight") {
-      // 1. STRAIGHT ARM: 3/3 of user calibrated arm (r1).
-      // Grace: allow from (r1 - 45px) all the way outward to screen border (everything beyond is permitted)
-      const negGrace = 45;
-      isRadiusMatched = dHand >= (r1 - negGrace);
-      isOptimalZone = dHand >= r1;
-      isInnerZone = dHand >= (r1 - negGrace) && dHand < r1;
+      // 1. FULL / NATURAL REACH: Extended arm constraint disabled (as requested)
+      // Allow flexible natural coronal sweep without forcing a rigid straight/extended elbow
+      const minAcceptStraight = Math.max(25, r2 - 30);
+      isRadiusMatched = dHand >= minAcceptStraight;
+      isOptimalZone = dHand >= r2;
+      isInnerZone = dHand >= minAcceptStraight && dHand < r2;
       isOuterZone = false; // No penalty for reaching further outward
 
       if (isOptimalZone) {
         currentAccuracy = 1.0;
       } else if (isInnerZone) {
-        // Continuous point gradient: 100% pts at r1 down to 75% pts at (r1 - negGrace)
-        const frac = (dHand - (r1 - negGrace)) / negGrace;
-        currentAccuracy = 0.75 + 0.25 * clamp(frac, 0, 1);
+        const frac = (dHand - minAcceptStraight) / Math.max(1, r2 - minAcceptStraight);
+        currentAccuracy = 0.8 + 0.2 * clamp(frac, 0, 1);
       } else {
-        const distOff = (r1 - negGrace) - dHand;
-        currentAccuracy = Math.max(0.05, 0.75 - distOff / 50);
+        const distOff = minAcceptStraight - dHand;
+        currentAccuracy = Math.max(0.2, 0.8 - distOff / 50);
       }
     } else if (corridor === "slight_bend") {
       // 2. SLIGHT BEND: 2/3 of user arm (r2).
@@ -304,9 +303,9 @@ export function drawTest5ROM(
 
   // 1. Draw 3 Ranging Corridors & Concentric Guides (Calibrated to 3/3, 2/3, 1/3 of User Reach)
   const trajectories = [
-    { idx: 1, name: `1. Straight (3/3 Arm · ${r1}px)`, r: r1, color: "#38bdf8", isCurrent: corridor === "straight" },
-    { idx: 2, name: `2. Slight Bend (2/3 Arm · ${r2}px)`, r: r2, color: "#34d399", isCurrent: corridor === "slight_bend" },
-    { idx: 3, name: `3. Folded (1/3 Arm · ${r3}px)`, r: r3, color: "#c084fc", isCurrent: corridor === "folded" },
+    { idx: 1, name: `1. Full Reach (${r1}px)`, r: r1, color: "#38bdf8", isCurrent: corridor === "straight" },
+    { idx: 2, name: `2. Slight Bend (2/3 Reach · ${r2}px)`, r: r2, color: "#34d399", isCurrent: corridor === "slight_bend" },
+    { idx: 3, name: `3. Folded (1/3 Reach · ${r3}px)`, r: r3, color: "#c084fc", isCurrent: corridor === "folded" },
   ];
 
   trajectories.forEach((traj) => {
@@ -666,13 +665,13 @@ export function drawTest5ROM(
 
     if (corridor === "straight") {
       if (isOptimalZone) {
-        hintText = "★ OPTIMAL STRAIGHT REACH (100% pts)";
+        hintText = "★ OPTIMAL REACH SWEEP (100% pts)";
         hintColor = "#10b981";
       } else if (isInnerZone) {
         hintText = `✓ ACCEPTED REGION (${ptsPct}% pts)`;
         hintColor = "#38bdf8";
       } else {
-        hintText = `▲ EXTEND ARM FURTHER OUT (+${Math.round(r1 - 45 - dHand)}px · 0% pts)`;
+        hintText = `▲ SWEEP ARM FURTHER OUT (+${Math.round(r2 - dHand)}px · 0% pts)`;
         hintColor = "#fbbf24";
       }
     } else if (corridor === "slight_bend") {
@@ -727,7 +726,7 @@ export function drawTest5ROM(
   const phaseNum = (!isCCW ? 0 : 3) + (corridor === "straight" ? 1 : corridor === "slight_bend" ? 2 : 3);
   const phaseTitle = `TRAJECTORY ${phaseNum}/6: ${isCCW ? "ANTI-CLOCKWISE ↺" : "CLOCKWISE ↻"} · ${
     corridor === "straight"
-      ? "STRAIGHT ARM (Wide Sweep • 180° Elbow)"
+      ? "FULL REACH ARM (Wide Coronal Sweep)"
       : corridor === "slight_bend"
       ? "SLIGHT ELBOW BEND (Mid Sweep • ~120° Elbow)"
       : "FOLDED ELBOW (Compact Inner Circle • ~65° Elbow)"
@@ -1082,7 +1081,9 @@ export function drawRomPrecheckFramingHUD(
       elbowAngle = Math.round(Math.acos(Math.max(-1, Math.min(1, dot / (mag1 * mag2)))) * (180 / Math.PI));
     }
   }
-  const isArmStraight = elbowAngle >= 148;
+  // Extended arm constraint disabled (as requested: remove concept of extended arm)
+  const REQUIRE_EXTENDED_ARM = false;
+  const isArmStraight = REQUIRE_EXTENDED_ARM ? (elbowAngle >= 148) : true;
 
   // ONLY wrist landmark is allowed to trigger the target box (no elbow fallback)
   const isWrInsideGateRegion = (wrX !== null && wrY !== null &&
@@ -1090,7 +1091,7 @@ export function drawRomPrecheckFramingHUD(
      (isLeft ? (wrX <= gateX + gateW + 20 && Math.abs(wrY - (gateY + gateH / 2)) < 70) : (wrX >= gateX - 20 && Math.abs(wrY - (gateY + gateH / 2)) < 70))));
 
   const isWrInsideGate = isWrInsideGateRegion && isArmStraight;
-  const isBentArmInGate = isWrInsideGateRegion && !isArmStraight;
+  const isBentArmInGate = false; // Disabled bent arm blocker/warning
   const step2Progress = Math.min(1.0, (step2Hold || 0) / 1.0);
 
   if (calibStep >= 2) {
@@ -1128,7 +1129,7 @@ export function drawRomPrecheckFramingHUD(
     ctx.font = "bold 11px Inter, sans-serif";
     ctx.fillStyle = gateColor;
     ctx.fillText(
-      isLeft ? "EXTEND ARM LEFT ⬅️" : "EXTEND ARM RIGHT ➡️",
+      isLeft ? "REACH ARM LEFT ⬅️" : "REACH ARM RIGHT ➡️",
       gateX + gateW / 2,
       gateY - 14
     );
