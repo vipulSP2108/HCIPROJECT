@@ -1013,24 +1013,12 @@ export default function TestBatteryRunner({
       }
 
       let activeWrist = null;
-      const w15 = pl && pl[15] && pl[15].visibility > 0.15 ? pl[15] : null;
-      const w16 = pl && pl[16] && pl[16].visibility > 0.15 ? pl[16] : null;
-      if (w15 && w16) {
-        activeWrist = isRight ? (w16.x > w15.x ? w16 : w15) : (w15.x < w16.x ? w15 : w16);
-      } else if (isRight && w16) {
+      const w15 = pl && pl[15] && pl[15].visibility > 0.25 ? pl[15] : null;
+      const w16 = pl && pl[16] && pl[16].visibility > 0.25 ? pl[16] : null;
+      if (isRight) {
         activeWrist = w16;
-      } else if (isLeft && w15) {
+      } else {
         activeWrist = w15;
-      } else if (w15 || w16) {
-        const single = w15 || w16;
-        if (isRight && single.x > 0.38) activeWrist = single;
-        else if (isLeft && single.x < 0.62) activeWrist = single;
-      }
-
-      if (!activeWrist && pl && pl[elIdx] && pl[shIdx] && pl[elIdx].visibility > 0.2) {
-        const dx = pl[elIdx].x - pl[shIdx].x;
-        const dy = pl[elIdx].y - pl[shIdx].y;
-        activeWrist = { x: pl[elIdx].x + dx * 0.75, y: pl[elIdx].y + dy * 0.75, visibility: 0.3 };
       }
 
       // ── MATCH ACTIVE HAND FROM MEDIAPIPE HANDS (hl) ──
@@ -1124,11 +1112,11 @@ export default function TestBatteryRunner({
         }
       }
 
-      if (!activeHandPoint) {
+      if (!activeHandPoint && usingMouseFallback) {
         activeHandPoint = mouseCoordRef.current;
         activePalmCenter = mouseCoordRef.current;
       }
-      if (!activeWrist) {
+      if (!activeWrist && usingMouseFallback) {
         activeWrist = activeHandPoint;
       }
 
@@ -1356,18 +1344,7 @@ export default function TestBatteryRunner({
 
           const w15 = pl && pl[15] && pl[15].visibility > 0.2 ? pl[15] : null;
           const w16 = pl && pl[16] && pl[16].visibility > 0.2 ? pl[16] : null;
-          let wr = null;
-          if (w15 && w16) {
-            wr = isLeft ? (w15.x < w16.x ? w15 : w16) : (w16.x > w15.x ? w16 : w15);
-          } else if (isRight && w16) {
-            wr = w16;
-          } else if (isLeft && w15) {
-            wr = w15;
-          } else if (w15 || w16) {
-            const single = w15 || w16;
-            if (isRight && single.x > 0.38) wr = single;
-            else if (isLeft && single.x < 0.62) wr = single;
-          }
+          const wr = isRight ? w16 : w15;
 
           // Extended arm constraint disabled (as requested: remove concept of extended arm)
           const REQUIRE_EXTENDED_ARM = false;
@@ -1915,6 +1892,16 @@ export default function TestBatteryRunner({
             test.color
           );
         } else if (test.id === "test5_romSweep") {
+          // Pure wrist tracking: ONLY real wrist of active arm, zero prediction, zero mouse fallback
+          let pureWrist = null;
+          if (pl) {
+            const w15 = pl[15] && pl[15].visibility > 0.25 ? pl[15] : null;
+            const w16 = pl[16] && pl[16].visibility > 0.25 ? pl[16] : null;
+            pureWrist = isRight ? w16 : w15;
+          } else if (usingMouseFallback) {
+            pureWrist = mouseCoordRef.current;
+          }
+
           const ph = t5PhaseRef.current;
           if (verticalAngle > t5PeakVerticalRef.current) {
             t5PeakVerticalRef.current = verticalAngle;
@@ -1946,7 +1933,7 @@ export default function TestBatteryRunner({
             dt,
             romCalibShoulderRef.current,
             romCalibRadiusRef.current,
-            activeWrist
+            pureWrist
           );
         }
       }

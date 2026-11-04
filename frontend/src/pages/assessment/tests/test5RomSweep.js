@@ -62,35 +62,26 @@ export function getKinematicHandPosition(pl, isLeft, w, h, calibShoulder, calibR
       ? r2
       : r3;
 
-  // If activeWristCoord was passed in from the runner, use it directly!
+  // If activeWristCoord was passed in from the runner, use it directly ONLY if valid
   if (activeWristCoord && typeof activeWristCoord.x === "number" && typeof activeWristCoord.y === "number") {
-    return {
-      x: activeWristCoord.x * (activeWristCoord.x <= 1 ? w : 1),
-      y: activeWristCoord.y * (activeWristCoord.y <= 1 ? h : 1),
-      cx: sx,
-      cy: sy,
-      targetR,
-    };
+    if (activeWristCoord.visibility === undefined || activeWristCoord.visibility > 0.25) {
+      return {
+        x: activeWristCoord.x * (activeWristCoord.x <= 1 ? w : 1),
+        y: activeWristCoord.y * (activeWristCoord.y <= 1 ? h : 1),
+        cx: sx,
+        cy: sy,
+        targetR,
+      };
+    }
   }
 
   if (!pl) return null;
 
-  const w15 = pl[15] && pl[15].visibility > 0.15 ? pl[15] : null;
-  const w16 = pl[16] && pl[16].visibility > 0.15 ? pl[16] : null;
+  // Real physical wrist ONLY for active arm (zero prediction, zero cross-body fallback):
+  const w15 = pl[15] && pl[15].visibility > 0.25 ? pl[15] : null;
+  const w16 = pl[16] && pl[16].visibility > 0.25 ? pl[16] : null;
 
-  let wr = null;
-  if (w15 && w16) {
-    // Both wrists visible: strictly pick the wrist on the active arm's side of the screen
-    wr = isRight ? (w16.x > w15.x ? w16 : w15) : (w15.x < w16.x ? w15 : w16);
-  } else if (isRight && w16) {
-    wr = w16;
-  } else if (isLeft && w15) {
-    wr = w15;
-  } else if (w15 || w16) {
-    const single = w15 || w16;
-    if (isRight && single.x > 0.38) wr = single;
-    else if (isLeft && single.x < 0.62) wr = single;
-  }
+  const wr = isRight ? w16 : w15;
 
   // Pure wrist tracking: return actual wrist position without artificial extrapolation
   if (wr) {
@@ -293,6 +284,12 @@ export function drawTest5ROM(
       while (handTrail.length > 0 && handTrail[0].time < cutoff) {
         handTrail.shift();
       }
+    }
+  } else {
+    // When wrist is disconnected or lost:
+    // Reset previous angle so that when it comes back into view, it doesn't calculate a huge fake jump across the circle!
+    if (t5Kinematics) {
+      t5Kinematics.prevAngle = null;
     }
   }
 
@@ -720,6 +717,27 @@ export function drawTest5ROM(
     ctx.fillText(hintText, hX + hW / 2, hY + 13);
 
     ctx.restore();
+  } else {
+    // When wrist is disconnected or lost, do NOT predict or draw anything. Show clean indicator.
+    ctx.save();
+    const bannerW = 420;
+    const bannerH = 36;
+    const bannerX = (w - bannerW) / 2;
+    const bannerY = h - 68;
+    ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+    ctx.beginPath();
+    ctx.roundRect(bannerX, bannerY, bannerW, bannerH, 10);
+    ctx.fill();
+    ctx.strokeStyle = "#f59e0b";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.font = "bold 12px Inter, sans-serif";
+    ctx.fillStyle = "#f59e0b";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("⚠️ Active Arm Wrist Not Detected — Keep Hand Visible In Frame", w / 2, bannerY + bannerH / 2);
+    ctx.restore();
   }
 
   // 5. Top Floating HUD (Supports 6 Trajectories: 3 Clockwise + 3 Anti-Clockwise)
@@ -1052,17 +1070,9 @@ export function drawRomPrecheckFramingHUD(
     }
 
     let activeWr = null;
-    if (w15 && w16) {
-      activeWr = isLeft ? (w15.x < w16.x ? w15 : w16) : (w16.x > w15.x ? w16 : w15);
-    } else if (isRight && w16) {
-      activeWr = w16;
-    } else if (isLeft && w15) {
-      activeWr = w15;
-    } else if (w15 || w16) {
-      const single = w15 || w16;
-      if (isRight && single.x > 0.38) activeWr = single;
-      else if (isLeft && single.x < 0.62) activeWr = single;
-    }
+    const wr15 = pl[15] && pl[15].visibility > 0.25 ? pl[15] : null;
+    const wr16 = pl[16] && pl[16].visibility > 0.25 ? pl[16] : null;
+    activeWr = isRight ? wr16 : wr15;
 
     if (activeSh) { shPtX = activeSh.x * w; shPtY = activeSh.y * h; }
     if (activeEl) { elX = activeEl.x * w; elY = activeEl.y * h; }
