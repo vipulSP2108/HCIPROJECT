@@ -1,6 +1,6 @@
 // canvasDrawing.js - Shared Canvas Skeletons, Avatar & Posture HUD Overlays
 
-import { clamp } from "./vectorMath";
+import { clamp, validateRealWrist } from "./vectorMath";
 
 export function drawClinicalStageBackground(ctx, w, h, testColor, hasWebcamVideo) {
   ctx.save();
@@ -127,8 +127,6 @@ export function drawHolographicAvatar(ctx, w, h, activeArm, wristCoord, testColo
   const elX = actShX + Math.cos(elAngle) * armLen1;
   const elY = shY + Math.sin(elAngle) * armLen1;
 
-  ctx.shadowColor = testColor;
-  ctx.shadowBlur = 18;
   ctx.lineWidth = 5;
   ctx.strokeStyle = testColor;
   ctx.beginPath();
@@ -136,7 +134,6 @@ export function drawHolographicAvatar(ctx, w, h, activeArm, wristCoord, testColo
   ctx.lineTo(elX, elY);
   ctx.lineTo(handX, handY);
   ctx.stroke();
-  ctx.shadowBlur = 0;
 
   [
     { x: actShX, y: shY, r: 8, label: "Shoulder" },
@@ -165,12 +162,18 @@ export function drawSkeletalOverlay(ctx, w, h, pl, hl, activeArm, testColor, isP
   const isRight = String(activeArm).toLowerCase() === "right";
   const isLeft = !isRight;
 
+  const validActiveWr = validateRealWrist(pl, isRight, w, h);
+  const validOtherWr = validateRealWrist(pl, !isRight, w, h);
+  const isLeftWristValid = isRight ? Boolean(validOtherWr) : Boolean(validActiveWr);
+  const isRightWristValid = isRight ? Boolean(validActiveWr) : Boolean(validOtherWr);
+
   const POSE_CONNECTIONS = [
     [11, 12], [11, 23], [12, 24], [23, 24],
-    [11, 13], [13, 15],
-    [12, 14], [14, 16],
+    [11, 13], [12, 14],
     [11, 0], [12, 0]
   ];
+  if (isLeftWristValid) POSE_CONNECTIONS.push([13, 15]);
+  if (isRightWristValid) POSE_CONNECTIONS.push([14, 16]);
 
   ctx.save();
   ctx.lineWidth = 3;
@@ -188,18 +191,22 @@ export function drawSkeletalOverlay(ctx, w, h, pl, hl, activeArm, testColor, isP
   });
 
   // Left Arm = [11, 13, 15] | Right Arm = [12, 14, 16]
-  let activeIndices = isRight ? [12, 14, 16] : [11, 13, 15];
+  let shIdx = isRight ? 12 : 11;
+  let elIdx = isRight ? 14 : 13;
+  let wrIdx = isRight ? 16 : 15;
   if (pl[11] && pl[12] && pl[11].visibility > 0.3 && pl[12].visibility > 0.3) {
     const screenLeftShIdx = pl[11].x < pl[12].x ? 11 : 12;
     const screenRightShIdx = screenLeftShIdx === 11 ? 12 : 11;
-    activeIndices = isRight
-      ? (screenRightShIdx === 12 ? [12, 14, 16] : [11, 13, 15])
-      : (screenLeftShIdx === 11 ? [11, 13, 15] : [12, 14, 16]);
+    shIdx = isRight ? screenRightShIdx : screenLeftShIdx;
+    elIdx = shIdx === 12 ? 14 : 13;
+    wrIdx = shIdx === 12 ? 16 : 15;
   }
+
+  // If wrist is disconnected or occluded, ONLY draw shoulder -> elbow (never shoot across screen)
+  const activeIndices = validActiveWr ? [shIdx, elIdx, wrIdx] : [shIdx, elIdx];
+
   ctx.lineWidth = 5.5;
   ctx.strokeStyle = testColor;
-  ctx.shadowColor = testColor;
-  ctx.shadowBlur = 18;
 
   ctx.beginPath();
   let first = true;
@@ -213,7 +220,6 @@ export function drawSkeletalOverlay(ctx, w, h, pl, hl, activeArm, testColor, isP
     }
   });
   ctx.stroke();
-  ctx.shadowBlur = 0;
 
   activeIndices.forEach((idx, stepIdx) => {
     const pt = pl[idx];

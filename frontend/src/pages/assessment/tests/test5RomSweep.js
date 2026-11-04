@@ -1,4 +1,4 @@
-import { clamp, vecSub, vecAngle } from "../utils/vectorMath";
+import { clamp, vecSub, vecAngle, validateRealWrist } from "../utils/vectorMath";
 
 // ── ROM SWEEP PHASE HELPER (Supports 6 Trajectories: 3 Clockwise + 3 Anti-Clockwise) ──
 export function parseRomPhase(sweepPhase) {
@@ -29,8 +29,8 @@ export function getKinematicHandPosition(pl, isLeft, w, h, calibShoulder, calibR
   let sy = calibShoulder ? clamp(calibShoulder.y, h * 0.38, h * 0.50) : h * 0.44;
 
   if (pl) {
-    const s11 = pl[11] && pl[11].visibility > 0.25 ? pl[11] : null;
-    const s12 = pl[12] && pl[12].visibility > 0.25 ? pl[12] : null;
+    const s11 = pl[11] && (pl[11].visibility ?? 0) > 0.35 ? pl[11] : null;
+    const s12 = pl[12] && (pl[12].visibility ?? 0) > 0.35 ? pl[12] : null;
 
     let sh = null;
     if (s11 && s12) {
@@ -62,32 +62,23 @@ export function getKinematicHandPosition(pl, isLeft, w, h, calibShoulder, calibR
       ? r2
       : r3;
 
-  // If activeWristCoord was passed in from the runner, use it directly ONLY if valid
+  // 1. If activeWristCoord was validated and passed in, use it directly
   if (activeWristCoord && typeof activeWristCoord.x === "number" && typeof activeWristCoord.y === "number") {
-    if (activeWristCoord.visibility === undefined || activeWristCoord.visibility > 0.25) {
-      return {
-        x: activeWristCoord.x * (activeWristCoord.x <= 1 ? w : 1),
-        y: activeWristCoord.y * (activeWristCoord.y <= 1 ? h : 1),
-        cx: sx,
-        cy: sy,
-        targetR,
-      };
-    }
+    return {
+      x: activeWristCoord.x * (activeWristCoord.x <= 1 ? w : 1),
+      y: activeWristCoord.y * (activeWristCoord.y <= 1 ? h : 1),
+      cx: sx,
+      cy: sy,
+      targetR,
+    };
   }
 
-  if (!pl) return null;
-
-  // Real physical wrist ONLY for active arm (zero prediction, zero cross-body fallback):
-  const w15 = pl[15] && pl[15].visibility > 0.25 ? pl[15] : null;
-  const w16 = pl[16] && pl[16].visibility > 0.25 ? pl[16] : null;
-
-  const wr = isRight ? w16 : w15;
-
-  // Pure wrist tracking: return actual wrist position without artificial extrapolation
-  if (wr) {
+  // 2. Strict anatomical real-wrist validation (zero synthetic prediction, zero hallucinated fallbacks)
+  const validated = validateRealWrist(pl, isRight, w, h);
+  if (validated) {
     return {
-      x: wr.x * w,
-      y: wr.y * h,
+      x: validated.x,
+      y: validated.y,
       cx: sx,
       cy: sy,
       targetR,
@@ -273,14 +264,19 @@ export function drawTest5ROM(
     }
 
     if (handTrail) {
-      handTrail.push({
-        x: handX,
-        y: handY,
-        matched: isRadiusMatched,
-        optimal: isOptimalZone,
-        time: Date.now(),
-      });
-      const cutoff = Date.now() - 1800;
+      const lastPt = handTrail.length > 0 ? handTrail[handTrail.length - 1] : null;
+      const jumpDist = lastPt ? Math.hypot(handX - lastPt.x, handY - lastPt.y) : 0;
+      // Guard against false teleport jumps in trail
+      if (!lastPt || jumpDist < 120) {
+        handTrail.push({
+          x: handX,
+          y: handY,
+          matched: isRadiusMatched,
+          optimal: isOptimalZone,
+          time: Date.now(),
+        });
+      }
+      const cutoff = Date.now() - 1500;
       while (handTrail.length > 0 && handTrail[0].time < cutoff) {
         handTrail.shift();
       }
@@ -313,7 +309,6 @@ export function drawTest5ROM(
 
       if (corridor === "straight") {
         // ZONE 1: WIDE PERMITTED OUTWARD CORRIDOR (from [R - 45] outward to screen border)
-        // Light transparent accepted region with gradient matching point reduction
         const innerR = Math.max(15, R - 45);
         const outerR = Math.min(Math.max(w, h) * 0.74, R + 95);
 
@@ -341,15 +336,18 @@ export function drawTest5ROM(
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Glowing Centerline Track (100% Points Target)
+        // Crisp Centerline Track (High-performance stroke, zero blur)
         ctx.beginPath();
         ctx.arc(cx, cy, R, 0, Math.PI * 2);
         ctx.lineWidth = 3;
         ctx.strokeStyle = traj.color;
-        ctx.shadowColor = traj.color;
-        ctx.shadowBlur = 16;
         ctx.stroke();
-        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.lineWidth = 7;
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+        ctx.stroke();
 
         // Label on Grace Limit Line
         const tagAngle = isRight ? Math.PI * 0.22 : Math.PI * 0.78;
@@ -361,7 +359,6 @@ export function drawTest5ROM(
         ctx.fillText("75% Grace Limit (-45px)", tagX + (isRight ? 6 : -6), tagY);
       } else if (corridor === "slight_bend") {
         // ZONE 2: SLIGHT BEND ACCEPTED REGION (from circle 3 [r3 - 25] up to circle 1 [r1 + 25])
-        // Light transparent accepted region with gradient matching point reduction
         const innerR = Math.max(15, r3 - 25);
         const outerR = r1 + 25;
 
@@ -398,15 +395,18 @@ export function drawTest5ROM(
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Glowing Centerline Track (100% Points Target)
+        // Crisp Centerline Track
         ctx.beginPath();
         ctx.arc(cx, cy, R, 0, Math.PI * 2);
         ctx.lineWidth = 3;
         ctx.strokeStyle = traj.color;
-        ctx.shadowColor = traj.color;
-        ctx.shadowBlur = 16;
         ctx.stroke();
-        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.lineWidth = 7;
+        ctx.strokeStyle = "rgba(52, 211, 153, 0.25)";
+        ctx.stroke();
 
         // Labels on Grace Limits
         const tagAngle = isRight ? Math.PI * 0.22 : Math.PI * 0.78;
@@ -421,7 +421,6 @@ export function drawTest5ROM(
         ctx.fillText("75% Grace Limit (Out)", outX + (isRight ? 6 : -6), outY);
       } else {
         // ZONE 3: FOLDED ELBOW (from near shoulder 20px up to circle 2 [r2 + 20])
-        // Light transparent accepted region with gradient matching point reduction
         const innerR = 20;
         const outerR = r2 + 20;
 
@@ -448,15 +447,18 @@ export function drawTest5ROM(
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Glowing Centerline Track (100% Points Target)
+        // Crisp Centerline Track
         ctx.beginPath();
         ctx.arc(cx, cy, R, 0, Math.PI * 2);
         ctx.lineWidth = 3;
         ctx.strokeStyle = traj.color;
-        ctx.shadowColor = traj.color;
-        ctx.shadowBlur = 16;
         ctx.stroke();
-        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.lineWidth = 7;
+        ctx.strokeStyle = "rgba(192, 132, 252, 0.25)";
+        ctx.stroke();
 
         // Label on Grace Limit
         const tagAngle = isRight ? Math.PI * 0.22 : Math.PI * 0.78;
@@ -468,21 +470,18 @@ export function drawTest5ROM(
         ctx.fillText("75% Grace Limit (Out)", outX + (isRight ? 6 : -6), outY);
       }
 
-      // VISITED SECTORS FILL
+      // VISITED SECTORS FILL - High-performance batched stroke (Zero blur overhead)
       if (angleSectors && angleSectors.size > 0) {
-        ctx.shadowBlur = 16;
-        ctx.shadowColor = "#10b981";
         ctx.strokeStyle = "#10b981";
-        ctx.lineWidth = 22;
+        ctx.lineWidth = 20;
         ctx.lineCap = "round";
+        ctx.beginPath();
         angleSectors.forEach((sec) => {
-          const startRad = (sec * 6 - 2) * Math.PI / 180;
-          const endRad = ((sec + 1) * 6 + 2) * Math.PI / 180;
-          ctx.beginPath();
+          const startRad = (sec * 6 - 1) * Math.PI / 180;
+          const endRad = ((sec + 1) * 6 + 1) * Math.PI / 180;
           ctx.arc(cx, cy, R, startRad, endRad);
-          ctx.stroke();
         });
-        ctx.shadowBlur = 0;
+        ctx.stroke();
       }
 
       // Start Marker with Direction Label
@@ -493,8 +492,6 @@ export function drawTest5ROM(
       ctx.beginPath();
       ctx.arc(sX, sY, 7, 0, Math.PI * 2);
       ctx.fillStyle = "#10b981";
-      ctx.shadowColor = "#10b981";
-      ctx.shadowBlur = 12;
       ctx.fill();
       ctx.strokeStyle = "#ffffff";
       ctx.lineWidth = 2;
@@ -503,13 +500,10 @@ export function drawTest5ROM(
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = "#000000";
       ctx.fillText(isCCW ? "START 🏁 ↺ CCW" : "START 🏁 ↻ CW", sX, sY - 10);
       ctx.restore();
 
       // Animated Orbiting Guide Pace Beacon - Auto-hides once user demonstrates understanding
-      // (e.g. sweeps 20% arc or 75° cumulative in target direction) so it does NOT distract
       const userUnderstands = coveragePct >= 20 || (t5Kinematics && (t5Kinematics.cumulativeDeg || 0) >= 75);
 
       if (!userUnderstands) {
@@ -518,7 +512,6 @@ export function drawTest5ROM(
         ctx.globalAlpha = beaconAlpha;
 
         const now = Date.now();
-        // Speed matching target direction: Clockwise (positive) or Counter-Clockwise (negative)
         const speed = isCCW ? -0.0015 : 0.0015;
         const orbAngle = (now * speed) % (Math.PI * 2);
         const orbX = cx + Math.cos(orbAngle) * R;
@@ -527,8 +520,6 @@ export function drawTest5ROM(
         ctx.beginPath();
         ctx.arc(orbX, orbY, 11, 0, Math.PI * 2);
         ctx.fillStyle = "#ffffff";
-        ctx.shadowColor = traj.color;
-        ctx.shadowBlur = 20;
         ctx.fill();
 
         ctx.beginPath();
@@ -581,13 +572,11 @@ export function drawTest5ROM(
     ctx.restore();
   });
 
-  // 2. Pulsing Shoulder Origin Hub
+  // 2. Center Shoulder Origin Hub (Clean hardware-accelerated concentric rings)
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, 14, 0, Math.PI * 2);
   ctx.fillStyle = curColor;
-  ctx.shadowColor = curColor;
-  ctx.shadowBlur = 15;
   ctx.fill();
   ctx.beginPath();
   ctx.arc(cx, cy, 22, 0, Math.PI * 2);
@@ -606,30 +595,30 @@ export function drawTest5ROM(
   ctx.fillText(`${activeArm.toUpperCase()} SHOULDER`, cx, cy + 32);
   ctx.restore();
 
-  // 3. Hand Motion Trail Ribbon
+  // 3. Hand Motion Trail Ribbon - Zero shadowBlur, skips teleport gaps
   if (handTrail && handTrail.length > 1) {
     ctx.save();
     for (let i = 0; i < handTrail.length - 1; i++) {
       const p1 = handTrail[i];
       const p2 = handTrail[i + 1];
+      // Do not draw trail lines across teleport jumps or sudden relocations
+      if (Math.hypot(p2.x - p1.x, p2.y - p1.y) > 90) continue;
       const ageFrac = i / handTrail.length;
       ctx.beginPath();
       ctx.moveTo(p1.x, p1.y);
       ctx.lineTo(p2.x, p2.y);
-      ctx.lineWidth = 3 + ageFrac * 8;
+      ctx.lineWidth = 3 + ageFrac * 6;
       ctx.strokeStyle = p2.optimal
-        ? `rgba(16, 185, 129, ${0.25 + ageFrac * 0.75})`
+        ? `rgba(16, 185, 129, ${0.3 + ageFrac * 0.7})`
         : p2.matched
-        ? `rgba(56, 189, 248, ${0.25 + ageFrac * 0.70})`
-        : `rgba(245, 158, 11, ${0.2 + ageFrac * 0.65})`;
-      ctx.shadowColor = p2.optimal ? "#10b981" : p2.matched ? "#38bdf8" : "#f59e0b";
-      ctx.shadowBlur = 8;
+        ? `rgba(56, 189, 248, ${0.3 + ageFrac * 0.7})`
+        : `rgba(245, 158, 11, ${0.25 + ageFrac * 0.65})`;
       ctx.stroke();
     }
     ctx.restore();
   }
 
-  // 4. Live Hand Marker & 3-Corridor Guidance Callout
+  // 4. Live Hand Marker & 3-Corridor Guidance Callout (Pure hardware-accelerated rendering)
   if (handX !== null && handY !== null) {
     ctx.save();
 
@@ -646,12 +635,21 @@ export function drawTest5ROM(
     ctx.stroke();
     ctx.setLineDash([]);
 
+    const markerColor = isOptimalZone ? "#10b981" : isRadiusMatched ? "#38bdf8" : curColor;
     ctx.beginPath();
     ctx.arc(handX, handY, 14, 0, Math.PI * 2);
-    ctx.fillStyle = isOptimalZone ? "#10b981" : isRadiusMatched ? "#38bdf8" : curColor;
-    ctx.shadowColor = isOptimalZone ? "#10b981" : isRadiusMatched ? "#38bdf8" : curColor;
-    ctx.shadowBlur = 18;
+    ctx.fillStyle = markerColor;
     ctx.fill();
+
+    // Concentric glow ring (hardware-accelerated, zero blur overhead)
+    ctx.beginPath();
+    ctx.arc(handX, handY, 20, 0, Math.PI * 2);
+    ctx.strokeStyle = markerColor + "55";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(handX, handY, 14, 0, Math.PI * 2);
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2.5;
     ctx.stroke();
@@ -830,12 +828,9 @@ export function drawTest5ROM(
   ctx.fill();
 
   ctx.fillStyle = isRound1Complete ? "#10b981" : curColor;
-  ctx.shadowColor = isRound1Complete ? "#10b981" : curColor;
-  ctx.shadowBlur = 8;
   ctx.beginPath();
   ctx.roundRect(pBarX, pBarY, (pBarW * (isRound1Complete ? 100 : round1Pct)) / 100, pBarH, 3);
   ctx.fill();
-  ctx.shadowBlur = 0;
 
   const metricLine = `Score Match: ${pathSimilarityPct}%  |  Speed: ${avgAngularSpeed}°/s  |  Arm Ratios: 3/3 (${r1}px) · 2/3 (${r2}px) · 1/3 (${r3}px)`;
   ctx.font = "bold 10px monospace";
@@ -1069,14 +1064,10 @@ export function drawRomPrecheckFramingHUD(
       activeEl = isRight ? (el14 || el13) : (el13 || el14);
     }
 
-    let activeWr = null;
-    const wr15 = pl[15] && pl[15].visibility > 0.25 ? pl[15] : null;
-    const wr16 = pl[16] && pl[16].visibility > 0.25 ? pl[16] : null;
-    activeWr = isRight ? wr16 : wr15;
-
+    const realWr = validateRealWrist(pl, isRight, w, h);
     if (activeSh) { shPtX = activeSh.x * w; shPtY = activeSh.y * h; }
     if (activeEl) { elX = activeEl.x * w; elY = activeEl.y * h; }
-    if (activeWr) { wrX = activeWr.x * w; wrY = activeWr.y * h; }
+    if (realWr) { wrX = realWr.x; wrY = realWr.y; }
   }
 
   // Calculate elbow angle to ensure arm is fully straight

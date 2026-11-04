@@ -29,7 +29,7 @@ import {
 
 import { CLINICAL_TESTS, S } from "../constants/clinicalTestBattery";
 import { playAudioFeedback } from "../utils/audioFeedback";
-import { ptDist, vecSub, vecAngle, clamp } from "../utils/vectorMath";
+import { ptDist, vecSub, vecAngle, clamp, validateRealWrist } from "../utils/vectorMath";
 import { KinematicTaskBuffer } from "../utils/kinematicsEngine";
 import {
   drawClinicalStageBackground,
@@ -200,11 +200,13 @@ export default function TestBatteryRunner({
   const romCalibRadiusRef = useRef(null);
   const romStep1HoldRef = useRef(0);
   const romStep2HoldRef = useRef(0);
+  const t5PrevValidWristRef = useRef(null);
 
   useEffect(() => {
     currentTestIdRef.current = test.id;
     if (test.id === "test5_romSweep") {
       latestHandsRef.current = null;
+      t5PrevValidWristRef.current = null;
       romCalibStepRef.current = 1;
       setRomCalibStep(1);
       romCalibShoulderRef.current = null;
@@ -1342,9 +1344,7 @@ export default function TestBatteryRunner({
           const gateX = isLeft ? (boxX + 14) : (boxX + boxW - gateW - 14);
           const gateY = clamp(anchorSy - gateH / 2, boxY + 20, boxY + boxH - gateH - 20);
 
-          const w15 = pl && pl[15] && pl[15].visibility > 0.2 ? pl[15] : null;
-          const w16 = pl && pl[16] && pl[16].visibility > 0.2 ? pl[16] : null;
-          const wr = isRight ? w16 : w15;
+          const wr = validateRealWrist(pl, isRight, w, h);
 
           // Extended arm constraint disabled (as requested: remove concept of extended arm)
           const REQUIRE_EXTENDED_ARM = false;
@@ -1353,8 +1353,8 @@ export default function TestBatteryRunner({
           // Wrist landmark completes calibration without requiring extended elbow
           let isWrInGate = false;
           if (wr) {
-            const wx = wr.x * w;
-            const wy = wr.y * h;
+            const wx = wr.x;
+            const wy = wr.y;
             const isWrInsideGateRegion = (
               (wx >= gateX - 25 && wx <= gateX + gateW + 25 && wy >= gateY - 30 && wy <= gateY + gateH + 30) ||
               (isLeft ? (wx <= gateX + gateW + 20 && Math.abs(wy - (gateY + gateH / 2)) < 70) : (wx >= gateX - 20 && Math.abs(wy - (gateY + gateH / 2)) < 70))
@@ -1370,8 +1370,8 @@ export default function TestBatteryRunner({
           if (isWrInGate) {
             romStep2HoldRef.current += dt;
             if (romStep2HoldRef.current >= 1.0) {
-              const curWrX = wr ? wr.x * w : isLeft ? gateX + gateW / 2 : gateX + gateW / 2;
-              const curWrY = wr ? wr.y * h : gateY + gateH / 2;
+              const curWrX = wr ? (wr.x <= 1 ? wr.x * w : wr.x) : (gateX + gateW / 2);
+              const curWrY = wr ? (wr.y <= 1 ? wr.y * h : wr.y) : (gateY + gateH / 2);
               const measuredR = Math.round(Math.hypot(curWrX - anchorSx, curWrY - anchorSy));
               // Respect user's real straight arm reach without capping away their arm length
               const maxPossibleR = Math.round(Math.hypot(Math.max(anchorSx, w - anchorSx), Math.max(anchorSy, h - anchorSy)));
@@ -1892,14 +1892,20 @@ export default function TestBatteryRunner({
             test.color
           );
         } else if (test.id === "test5_romSweep") {
-          // Pure wrist tracking: ONLY real wrist of active arm, zero prediction, zero mouse fallback
+          // Pure wrist tracking: ONLY strictly real wrist of active arm, zero prediction, zero hallucination
           let pureWrist = null;
           if (pl) {
-            const w15 = pl[15] && pl[15].visibility > 0.25 ? pl[15] : null;
-            const w16 = pl[16] && pl[16].visibility > 0.25 ? pl[16] : null;
-            pureWrist = isRight ? w16 : w15;
+            pureWrist = validateRealWrist(pl, isRight, w, h, t5PrevValidWristRef.current);
           } else if (usingMouseFallback) {
             pureWrist = mouseCoordRef.current;
+          }
+
+          if (pureWrist) {
+            t5PrevValidWristRef.current = { x: pureWrist.x, y: pureWrist.y, time: Date.now() };
+          } else {
+            if (t5PrevValidWristRef.current && Date.now() - t5PrevValidWristRef.current.time > 150) {
+              t5PrevValidWristRef.current = null;
+            }
           }
 
           const ph = t5PhaseRef.current;
