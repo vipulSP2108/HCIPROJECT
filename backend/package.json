@@ -7,6 +7,7 @@
     "start": "node src/server.js",
     "dev": "nodemon -L src/server.js",
     "seed:demo": "node scripts/seed_demo_patients.js",
+    "setup:study": "node scripts/setup_real_study_patients.js",
     "analytics": "node ../analytics/pipeline/run_pipeline.js"
   },
   "dependencies": {
