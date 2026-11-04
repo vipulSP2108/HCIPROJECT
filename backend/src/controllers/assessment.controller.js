@@ -7,6 +7,9 @@ const PianoSession        = require('../models/pianoSession.model');
 
 const { computeGameMetrics }                     = require('../utils/assessmentMetrics');
 const { computeClinicalMetrics, classifyImprovement, MCID } = require('../utils/clinicalMetrics');
+const { saveUserMatrixFiles, listUserFiles, USER_FILES_BASE_DIR } = require('../utils/matrixFileStorage');
+const path = require('path');
+const fs   = require('fs');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -124,7 +127,20 @@ exports.saveClinicalSession = async (req, res) => {
     assessment.clinicalTestSessionId = clinicalSession._id;
     await assessment.save();
 
-    res.status(201).json({ success: true, clinicalSession });
+    // Auto-save JSON and CSV matrix files user-wise to server disk
+    let savedFilesInfo = null;
+    try {
+      savedFilesInfo = await saveUserMatrixFiles({
+        user: req.user,
+        assessment,
+        clinicalSession,
+      });
+      console.log(`[saveClinicalSession] Saved user matrix files: ${savedFilesInfo?.jsonFilename}`);
+    } catch (fErr) {
+      console.warn('[saveClinicalSession] Failed to write user matrix file to disk:', fErr.message);
+    }
+
+    res.status(201).json({ success: true, clinicalSession, files: savedFilesInfo });
   } catch (err) {
     console.error('[saveClinicalSession]', err);
     res.status(500).json({ success: false, message: err.message });
@@ -369,6 +385,72 @@ exports.abandonAssessment = async (req, res) => {
     res.json({ success: true, assessment });
   } catch (err) {
     console.error('[abandonAssessment]', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// ─── USER-WISE FILE MANAGEMENT ───────────────────────────────────────────────
+/**
+ * POST /api/assessment/:id/save-matrix-files
+ * Body: { results, activeArm, jsonReport, csvContent }
+ */
+exports.saveMatrixFiles = async (req, res) => {
+  try {
+    const assessment = await AssessmentSession.findOne({ _id: req.params.id, user: req.user._id });
+    const clinicalSession = assessment?.clinicalTestSessionId
+      ? await ClinicalTestSession.findById(assessment.clinicalTestSessionId)
+      : null;
+
+    const { results, activeArm, jsonReport, csvContent } = req.body;
+
+    const savedFilesInfo = await saveUserMatrixFiles({
+      user: req.user,
+      assessment: assessment || { _id: req.params.id, phase: 'ongoing' },
+      clinicalSession: clinicalSession || results || { activeArm: activeArm || 'Left' },
+      customJson: jsonReport,
+      customCsv: csvContent,
+    });
+
+    res.status(200).json({ success: true, files: savedFilesInfo });
+  } catch (err) {
+    console.error('[saveMatrixFiles]', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * GET /api/assessment/user-files (or ?userId= for doctors)
+ */
+exports.listUserMatrixFiles = async (req, res) => {
+  try {
+    const targetUserId = req.query.userId || req.user._id;
+    const files = await listUserFiles(targetUserId);
+    res.json({ success: true, userId: targetUserId, files });
+  } catch (err) {
+    console.error('[listUserMatrixFiles]', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * GET /api/assessment/user-files/:filename
+ */
+exports.downloadUserMatrixFile = async (req, res) => {
+  try {
+    const targetUserId = req.query.userId || req.user._id;
+    const { filename } = req.params;
+
+    // Security check to avoid path traversal
+    const safeFilename = path.basename(filename);
+    const filePath = path.join(USER_FILES_BASE_DIR, String(targetUserId), safeFilename);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ success: false, message: 'File not found.' });
+    }
+
+    res.download(filePath, safeFilename);
+  } catch (err) {
+    console.error('[downloadUserMatrixFile]', err);
     res.status(500).json({ success: false, message: err.message });
   }
 };

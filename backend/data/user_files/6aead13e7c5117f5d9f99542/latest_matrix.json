@@ -1,0 +1,522 @@
+{
+  "reportTitle": "LimbPlay Track B Clinical Kinematics Matrix Report",
+  "generatedAt": "2026-11-04T06:31:26.800Z",
+  "formattedDate": "11/3/2026, 12:01:26 PM",
+  "patientMetadata": {
+    "userId": "6aead13e7c5117f5d9f99542",
+    "patientName": "Robert Chen",
+    "patientEmail": "robert.chen@demo.com",
+    "assessedArm": "Left",
+    "assessmentId": "6aead13e7c5117f5d9f99552",
+    "phase": "post",
+    "overallScore": 92
+  },
+  "executiveSummaryMatrix": {
+    "Test 1 - Gross Reach": {
+      "aratGrossScore": "9 / 9 pts",
+      "avgCompletionTime_ms": 1203,
+      "avgVelocity_units_per_sec": 0.79,
+      "peakVelocity_units_per_sec": 2.45,
+      "trajectorySmoothness_pct": "69%",
+      "totalCorrectiveMovements": 4,
+      "avgPathDirectness_pct": "81%",
+      "posturalCompensations": 0
+    },
+    "Test 2 - Object Transfer": {
+      "blocksTransferred": 19,
+      "wallCollisions": 1,
+      "collisionDeductions": "-0.1 pts",
+      "finalUncappedScore": "18.9 pts",
+      "firstTransferLatency_sec": "2.35s",
+      "steadyStateAvgDuration_sec": "2.40s",
+      "fatigueIndex": 1,
+      "avgTransportTime_ms": 2400,
+      "avgTransportVelocity": 0.72,
+      "peakTransportVelocity": 2.35,
+      "trajectorySmoothness_pct": "71%",
+      "totalCorrectiveMovements": 11,
+      "transferIntervals_sec": "2.35, 2.45, 2.35, 2.45, 2.35, 2.45, 2.35, 2.45, 2.35, 2.45, 2.35, 2.45, 2.35, 2.45, 2.35, 2.45, 2.35, 2.45, 2.35"
+    },
+    "Test 3 - Finger Pinch": {
+      "aratPinchScore": "17.5 pts (Uncapped)",
+      "handOpenSpread": "Full",
+      "avgClosureTime_ms": 1050,
+      "avgTimeToTouch_ms": 1050,
+      "totalSpeedBonus_pts": "+0 pts",
+      "rapidFluidTouches": "4 / 5",
+      "avgPinchVelocity": 0,
+      "trajectorySmoothness_pct": "78%",
+      "totalCorrectiveMovements": 2
+    },
+    "Test 4 - Timed Reaction Strike": {
+      "successfulReaches": "10 / 10 hits",
+      "avgReactionLatency_ms": 540,
+      "movementCompletionTime_ms": 360,
+      "strikePeakVelocity": 2.6,
+      "avgHandVelocity": 0.62,
+      "movementSmoothness_pct": "78%",
+      "totalCorrectiveSubmovements": 3,
+      "continuousReactionScore": "4.85 pts"
+    },
+    "Test 5 - Active ROM Sweep": {
+      "fmaProximalScore": "9 / 9 pts",
+      "sweepMode": "Natural Active Coronal Reach",
+      "circleCoveragePct": "95% (360° Base)",
+      "continuousDegreesSwept": "1120° (3.11 Laps)",
+      "pathRadialSimilarity": "88% Match",
+      "avgRotationalSpeed": "85°/s",
+      "peakAngularSpeed": "2.25°/s",
+      "trajectorySmoothness_pct": "74%",
+      "correctiveHesitations": 6,
+      "shoulderAbduction_deg": "168°",
+      "verticalAngle_deg": "165°"
+    }
+  },
+  "granularTrialDatasets": {
+    "test1_grossReach_zones": [
+      {
+        "zone": "mouth",
+        "success": true,
+        "latency_ms": 1100,
+        "completionTime_ms": 950,
+        "reactionLatency_ms": 150,
+        "avgVelocity": 0.88,
+        "peakVelocity": 2.45,
+        "trajectorySmoothness": 0.74,
+        "correctiveMovements": 1,
+        "pathLength": 1.12,
+        "directnessRatio": 0.88,
+        "shoulderAngle": 75,
+        "elbowAngle": 98,
+        "compensationDetected": false,
+        "score": 3,
+        "downsampledPath": []
+      },
+      {
+        "zone": "top_head",
+        "success": true,
+        "latency_ms": 1350,
+        "completionTime_ms": 1180,
+        "reactionLatency_ms": 170,
+        "avgVelocity": 0.82,
+        "peakVelocity": 2.2,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 1,
+        "pathLength": 1.18,
+        "directnessRatio": 0.84,
+        "shoulderAngle": 142,
+        "elbowAngle": 124,
+        "compensationDetected": false,
+        "score": 3,
+        "downsampledPath": []
+      },
+      {
+        "zone": "behind_head",
+        "success": true,
+        "latency_ms": 1680,
+        "completionTime_ms": 1480,
+        "reactionLatency_ms": 200,
+        "avgVelocity": 0.68,
+        "peakVelocity": 1.75,
+        "trajectorySmoothness": 0.62,
+        "correctiveMovements": 2,
+        "pathLength": 1.3,
+        "directnessRatio": 0.72,
+        "shoulderAngle": 108,
+        "elbowAngle": 92,
+        "compensationDetected": false,
+        "score": 3,
+        "downsampledPath": []
+      }
+    ],
+    "test2_objectTransfer_trials": [
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 1,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 1,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 1,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 1,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 1,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2450,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      },
+      {
+        "success": true,
+        "completionTime_ms": 2350,
+        "avgVelocity": 0.72,
+        "peakVelocity": 2.3,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "downsampledPath": []
+      }
+    ],
+    "test3_pinch_attempts": [
+      {
+        "finger": "open",
+        "success": true,
+        "accuracy": 0.35,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 620,
+        "avgVelocity": 0.12,
+        "peakVelocity": 0.25,
+        "trajectorySmoothness": 0.82,
+        "correctiveMovements": 0,
+        "score": 4
+      },
+      {
+        "finger": "index",
+        "success": true,
+        "accuracy": 0.021,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 880,
+        "avgVelocity": 0.14,
+        "peakVelocity": 0.3,
+        "trajectorySmoothness": 0.8,
+        "correctiveMovements": 0,
+        "score": 4
+      },
+      {
+        "finger": "middle",
+        "success": true,
+        "accuracy": 0.023,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1020,
+        "avgVelocity": 0.11,
+        "peakVelocity": 0.24,
+        "trajectorySmoothness": 0.76,
+        "correctiveMovements": 1,
+        "score": 3.5
+      },
+      {
+        "finger": "ring",
+        "success": true,
+        "accuracy": 0.024,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1180,
+        "avgVelocity": 0.1,
+        "peakVelocity": 0.21,
+        "trajectorySmoothness": 0.74,
+        "correctiveMovements": 1,
+        "score": 3.5
+      },
+      {
+        "finger": "pinky",
+        "success": true,
+        "accuracy": 0.025,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1250,
+        "avgVelocity": 0.09,
+        "peakVelocity": 0.19,
+        "trajectorySmoothness": 0.72,
+        "correctiveMovements": 0,
+        "score": 3
+      }
+    ],
+    "test4_reactionStrike_trials": [
+      {
+        "reactionTime_ms": 530,
+        "initiationTime_ms": 180,
+        "completionTime_ms": 350,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 538,
+        "initiationTime_ms": 185,
+        "completionTime_ms": 370,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 546,
+        "initiationTime_ms": 190,
+        "completionTime_ms": 350,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 554,
+        "initiationTime_ms": 195,
+        "completionTime_ms": 370,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 1,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 562,
+        "initiationTime_ms": 200,
+        "completionTime_ms": 350,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 570,
+        "initiationTime_ms": 205,
+        "completionTime_ms": 370,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 578,
+        "initiationTime_ms": 210,
+        "completionTime_ms": 350,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 586,
+        "initiationTime_ms": 215,
+        "completionTime_ms": 370,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 594,
+        "initiationTime_ms": 220,
+        "completionTime_ms": 350,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      },
+      {
+        "reactionTime_ms": 602,
+        "initiationTime_ms": 225,
+        "completionTime_ms": 370,
+        "avgVelocity": 0.62,
+        "peakVelocity": 2.55,
+        "trajectorySmoothness": 0.78,
+        "correctiveMovements": 0,
+        "hit": true,
+        "trajectoryJerk": 0.21,
+        "score": 0.5,
+        "downsampledPath": []
+      }
+    ],
+    "test5_romSweep_summary": {
+      "maxShoulder": 168,
+      "maxElbow": 175,
+      "maxVertical": 165,
+      "coveragePct": 95,
+      "cumulativeDeg": 1120,
+      "laps": 3.11,
+      "pathSimilarity": 88,
+      "avgAngularSpeed": 85,
+      "jerk": 0.22,
+      "smoothness": 0.74,
+      "hesitations": 6
+    }
+  },
+  "metricDefinitionsGlossary": {
+    "Completion Time (MT)": "Movement Time elapsed from sustained kinematic onset (velocity >= 0.045 units/s) until final target arrival or grasp completion.",
+    "Initiation / Reaction Latency": "Latency from visual stimulus spawn until the participant first initiates hand movement towards the target.",
+    "Trajectory Smoothness": "0 to 1 normalized metric combining straight-line path directness and normalized dimensionless jerk.",
+    "Velocity (Avg & Peak)": "Speed of hand movement in normalized workspace units per second, filtered with a 3-point moving average.",
+    "Corrective Movements": "Count of submovement velocity peaks where the subject hesitated or made secondary trajectory corrections.",
+    "Fatigue Index": "Ratio of mean completion time of the final 5 transfers to the initial 5 transfers. > 1.2 indicates progressive exhaustion.",
+    "Distal Bradykinesia Index": "Ratio of Ring & Pinky touch latencies to Index & Middle latencies, detecting selective finger fractionation deficits."
+  }
+}

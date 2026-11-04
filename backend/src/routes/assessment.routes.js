@@ -10,8 +10,13 @@ router.use(protect);
 router.post('/',                      ctrl.createAssessment);     // Create
 router.patch('/:id/link-session',     ctrl.linkGameSession);      // Track A: attach game session
 router.post('/:id/clinical-session',  ctrl.saveClinicalSession);  // Track B: save clinical test data
+router.post('/:id/save-matrix-files', ctrl.saveMatrixFiles);      // Explicitly save JSON/CSV matrix
 router.post('/:id/finalise',          ctrl.finaliseAssessment);   // Compute + close
 router.patch('/:id/abandon',          ctrl.abandonAssessment);    // Abandon in-progress
+
+// ── User-wise Matrix Files ───────────────────────────────────────────────────
+router.get('/user-files',             ctrl.listUserMatrixFiles);       // List user's matrix files
+router.get('/user-files/:filename',   ctrl.downloadUserMatrixFile);    // Download specific file
 
 // ── Retrieval ───────────────────────────────────────────────────────────────
 router.get('/compare',                ctrl.compareAssessments);   // ?a=:id1&b=:id2  (before /:id)

@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon -L src/server.js"
+    "dev": "nodemon -L src/server.js",
+    "seed:demo": "node scripts/seed_demo_patients.js",
+    "analytics": "node ../analytics/pipeline/run_pipeline.js"
   },
   "dependencies": {
     "express": "^4.18.2",

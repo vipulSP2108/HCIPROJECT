@@ -121,15 +121,25 @@ const computeGrossReachMetrics = (test1) => {
   const total       = mouthScore + topScore + behindScore;
 
   const latencies = zones.map(z => safeNum(z.latency_ms)).filter(v => v !== null);
+  const compTimes = zones.map(z => safeNum(z.completionTime_ms)).filter(v => v !== null);
+  const vels      = zones.map(z => safeNum(z.avgVelocity)).filter(v => v !== null);
+  const peakVels  = zones.map(z => safeNum(z.peakVelocity)).filter(v => v !== null);
+  const smooths   = zones.map(z => safeNum(z.trajectorySmoothness)).filter(v => v !== null);
+  const corrects  = zones.map(z => safeNum(z.correctiveMovements, 0));
   const compCount = zones.filter(z => z.compensationDetected).length;
 
   return {
-    gross_mouthScore:        mouthScore,
-    gross_topHeadScore:      topScore,
-    gross_behindHeadScore:   behindScore,
-    gross_totalScore:        total,
-    gross_avgLatency_ms:     mean(latencies),
-    gross_compensationCount: compCount,
+    gross_mouthScore:           mouthScore,
+    gross_topHeadScore:         topScore,
+    gross_behindHeadScore:      behindScore,
+    gross_totalScore:           total,
+    gross_avgLatency_ms:        mean(latencies),
+    gross_compensationCount:    compCount,
+    gross_avgCompletionTime_ms: safeNum(test1.avgCompletionTime_ms, mean(compTimes)),
+    gross_avgVelocity:          safeNum(test1.avgVelocity, mean(vels)),
+    gross_peakVelocity:         safeNum(test1.peakVelocity, peakVels.length ? Math.max(...peakVels) : null),
+    gross_trajectorySmoothness: safeNum(test1.trajectorySmoothness, mean(smooths)),
+    gross_correctiveMovements:  safeNum(test1.totalCorrectiveMovements, corrects.reduce((a, b) => a + b, 0)),
   };
 };
 
@@ -149,6 +159,11 @@ const computeTransferMetrics = (test2) => {
 
   const pickTimes  = successes.map(t => safeNum(t.pickTime_ms)).filter(v => v !== null);
   const dropTimes  = successes.map(t => safeNum(t.dropTime_ms)).filter(v => v !== null);
+  const compTimes  = successes.map(t => safeNum(t.completionTime_ms)).filter(v => v !== null);
+  const vels       = successes.map(t => safeNum(t.avgVelocity)).filter(v => v !== null);
+  const peakVels   = successes.map(t => safeNum(t.peakVelocity)).filter(v => v !== null);
+  const smooths    = successes.map(t => safeNum(t.trajectorySmoothness)).filter(v => v !== null);
+  const corrects   = trials.map(t => safeNum(t.correctiveMovements, 0));
   const elbows     = trials.map(t => safeNum(t.elbowAngle)).filter(v => v !== null && v > 0);
   const shoulders  = trials.map(t => safeNum(t.shoulderAngle)).filter(v => v !== null && v > 0);
 
@@ -157,15 +172,20 @@ const computeTransferMetrics = (test2) => {
   const score      = safeNum(test2.score, Math.max(0, Math.round((blocks - penalty) * 100) / 100));
 
   return {
-    transfer_blocksTransferred:  blocks,
-    transfer_score:              score,
-    transfer_collisionPenalty:   penalty,
-    transfer_aratProxyScore:     aratProxy,
-    transfer_avgPickTime_ms:     mean(pickTimes),
-    transfer_avgDropTime_ms:     mean(dropTimes),
-    transfer_missCount:          misses,
-    transfer_elbowAngle_mean:    mean(elbows),
-    transfer_shoulderAngle_mean: mean(shoulders),
+    transfer_blocksTransferred:    blocks,
+    transfer_score:                score,
+    transfer_collisionPenalty:     penalty,
+    transfer_aratProxyScore:       aratProxy,
+    transfer_avgPickTime_ms:       mean(pickTimes),
+    transfer_avgDropTime_ms:       mean(dropTimes),
+    transfer_avgCompletionTime_ms: safeNum(test2.avgCompletionTime_ms, mean(compTimes)),
+    transfer_avgVelocity:          safeNum(test2.avgVelocity, mean(vels)),
+    transfer_peakVelocity:         safeNum(test2.peakVelocity, peakVels.length ? Math.max(...peakVels) : null),
+    transfer_trajectorySmoothness: safeNum(test2.trajectorySmoothness, mean(smooths)),
+    transfer_correctiveMovements:  safeNum(test2.totalCorrectiveMovements, corrects.reduce((a, b) => a + b, 0) + misses),
+    transfer_missCount:            misses,
+    transfer_elbowAngle_mean:      mean(elbows),
+    transfer_shoulderAngle_mean:   mean(shoulders),
   };
 };
 
@@ -214,15 +234,24 @@ const computePinchMetrics = (test3) => {
   // Total: open (0/3) + index (0-3) + middle (0-3) + ring (0-3) + pinky (0-3) = max 15
   const total = openScore + indexScore + middleScore + ringScore + pinkyScore;
 
+  const compTimes = attempts.map(a => safeNum(a.completionTime_ms)).filter(v => v !== null);
+  const vels      = attempts.map(a => safeNum(a.avgVelocity)).filter(v => v !== null);
+  const smooths   = attempts.map(a => safeNum(a.trajectorySmoothness)).filter(v => v !== null);
+  const corrects  = attempts.map(a => safeNum(a.correctiveMovements, 0));
+
   return {
-    pinch_handOpenSuccess: Boolean(test3.handOpenSuccess),
-    pinch_handOpenSpread:  safeNum(test3.handOpenSpread),
-    pinch_openScore:       openScore,
-    pinch_indexScore:      indexScore,
-    pinch_middleScore:     middleScore,
-    pinch_ringScore:       ringScore,
-    pinch_pinkyScore:      pinkyScore,
-    pinch_totalScore:      total,  // 0–15 (5 poses × max 3)
+    pinch_handOpenSuccess:      Boolean(test3.handOpenSuccess),
+    pinch_handOpenSpread:       safeNum(test3.handOpenSpread),
+    pinch_openScore:            openScore,
+    pinch_indexScore:           indexScore,
+    pinch_middleScore:          middleScore,
+    pinch_ringScore:            ringScore,
+    pinch_pinkyScore:           pinkyScore,
+    pinch_totalScore:           total,  // 0–15 (5 poses × max 3)
+    pinch_avgCompletionTime_ms: safeNum(test3.avgCompletionTime_ms, mean(compTimes)),
+    pinch_avgVelocity:          safeNum(test3.avgVelocity, mean(vels)),
+    pinch_trajectorySmoothness: safeNum(test3.trajectorySmoothness, mean(smooths)),
+    pinch_correctiveMovements:  safeNum(test3.totalCorrectiveMovements, corrects.reduce((a, b) => a + b, 0)),
   };
 };
 
@@ -238,7 +267,12 @@ const computeReactionMetrics = (test4) => {
   const trials    = test4.trials;
   const hits      = trials.filter(t => t.hit);
   const rts       = hits.map(t => safeNum(t.reactionTime_ms)).filter(v => v !== null && v > 0);
+  const compTimes = hits.map(t => safeNum(t.completionTime_ms)).filter(v => v !== null);
+  const vels      = hits.map(t => safeNum(t.avgVelocity)).filter(v => v !== null);
+  const peakVels  = hits.map(t => safeNum(t.peakVelocity)).filter(v => v !== null);
   const jerks     = trials.map(t => safeNum(t.trajectoryJerk)).filter(v => v !== null);
+  const smooths   = hits.map(t => safeNum(t.trajectorySmoothness)).filter(v => v !== null);
+  const corrects  = trials.map(t => safeNum(t.correctiveMovements, 0));
   const avgJerk   = mean(jerks);
   const smooth    = avgJerk !== null ? clamp(1 / (1 + avgJerk), 0, 1) : null;
 
@@ -257,15 +291,19 @@ const computeReactionMetrics = (test4) => {
     : null;
 
   return {
-    reaction_avgRT_ms:       avgRT,
-    reaction_medianRT_ms:    median(rts),
-    reaction_p90RT_ms:       percentile(rts, 90),
-    reaction_hitAccuracy:    hitRate > 0 ? hitRate : (trials.length > 0 ? hits.length / trials.length : null),
-    reaction_movementJerk:   avgJerk,
-    reaction_smoothnessScore: smooth,
-    reaction_reactionScore:  reactionScore,
-    reaction_trialsCompleted: trials.length,
-    reaction_hitsCount:      hits.length,
+    reaction_avgRT_ms:             avgRT,
+    reaction_medianRT_ms:          median(rts),
+    reaction_p90RT_ms:             percentile(rts, 90),
+    reaction_avgCompletionTime_ms: safeNum(test4.avgCompletionTime_ms, mean(compTimes)),
+    reaction_avgVelocity:          safeNum(test4.avgVelocity, mean(vels)),
+    reaction_peakVelocity:         safeNum(test4.peakVelocity, peakVels.length ? Math.max(...peakVels) : null),
+    reaction_hitAccuracy:          hitRate > 0 ? hitRate : (trials.length > 0 ? hits.length / trials.length : null),
+    reaction_movementJerk:         avgJerk,
+    reaction_smoothnessScore:      safeNum(test4.smoothnessScore, mean(smooths) || smooth),
+    reaction_correctiveMovements:  safeNum(test4.totalCorrectiveMovements, corrects.reduce((a, b) => a + b, 0)),
+    reaction_reactionScore:        reactionScore,
+    reaction_trialsCompleted:      trials.length,
+    reaction_hitsCount:            hits.length,
   };
 };
 
@@ -293,7 +331,11 @@ const computeROMMetrics = (test5) => {
     rom_lapsCompleted:        safeNum(test5.lapsCompleted),
     rom_pathSimilarityPct:    safeNum(test5.pathSimilarityPct),
     rom_avgAngularSpeed:      safeNum(test5.avgAngularSpeed_deg_s),
+    rom_avgVelocity:          safeNum(test5.avgVelocity, safeNum(test5.avgAngularSpeed_deg_s)),
+    rom_peakVelocity:         safeNum(test5.peakVelocity),
     rom_trajectoryJerk:       safeNum(test5.trajectoryJerk),
+    rom_trajectorySmoothness: safeNum(test5.trajectorySmoothness, safeNum(test5.trajectoryJerk) != null ? clamp(1 / (1 + safeNum(test5.trajectoryJerk) * 4), 0, 1) : null),
+    rom_correctiveMovements:  safeNum(test5.correctiveMovements, 0),
     rom_sweepDuration_ms:     safeNum(test5.sweepDuration_ms),
     rom_totalScore:           total,
   };

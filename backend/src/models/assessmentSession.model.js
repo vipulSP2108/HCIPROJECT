@@ -57,38 +57,61 @@ const clinicalMetricsSchema = new mongoose.Schema({
   gross_totalScore:          { type: Number },  // 0–9
   gross_avgLatency_ms:       { type: Number },
   gross_compensationCount:   { type: Number },  // how many zones had compensation
+  gross_avgCompletionTime_ms:{ type: Number },
+  gross_avgVelocity:         { type: Number },
+  gross_peakVelocity:        { type: Number },
+  gross_trajectorySmoothness:{ type: Number },
+  gross_correctiveMovements: { type: Number },
 
   // Test 2 — Object Transfer
   transfer_blocksTransferred: { type: Number },
   transfer_aratProxyScore:    { type: Number },  // 0–3
   transfer_avgPickTime_ms:    { type: Number },
   transfer_avgDropTime_ms:    { type: Number },
+  transfer_avgCompletionTime_ms:{ type: Number },
+  transfer_avgVelocity:       { type: Number },
+  transfer_peakVelocity:      { type: Number },
+  transfer_trajectorySmoothness:{ type: Number },
+  transfer_correctiveMovements:{ type: Number },
   transfer_missCount:         { type: Number },
   transfer_elbowAngle_mean:   { type: Number },
   transfer_shoulderAngle_mean:{ type: Number },
 
-  // Test 3 — Pinch (0–12)
+  // Test 3 — Pinch (0–15)
   pinch_handOpenSuccess:      { type: Boolean },
   pinch_handOpenSpread:       { type: Number },
   pinch_indexScore:           { type: Number },
   pinch_middleScore:          { type: Number },
   pinch_ringScore:            { type: Number },
-  pinch_totalScore:           { type: Number },  // 0–12
+  pinch_pinkyScore:           { type: Number },
+  pinch_totalScore:           { type: Number },  // 0–15
+  pinch_avgCompletionTime_ms: { type: Number },
+  pinch_avgVelocity:          { type: Number },
+  pinch_trajectorySmoothness: { type: Number },
+  pinch_correctiveMovements:  { type: Number },
 
   // Test 4 — Reaction Strike
   reaction_avgRT_ms:          { type: Number },
   reaction_medianRT_ms:       { type: Number },
   reaction_p90RT_ms:          { type: Number },
+  reaction_avgCompletionTime_ms:{ type: Number },
+  reaction_avgVelocity:       { type: Number },
+  reaction_peakVelocity:      { type: Number },
   reaction_hitAccuracy:       { type: Number },  // 0–1
   reaction_movementJerk:      { type: Number },
   reaction_smoothnessScore:   { type: Number },  // 0–1
+  reaction_correctiveMovements:{ type: Number },
   reaction_reactionScore:     { type: Number },  // 0–10
 
   // Test 5 — ROM Sweep (0–9)
   rom_maxShoulderAbduction:   { type: Number },  // degrees
   rom_maxElbowExtension:      { type: Number },  // degrees
   rom_maxVerticalAngle:       { type: Number },  // degrees
+  rom_avgVelocity:            { type: Number },
+  rom_peakVelocity:           { type: Number },
   rom_trajectoryJerk:         { type: Number },
+  rom_trajectorySmoothness:   { type: Number },
+  rom_correctiveMovements:    { type: Number },
   rom_sweepDuration_ms:       { type: Number },
   rom_totalScore:             { type: Number },  // 0–9
 

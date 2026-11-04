@@ -6,6 +6,15 @@ const grossReachZoneSchema = new mongoose.Schema({
   zone:                  { type: String },   // 'mouth' | 'top_head' | 'behind_head'
   success:               { type: Boolean },
   latency_ms:            { type: Number },
+  completionTime_ms:     { type: Number },   // onset-to-offset movement completion time
+  reactionLatency_ms:    { type: Number },   // spawn-to-onset initiation time
+  avgVelocity:           { type: Number },   // mean hand velocity (units/s)
+  peakVelocity:          { type: Number },   // maximum hand velocity
+  trajectorySmoothness:  { type: Number },   // 0–1 smoothness score (directness + dimensionless jerk)
+  correctiveMovements:   { type: Number },   // velocity submovement corrections & inflections
+  pathLength:            { type: Number },
+  directnessRatio:       { type: Number },
+  downsampledPath:       [{ x: Number, y: Number }], // lightweight 14-point trajectory
   shoulderAngle:         { type: Number },
   elbowAngle:            { type: Number },
   compensationDetected:  { type: Boolean },
@@ -13,26 +22,48 @@ const grossReachZoneSchema = new mongoose.Schema({
 }, { _id: false });
 
 const objectTransferTrialSchema = new mongoose.Schema({
-  success:       { type: Boolean },
-  pickTime_ms:   { type: Number },
-  dropTime_ms:   { type: Number },
-  elbowAngle:    { type: Number },
-  shoulderAngle: { type: Number },
+  success:               { type: Boolean },
+  pickTime_ms:           { type: Number },
+  dropTime_ms:           { type: Number },
+  completionTime_ms:     { type: Number },   // transport onset-to-offset time
+  avgVelocity:           { type: Number },
+  peakVelocity:          { type: Number },
+  trajectorySmoothness:  { type: Number },
+  correctiveMovements:   { type: Number },   // submovements + wall contacts
+  pathLength:            { type: Number },
+  directnessRatio:       { type: Number },
+  downsampledPath:       [{ x: Number, y: Number }],
+  elbowAngle:            { type: Number },
+  shoulderAngle:         { type: Number },
 }, { _id: false });
 
 const pinchAttemptSchema = new mongoose.Schema({
-  finger:        { type: String },   // 'open' | 'index' | 'middle' | 'ring' | 'pinky'
-  success:       { type: Boolean },
-  accuracy:      { type: Number },   // normalised tip distance, lower = better
-  dwellActual_ms:{ type: Number },
-  score:         { type: Number },   // 0–3 per ARAT rubric
+  finger:                { type: String },   // 'open' | 'index' | 'middle' | 'ring' | 'pinky'
+  success:               { type: Boolean },
+  accuracy:              { type: Number },   // normalised tip distance, lower = better
+  dwellActual_ms:        { type: Number },
+  completionTime_ms:     { type: Number },
+  avgVelocity:           { type: Number },
+  peakVelocity:          { type: Number },
+  trajectorySmoothness:  { type: Number },
+  correctiveMovements:   { type: Number },
+  score:                 { type: Number },   // 0–3 per ARAT rubric
 }, { _id: false });
 
 const reactionTrialSchema = new mongoose.Schema({
-  reactionTime_ms:  { type: Number },
-  hit:              { type: Boolean },
-  trajectoryJerk:   { type: Number },
-  score:            { type: Number },
+  reactionTime_ms:       { type: Number },   // total time spawn to strike
+  initiationTime_ms:     { type: Number },   // spawn to movement onset latency
+  completionTime_ms:     { type: Number },   // onset to strike offset movement time
+  avgVelocity:           { type: Number },
+  peakVelocity:          { type: Number },
+  trajectorySmoothness:  { type: Number },
+  correctiveMovements:   { type: Number },   // trajectory submovements
+  pathLength:            { type: Number },
+  directnessRatio:       { type: Number },
+  downsampledPath:       [{ x: Number, y: Number }],
+  hit:                   { type: Boolean },
+  trajectoryJerk:        { type: Number },
+  score:                 { type: Number },
 }, { _id: false });
 
 // ─── Main schema ─────────────────────────────────────────────────────────────
@@ -46,61 +77,83 @@ const clinicalTestSessionSchema = new mongoose.Schema({
 
   // ── Test 1: Gross Arm Reach (ARAT Gross Movement proxy, max 9 pts) ─────────
   test1_grossReach: {
-    zones:          [grossReachZoneSchema],
-    totalScore:     { type: Number },  // 0–9
+    zones:                     [grossReachZoneSchema],
+    totalScore:                { type: Number },  // 0–9
+    avgCompletionTime_ms:      { type: Number },
+    avgVelocity:               { type: Number },
+    peakVelocity:              { type: Number },
+    trajectorySmoothness:      { type: Number },
+    totalCorrectiveMovements:  { type: Number },
   },
 
   // ── Test 2: Virtual Object Transfer (BBT / ARAT Grasp proxy) ─────────────
   test2_objectTransfer: {
-    durationSec:         { type: Number },
-    trials:              [objectTransferTrialSchema],
-    blocksTransferred:   { type: Number },  // raw BBT count
-    missCount:           { type: Number },
-    collisionPenalty:    { type: Number },
-    score:               { type: Number },
-    avgPickTime_ms:      { type: Number },
-    avgDropTime_ms:      { type: Number },
-    elbowAngle_mean:     { type: Number },
-    shoulderAngle_mean:  { type: Number },
-    aratProxyScore:      { type: Number },  // 0–3
+    durationSec:               { type: Number },
+    trials:                    [objectTransferTrialSchema],
+    blocksTransferred:         { type: Number },  // raw BBT count
+    missCount:                 { type: Number },
+    collisionPenalty:          { type: Number },
+    score:                     { type: Number },
+    avgPickTime_ms:            { type: Number },
+    avgDropTime_ms:            { type: Number },
+    avgCompletionTime_ms:      { type: Number },
+    avgVelocity:               { type: Number },
+    peakVelocity:              { type: Number },
+    trajectorySmoothness:      { type: Number },
+    totalCorrectiveMovements:  { type: Number },
+    elbowAngle_mean:           { type: Number },
+    shoulderAngle_mean:        { type: Number },
+    aratProxyScore:            { type: Number },  // 0–3
   },
 
   // ── Test 3: Finger Spread & Pinch (ARAT Pinch proxy, max 15 pts) ──────────
   // Scoring: open spread (0–3) + index (0–3) + middle (0–3) + ring (0–3) + pinky (0–3) = 15
   test3_pinch: {
-    handOpenSuccess:    { type: Boolean },
-    handOpenSpread:     { type: Number },   // normalised mean spread 0–1
-    pinchAttempts:      [pinchAttemptSchema],
-    totalScore:         { type: Number },   // 0–15
+    handOpenSuccess:           { type: Boolean },
+    handOpenSpread:            { type: Number },   // normalised mean spread 0–1
+    pinchAttempts:             [pinchAttemptSchema],
+    totalScore:                { type: Number },   // 0–15
+    avgCompletionTime_ms:      { type: Number },
+    avgVelocity:               { type: Number },
+    trajectorySmoothness:      { type: Number },
+    totalCorrectiveMovements:  { type: Number },
   },
 
   // ── Test 4: Timed Reaction Strike (WMFT timed tasks proxy) ───────────────
   test4_reactionStrike: {
-    trials:               [reactionTrialSchema],
-    trialScores:          [{ type: Number }],
-    avgReactionTime_ms:   { type: Number },
-    medianRT_ms:          { type: Number },
-    p90RT_ms:             { type: Number },
-    hitAccuracy:          { type: Number },  // 0–1
-    movementJerk:         { type: Number },
-    smoothnessScore:      { type: Number },  // 0–1
-    reactionScore:        { type: Number },  // continuous reaction score
-    score:                { type: Number },
+    trials:                    [reactionTrialSchema],
+    trialScores:               [{ type: Number }],
+    avgReactionTime_ms:        { type: Number },
+    medianRT_ms:               { type: Number },
+    p90RT_ms:                  { type: Number },
+    avgCompletionTime_ms:      { type: Number },
+    avgVelocity:               { type: Number },
+    peakVelocity:              { type: Number },
+    hitAccuracy:               { type: Number },  // 0–1
+    movementJerk:              { type: Number },
+    smoothnessScore:           { type: Number },  // 0–1
+    totalCorrectiveMovements:  { type: Number },
+    reactionScore:             { type: Number },  // continuous reaction score
+    score:                     { type: Number },
   },
 
   // ── Test 5: ROM Sweep (FMA proximal upper extremity proxy, max 9 pts) ──────
   test5_romSweep: {
-    maxShoulderAbduction_deg: { type: Number },
-    maxElbowExtension_deg:    { type: Number },
-    maxVerticalAngle_deg:     { type: Number },
-    circleCoveragePct:        { type: Number }, // % of 360° completed
-    cumulativeDegreesSwept:   { type: Number }, // continuous degrees swept (e.g. 360°+)
-    lapsCompleted:            { type: Number }, // e.g. 1.0, 1.5, 2.0 laps
-    pathSimilarityPct:        { type: Number }, // trajectory radial fidelity %
-    avgAngularSpeed_deg_s:    { type: Number }, // rotational velocity
-    trajectoryJerk:           { type: Number },
-    sweepDuration_ms:         { type: Number },
-    totalScore:               { type: Number },  // 0–9
+    maxShoulderAbduction_deg:  { type: Number },
+    maxElbowExtension_deg:     { type: Number },
+    maxVerticalAngle_deg:      { type: Number },
+    circleCoveragePct:         { type: Number }, // % of 360° completed
+    cumulativeDegreesSwept:    { type: Number }, // continuous degrees swept (e.g. 360°+)
+    lapsCompleted:             { type: Number }, // e.g. 1.0, 1.5, 2.0 laps
+    pathSimilarityPct:         { type: Number }, // trajectory radial fidelity %
+    avgAngularSpeed_deg_s:     { type: Number }, // rotational velocity
+    avgVelocity:               { type: Number },
+    peakVelocity:              { type: Number },
+    trajectoryJerk:            { type: Number },
+    trajectorySmoothness:      { type: Number },
+    correctiveMovements:       { type: Number },
+    sweepDuration_ms:          { type: Number },
+    totalScore:                { type: Number },  // 0–9
   },
 
 }, { timestamps: true });
