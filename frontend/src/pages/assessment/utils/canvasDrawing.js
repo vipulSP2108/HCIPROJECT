@@ -423,8 +423,8 @@ export function drawCameraPostureFramingHUD(ctx, w, h, pl, postureData, testColo
   ctx.textBaseline = "middle";
   ctx.fillStyle = isTiltOk ? "#34d399" : "#fbbf24";
   const tiltText = isTiltOk
-    ? `📐 Screen Tilt: ${Math.abs(tiltDeg)}° • LEVEL ✓`
-    : `📐 Screen Tilt: ${Math.abs(tiltDeg)}° • ${tiltDeg > 0 ? "TILT RIGHT ⚠" : "TILT LEFT ⚠"}`;
+    ? "📐 Camera: Level ✓"
+    : `📐 Camera: ${tiltDeg > 0 ? "Tilt Right ⚠️" : "Tilt Left ⚠️"}`;
   ctx.fillText(tiltText, tiltMeterX + tiltMeterW / 2, tiltMeterY + tiltMeterH / 2);
 
   // Horizontal X-Centering Gauge (Bottom)
