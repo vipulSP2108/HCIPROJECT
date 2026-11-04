@@ -1,0 +1,3257 @@
+{
+  "reportTitle": "LimbPlay Track B Clinical Kinematics & Motor Matrix Report",
+  "generatedAt": "2026-11-04T04:52:15.219Z",
+  "formattedDate": "04/11/2026, 10:22:15",
+  "patientMetadata": {
+    "assessedArm": "Left",
+    "assessmentId": "6aeab8fc0fa243b6f9f7298d",
+    "phase": "assessment",
+    "overallScore": 102
+  },
+  "executiveSummaryMatrix": {
+    "Test 1 - Gross Reach": {
+      "aratGrossScore": "9 / 9 pts",
+      "avgCompletionTime_ms": 1135,
+      "avgVelocity_units_per_sec": 0.9,
+      "peakVelocity_units_per_sec": 7.73,
+      "trajectorySmoothness_pct": "31%",
+      "totalCorrectiveMovements": 10
+    },
+    "Test 2 - Object Transfer": {
+      "blocksTransferred": 20,
+      "wallCollisions": 4,
+      "collisionDeductions": "-0.4 pts",
+      "finalUncappedScore": "19.6 pts",
+      "firstTransferLatency_sec": "4.13s",
+      "steadyStateAvgDuration_sec": "2.86s",
+      "fatigueIndex": 0.96,
+      "avgTransportTime_ms": 2919,
+      "avgTransportVelocity": 0.68,
+      "peakTransportVelocity": 2.14,
+      "trajectorySmoothness_pct": "36%",
+      "totalCorrectiveMovements": 59,
+      "transferIntervals_sec": "4.13, 3.01, 2.4, 2.49, 2.73, 2.94, 2.34, 4.23, 3.06, 2.46, 2.48, 2.15, 2.4, 2.61, 5.5, 2.62, 3.03, 2.51, 2.59, 2.7"
+    },
+    "Test 3 - Finger Pinch": {
+      "aratPinchScore": "17.5 / 15 pts",
+      "handOpenSpread": "Full",
+      "avgClosureTime_ms": 1232,
+      "avgTimeToTouch_ms": 1622,
+      "totalSpeedBonus_pts": "+2.5 pts",
+      "avgPinchVelocity": 0.07,
+      "trajectorySmoothness_pct": "45%",
+      "totalCorrectiveMovements": 17
+    },
+    "Test 4 - Timed Reaction Strike": {
+      "successfulReaches": "10 / 10 hits",
+      "avgReactionLatency_ms": 681,
+      "movementCompletionTime_ms": 431,
+      "strikePeakVelocity": 2.03,
+      "avgHandVelocity": 0.35,
+      "movementSmoothness_pct": "64%",
+      "totalCorrectiveSubmovements": 4,
+      "continuousReactionScore": "4.55 pts"
+    },
+    "Test 5 - Active ROM Sweep": {
+      "fmaProximalScore": "9 / 9 pts",
+      "circleCoveragePct": "85% (360° Base)",
+      "continuousDegreesSwept": "1131° (3.1 Laps)",
+      "pathRadialSimilarity": "80% Match",
+      "avgRotationalSpeed": "80°/s",
+      "peakAngularSpeed": "297°/s",
+      "trajectorySmoothness_pct": "25%",
+      "correctiveHesitations": 49,
+      "shoulderAbduction_deg": "179°",
+      "elbowExtension_deg": "180°",
+      "verticalAngle_deg": "180°"
+    }
+  },
+  "granularTrialDatasets": {
+    "test1_grossReach_zones": [
+      {
+        "zone": "mouth",
+        "success": true,
+        "latency_ms": 2017,
+        "completionTime_ms": 1674,
+        "reactionLatency_ms": 343,
+        "avgVelocity": 1.32,
+        "peakVelocity": 6.03,
+        "trajectorySmoothness": 0.22,
+        "correctiveMovements": 7,
+        "pathLength": 2.316,
+        "directnessRatio": 0.35,
+        "downsampledPath": [
+          {
+            "x": 0.541,
+            "y": 1.411
+          },
+          {
+            "x": 0.616,
+            "y": 1.358
+          },
+          {
+            "x": 0.55,
+            "y": 0.975
+          },
+          {
+            "x": 0.545,
+            "y": 0.965
+          },
+          {
+            "x": 0.557,
+            "y": 1.25
+          },
+          {
+            "x": 0.56,
+            "y": 1.084
+          },
+          {
+            "x": 0.543,
+            "y": 0.988
+          },
+          {
+            "x": 0.546,
+            "y": 0.915
+          },
+          {
+            "x": 0.539,
+            "y": 1.038
+          },
+          {
+            "x": 0.549,
+            "y": 0.953
+          },
+          {
+            "x": 0.611,
+            "y": 0.985
+          },
+          {
+            "x": 0.465,
+            "y": 0.608
+          },
+          {
+            "x": 0.466,
+            "y": 0.599
+          },
+          {
+            "x": 0.465,
+            "y": 0.598
+          },
+          {
+            "x": 0.461,
+            "y": 0.599
+          },
+          {
+            "x": 0.461,
+            "y": 0.6
+          },
+          {
+            "x": 0.461,
+            "y": 0.6
+          }
+        ],
+        "shoulderAngle": 139,
+        "elbowAngle": 8,
+        "compensationDetected": false,
+        "score": 3
+      },
+      {
+        "zone": "top_head",
+        "success": true,
+        "latency_ms": 1379,
+        "completionTime_ms": 793,
+        "reactionLatency_ms": 586,
+        "avgVelocity": 0.23,
+        "peakVelocity": 0.93,
+        "trajectorySmoothness": 0.61,
+        "correctiveMovements": 2,
+        "pathLength": 0.287,
+        "directnessRatio": 0.89,
+        "downsampledPath": [
+          {
+            "x": 0.46,
+            "y": 0.6
+          },
+          {
+            "x": 0.46,
+            "y": 0.601
+          },
+          {
+            "x": 0.459,
+            "y": 0.602
+          },
+          {
+            "x": 0.459,
+            "y": 0.601
+          },
+          {
+            "x": 0.46,
+            "y": 0.601
+          },
+          {
+            "x": 0.462,
+            "y": 0.599
+          },
+          {
+            "x": 0.449,
+            "y": 0.549
+          },
+          {
+            "x": 0.451,
+            "y": 0.519
+          },
+          {
+            "x": 0.444,
+            "y": 0.435
+          },
+          {
+            "x": 0.454,
+            "y": 0.392
+          },
+          {
+            "x": 0.457,
+            "y": 0.378
+          },
+          {
+            "x": 0.463,
+            "y": 0.358
+          },
+          {
+            "x": 0.466,
+            "y": 0.361
+          },
+          {
+            "x": 0.471,
+            "y": 0.371
+          },
+          {
+            "x": 0.471,
+            "y": 0.378
+          },
+          {
+            "x": 0.472,
+            "y": 0.385
+          },
+          {
+            "x": 0.473,
+            "y": 0.39
+          },
+          {
+            "x": 0.474,
+            "y": 0.391
+          },
+          {
+            "x": 0.474,
+            "y": 0.392
+          },
+          {
+            "x": 0.474,
+            "y": 0.392
+          },
+          {
+            "x": 0.474,
+            "y": 0.392
+          }
+        ],
+        "shoulderAngle": 174,
+        "elbowAngle": 56,
+        "compensationDetected": false,
+        "score": 3
+      },
+      {
+        "zone": "behind_head",
+        "success": true,
+        "latency_ms": 1389,
+        "completionTime_ms": 937,
+        "reactionLatency_ms": 452,
+        "avgVelocity": 1.15,
+        "peakVelocity": 7.73,
+        "trajectorySmoothness": 0.1,
+        "correctiveMovements": 1,
+        "pathLength": 1.663,
+        "directnessRatio": 0.09,
+        "downsampledPath": [
+          {
+            "x": 0.473,
+            "y": 0.394
+          },
+          {
+            "x": 0.473,
+            "y": 0.393
+          },
+          {
+            "x": 0.473,
+            "y": 0.394
+          },
+          {
+            "x": 0.474,
+            "y": 0.393
+          },
+          {
+            "x": 0.474,
+            "y": 0.393
+          },
+          {
+            "x": 0.47,
+            "y": 0.387
+          },
+          {
+            "x": 0.452,
+            "y": 0.366
+          },
+          {
+            "x": 0.436,
+            "y": 0.401
+          },
+          {
+            "x": 0.645,
+            "y": 1.061
+          },
+          {
+            "x": 0.644,
+            "y": 1.19
+          },
+          {
+            "x": 0.646,
+            "y": 1.201
+          },
+          {
+            "x": 0.394,
+            "y": 0.554
+          },
+          {
+            "x": 0.379,
+            "y": 0.544
+          },
+          {
+            "x": 0.38,
+            "y": 0.541
+          },
+          {
+            "x": 0.382,
+            "y": 0.539
+          },
+          {
+            "x": 0.384,
+            "y": 0.546
+          },
+          {
+            "x": 0.38,
+            "y": 0.541
+          },
+          {
+            "x": 0.38,
+            "y": 0.55
+          },
+          {
+            "x": 0.382,
+            "y": 0.55
+          },
+          {
+            "x": 0.381,
+            "y": 0.551
+          },
+          {
+            "x": 0.38,
+            "y": 0.56
+          },
+          {
+            "x": 0.38,
+            "y": 0.56
+          }
+        ],
+        "shoulderAngle": 179,
+        "elbowAngle": 43,
+        "compensationDetected": false,
+        "score": 3
+      }
+    ],
+    "test2_objectTransfer_trials": [
+      {
+        "transferIdx": 1,
+        "success": true,
+        "reachToPick_ms": 1747,
+        "transitTime_ms": 2384,
+        "totalTransferCycle_ms": 4131,
+        "pickTime_ms": 1747,
+        "dropTime_ms": 2384,
+        "completionTime_ms": 1970,
+        "avgVelocity": 0.4,
+        "peakVelocity": 1.07,
+        "trajectorySmoothness": 0.46,
+        "correctiveMovements": 5,
+        "wallCollisions": 1,
+        "pathLength": 0.928,
+        "directnessRatio": 0.56,
+        "downsampledPath": [
+          {
+            "x": 0.216,
+            "y": 0.599
+          },
+          {
+            "x": 0.213,
+            "y": 0.604
+          },
+          {
+            "x": 0.208,
+            "y": 0.587
+          },
+          {
+            "x": 0.219,
+            "y": 0.503
+          },
+          {
+            "x": 0.272,
+            "y": 0.397
+          },
+          {
+            "x": 0.343,
+            "y": 0.309
+          },
+          {
+            "x": 0.403,
+            "y": 0.292
+          },
+          {
+            "x": 0.475,
+            "y": 0.335
+          },
+          {
+            "x": 0.555,
+            "y": 0.462
+          },
+          {
+            "x": 0.578,
+            "y": 0.525
+          },
+          {
+            "x": 0.564,
+            "y": 0.523
+          },
+          {
+            "x": 0.554,
+            "y": 0.522
+          },
+          {
+            "x": 0.557,
+            "y": 0.522
+          },
+          {
+            "x": 0.601,
+            "y": 0.518
+          },
+          {
+            "x": 0.685,
+            "y": 0.532
+          },
+          {
+            "x": 0.727,
+            "y": 0.549
+          },
+          {
+            "x": 0.731,
+            "y": 0.559
+          },
+          {
+            "x": 0.731,
+            "y": 0.559
+          }
+        ],
+        "elbowAngle": 52,
+        "shoulderAngle": 73
+      },
+      {
+        "transferIdx": 2,
+        "success": true,
+        "reachToPick_ms": 1727,
+        "transitTime_ms": 1279,
+        "totalTransferCycle_ms": 3006,
+        "pickTime_ms": 1727,
+        "dropTime_ms": 1279,
+        "completionTime_ms": 1075,
+        "avgVelocity": 0.73,
+        "peakVelocity": 1.4,
+        "trajectorySmoothness": 0.47,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 0.962,
+        "directnessRatio": 0.58,
+        "downsampledPath": [
+          {
+            "x": 0.22,
+            "y": 0.624
+          },
+          {
+            "x": 0.218,
+            "y": 0.609
+          },
+          {
+            "x": 0.221,
+            "y": 0.582
+          },
+          {
+            "x": 0.235,
+            "y": 0.535
+          },
+          {
+            "x": 0.266,
+            "y": 0.47
+          },
+          {
+            "x": 0.31,
+            "y": 0.401
+          },
+          {
+            "x": 0.371,
+            "y": 0.335
+          },
+          {
+            "x": 0.439,
+            "y": 0.294
+          },
+          {
+            "x": 0.529,
+            "y": 0.287
+          },
+          {
+            "x": 0.582,
+            "y": 0.322
+          },
+          {
+            "x": 0.632,
+            "y": 0.383
+          },
+          {
+            "x": 0.687,
+            "y": 0.487
+          },
+          {
+            "x": 0.733,
+            "y": 0.559
+          },
+          {
+            "x": 0.762,
+            "y": 0.609
+          },
+          {
+            "x": 0.777,
+            "y": 0.64
+          },
+          {
+            "x": 0.783,
+            "y": 0.65
+          },
+          {
+            "x": 0.785,
+            "y": 0.649
+          },
+          {
+            "x": 0.781,
+            "y": 0.644
+          },
+          {
+            "x": 0.781,
+            "y": 0.644
+          }
+        ],
+        "elbowAngle": 54,
+        "shoulderAngle": 84
+      },
+      {
+        "transferIdx": 3,
+        "success": true,
+        "reachToPick_ms": 839,
+        "transitTime_ms": 1561,
+        "totalTransferCycle_ms": 2400,
+        "pickTime_ms": 839,
+        "dropTime_ms": 1561,
+        "completionTime_ms": 1332,
+        "avgVelocity": 0.57,
+        "peakVelocity": 1.31,
+        "trajectorySmoothness": 0.36,
+        "correctiveMovements": 1,
+        "wallCollisions": 0,
+        "pathLength": 0.862,
+        "directnessRatio": 0.43,
+        "downsampledPath": [
+          {
+            "x": 0.316,
+            "y": 0.646
+          },
+          {
+            "x": 0.315,
+            "y": 0.654
+          },
+          {
+            "x": 0.314,
+            "y": 0.654
+          },
+          {
+            "x": 0.31,
+            "y": 0.648
+          },
+          {
+            "x": 0.307,
+            "y": 0.621
+          },
+          {
+            "x": 0.311,
+            "y": 0.57
+          },
+          {
+            "x": 0.325,
+            "y": 0.501
+          },
+          {
+            "x": 0.348,
+            "y": 0.433
+          },
+          {
+            "x": 0.384,
+            "y": 0.366
+          },
+          {
+            "x": 0.405,
+            "y": 0.329
+          },
+          {
+            "x": 0.443,
+            "y": 0.296
+          },
+          {
+            "x": 0.48,
+            "y": 0.281
+          },
+          {
+            "x": 0.509,
+            "y": 0.289
+          },
+          {
+            "x": 0.536,
+            "y": 0.316
+          },
+          {
+            "x": 0.559,
+            "y": 0.362
+          },
+          {
+            "x": 0.595,
+            "y": 0.455
+          },
+          {
+            "x": 0.617,
+            "y": 0.52
+          },
+          {
+            "x": 0.649,
+            "y": 0.584
+          },
+          {
+            "x": 0.662,
+            "y": 0.605
+          },
+          {
+            "x": 0.678,
+            "y": 0.619
+          },
+          {
+            "x": 0.682,
+            "y": 0.624
+          },
+          {
+            "x": 0.687,
+            "y": 0.625
+          },
+          {
+            "x": 0.687,
+            "y": 0.625
+          }
+        ],
+        "elbowAngle": 30,
+        "shoulderAngle": 103
+      },
+      {
+        "transferIdx": 4,
+        "success": true,
+        "reachToPick_ms": 1017,
+        "transitTime_ms": 1470,
+        "totalTransferCycle_ms": 2487,
+        "pickTime_ms": 1017,
+        "dropTime_ms": 1470,
+        "completionTime_ms": 1282,
+        "avgVelocity": 0.64,
+        "peakVelocity": 1.66,
+        "trajectorySmoothness": 0.42,
+        "correctiveMovements": 1,
+        "wallCollisions": 0,
+        "pathLength": 0.932,
+        "directnessRatio": 0.6,
+        "downsampledPath": [
+          {
+            "x": 0.258,
+            "y": 0.659
+          },
+          {
+            "x": 0.247,
+            "y": 0.654
+          },
+          {
+            "x": 0.245,
+            "y": 0.649
+          },
+          {
+            "x": 0.249,
+            "y": 0.632
+          },
+          {
+            "x": 0.272,
+            "y": 0.574
+          },
+          {
+            "x": 0.299,
+            "y": 0.512
+          },
+          {
+            "x": 0.336,
+            "y": 0.441
+          },
+          {
+            "x": 0.392,
+            "y": 0.357
+          },
+          {
+            "x": 0.466,
+            "y": 0.311
+          },
+          {
+            "x": 0.501,
+            "y": 0.287
+          },
+          {
+            "x": 0.549,
+            "y": 0.285
+          },
+          {
+            "x": 0.594,
+            "y": 0.308
+          },
+          {
+            "x": 0.658,
+            "y": 0.383
+          },
+          {
+            "x": 0.719,
+            "y": 0.435
+          },
+          {
+            "x": 0.757,
+            "y": 0.491
+          },
+          {
+            "x": 0.785,
+            "y": 0.537
+          },
+          {
+            "x": 0.807,
+            "y": 0.571
+          },
+          {
+            "x": 0.812,
+            "y": 0.579
+          },
+          {
+            "x": 0.814,
+            "y": 0.581
+          },
+          {
+            "x": 0.812,
+            "y": 0.581
+          },
+          {
+            "x": 0.809,
+            "y": 0.582
+          },
+          {
+            "x": 0.809,
+            "y": 0.582
+          }
+        ],
+        "elbowAngle": 57,
+        "shoulderAngle": 79
+      },
+      {
+        "transferIdx": 5,
+        "success": true,
+        "reachToPick_ms": 914,
+        "transitTime_ms": 1811,
+        "totalTransferCycle_ms": 2725,
+        "pickTime_ms": 914,
+        "dropTime_ms": 1811,
+        "completionTime_ms": 1582,
+        "avgVelocity": 0.51,
+        "peakVelocity": 1.65,
+        "trajectorySmoothness": 0.33,
+        "correctiveMovements": 3,
+        "wallCollisions": 0,
+        "pathLength": 0.903,
+        "directnessRatio": 0.44,
+        "downsampledPath": [
+          {
+            "x": 0.263,
+            "y": 0.637
+          },
+          {
+            "x": 0.258,
+            "y": 0.635
+          },
+          {
+            "x": 0.261,
+            "y": 0.617
+          },
+          {
+            "x": 0.274,
+            "y": 0.571
+          },
+          {
+            "x": 0.31,
+            "y": 0.473
+          },
+          {
+            "x": 0.349,
+            "y": 0.398
+          },
+          {
+            "x": 0.401,
+            "y": 0.332
+          },
+          {
+            "x": 0.476,
+            "y": 0.273
+          },
+          {
+            "x": 0.512,
+            "y": 0.256
+          },
+          {
+            "x": 0.554,
+            "y": 0.266
+          },
+          {
+            "x": 0.601,
+            "y": 0.328
+          },
+          {
+            "x": 0.629,
+            "y": 0.384
+          },
+          {
+            "x": 0.658,
+            "y": 0.433
+          },
+          {
+            "x": 0.666,
+            "y": 0.472
+          },
+          {
+            "x": 0.678,
+            "y": 0.491
+          },
+          {
+            "x": 0.679,
+            "y": 0.494
+          },
+          {
+            "x": 0.678,
+            "y": 0.491
+          },
+          {
+            "x": 0.674,
+            "y": 0.492
+          },
+          {
+            "x": 0.675,
+            "y": 0.497
+          },
+          {
+            "x": 0.673,
+            "y": 0.508
+          },
+          {
+            "x": 0.668,
+            "y": 0.514
+          },
+          {
+            "x": 0.662,
+            "y": 0.514
+          },
+          {
+            "x": 0.657,
+            "y": 0.526
+          },
+          {
+            "x": 0.663,
+            "y": 0.567
+          },
+          {
+            "x": 0.654,
+            "y": 0.591
+          },
+          {
+            "x": 0.654,
+            "y": 0.591
+          }
+        ],
+        "elbowAngle": 4,
+        "shoulderAngle": 122
+      },
+      {
+        "transferIdx": 6,
+        "success": true,
+        "reachToPick_ms": 1452,
+        "transitTime_ms": 1490,
+        "totalTransferCycle_ms": 2942,
+        "pickTime_ms": 1452,
+        "dropTime_ms": 1490,
+        "completionTime_ms": 1201,
+        "avgVelocity": 0.67,
+        "peakVelocity": 1.82,
+        "trajectorySmoothness": 0.48,
+        "correctiveMovements": 3,
+        "wallCollisions": 0,
+        "pathLength": 0.992,
+        "directnessRatio": 0.72,
+        "downsampledPath": [
+          {
+            "x": 0.159,
+            "y": 0.585
+          },
+          {
+            "x": 0.157,
+            "y": 0.582
+          },
+          {
+            "x": 0.163,
+            "y": 0.571
+          },
+          {
+            "x": 0.18,
+            "y": 0.538
+          },
+          {
+            "x": 0.218,
+            "y": 0.486
+          },
+          {
+            "x": 0.264,
+            "y": 0.424
+          },
+          {
+            "x": 0.352,
+            "y": 0.348
+          },
+          {
+            "x": 0.398,
+            "y": 0.314
+          },
+          {
+            "x": 0.515,
+            "y": 0.261
+          },
+          {
+            "x": 0.607,
+            "y": 0.278
+          },
+          {
+            "x": 0.646,
+            "y": 0.283
+          },
+          {
+            "x": 0.728,
+            "y": 0.342
+          },
+          {
+            "x": 0.786,
+            "y": 0.399
+          },
+          {
+            "x": 0.841,
+            "y": 0.462
+          },
+          {
+            "x": 0.858,
+            "y": 0.496
+          },
+          {
+            "x": 0.873,
+            "y": 0.527
+          },
+          {
+            "x": 0.875,
+            "y": 0.534
+          },
+          {
+            "x": 0.876,
+            "y": 0.541
+          },
+          {
+            "x": 0.875,
+            "y": 0.541
+          },
+          {
+            "x": 0.872,
+            "y": 0.543
+          },
+          {
+            "x": 0.869,
+            "y": 0.541
+          },
+          {
+            "x": 0.869,
+            "y": 0.541
+          }
+        ],
+        "elbowAngle": 177,
+        "shoulderAngle": 33
+      },
+      {
+        "transferIdx": 7,
+        "success": true,
+        "reachToPick_ms": 1028,
+        "transitTime_ms": 1313,
+        "totalTransferCycle_ms": 2341,
+        "pickTime_ms": 1028,
+        "dropTime_ms": 1313,
+        "completionTime_ms": 892,
+        "avgVelocity": 0.7,
+        "peakVelocity": 1.42,
+        "trajectorySmoothness": 0.37,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 0.929,
+        "directnessRatio": 0.47,
+        "downsampledPath": [
+          {
+            "x": 0.274,
+            "y": 0.624
+          },
+          {
+            "x": 0.277,
+            "y": 0.621
+          },
+          {
+            "x": 0.278,
+            "y": 0.62
+          },
+          {
+            "x": 0.278,
+            "y": 0.617
+          },
+          {
+            "x": 0.281,
+            "y": 0.573
+          },
+          {
+            "x": 0.291,
+            "y": 0.539
+          },
+          {
+            "x": 0.324,
+            "y": 0.464
+          },
+          {
+            "x": 0.361,
+            "y": 0.389
+          },
+          {
+            "x": 0.405,
+            "y": 0.301
+          },
+          {
+            "x": 0.484,
+            "y": 0.215
+          },
+          {
+            "x": 0.531,
+            "y": 0.254
+          },
+          {
+            "x": 0.561,
+            "y": 0.324
+          },
+          {
+            "x": 0.586,
+            "y": 0.427
+          },
+          {
+            "x": 0.621,
+            "y": 0.503
+          },
+          {
+            "x": 0.655,
+            "y": 0.548
+          },
+          {
+            "x": 0.69,
+            "y": 0.59
+          },
+          {
+            "x": 0.696,
+            "y": 0.593
+          },
+          {
+            "x": 0.711,
+            "y": 0.593
+          },
+          {
+            "x": 0.711,
+            "y": 0.593
+          }
+        ],
+        "elbowAngle": 11,
+        "shoulderAngle": 115
+      },
+      {
+        "transferIdx": 8,
+        "success": true,
+        "reachToPick_ms": 1569,
+        "transitTime_ms": 2660,
+        "totalTransferCycle_ms": 4229,
+        "pickTime_ms": 1569,
+        "dropTime_ms": 2660,
+        "completionTime_ms": 2438,
+        "avgVelocity": 0.6,
+        "peakVelocity": 1.47,
+        "trajectorySmoothness": 0.25,
+        "correctiveMovements": 10,
+        "wallCollisions": 2,
+        "pathLength": 1.563,
+        "directnessRatio": 0.32,
+        "downsampledPath": [
+          {
+            "x": 0.315,
+            "y": 0.728
+          },
+          {
+            "x": 0.337,
+            "y": 0.699
+          },
+          {
+            "x": 0.353,
+            "y": 0.636
+          },
+          {
+            "x": 0.369,
+            "y": 0.545
+          },
+          {
+            "x": 0.411,
+            "y": 0.424
+          },
+          {
+            "x": 0.484,
+            "y": 0.322
+          },
+          {
+            "x": 0.558,
+            "y": 0.28
+          },
+          {
+            "x": 0.613,
+            "y": 0.333
+          },
+          {
+            "x": 0.641,
+            "y": 0.409
+          },
+          {
+            "x": 0.663,
+            "y": 0.495
+          },
+          {
+            "x": 0.668,
+            "y": 0.552
+          },
+          {
+            "x": 0.646,
+            "y": 0.566
+          },
+          {
+            "x": 0.602,
+            "y": 0.569
+          },
+          {
+            "x": 0.541,
+            "y": 0.572
+          },
+          {
+            "x": 0.432,
+            "y": 0.545
+          },
+          {
+            "x": 0.421,
+            "y": 0.539
+          },
+          {
+            "x": 0.568,
+            "y": 0.555
+          },
+          {
+            "x": 0.813,
+            "y": 0.641
+          },
+          {
+            "x": 0.812,
+            "y": 0.664
+          },
+          {
+            "x": 0.808,
+            "y": 0.669
+          }
+        ],
+        "elbowAngle": 56,
+        "shoulderAngle": 89
+      },
+      {
+        "transferIdx": 9,
+        "success": true,
+        "reachToPick_ms": 1540,
+        "transitTime_ms": 1516,
+        "totalTransferCycle_ms": 3056,
+        "pickTime_ms": 1540,
+        "dropTime_ms": 1516,
+        "completionTime_ms": 1238,
+        "avgVelocity": 0.82,
+        "peakVelocity": 1.53,
+        "trajectorySmoothness": 0.38,
+        "correctiveMovements": 3,
+        "wallCollisions": 0,
+        "pathLength": 1.243,
+        "directnessRatio": 0.52,
+        "downsampledPath": [
+          {
+            "x": 0.199,
+            "y": 0.725
+          },
+          {
+            "x": 0.196,
+            "y": 0.727
+          },
+          {
+            "x": 0.196,
+            "y": 0.727
+          },
+          {
+            "x": 0.198,
+            "y": 0.715
+          },
+          {
+            "x": 0.205,
+            "y": 0.683
+          },
+          {
+            "x": 0.221,
+            "y": 0.63
+          },
+          {
+            "x": 0.243,
+            "y": 0.568
+          },
+          {
+            "x": 0.273,
+            "y": 0.5
+          },
+          {
+            "x": 0.311,
+            "y": 0.423
+          },
+          {
+            "x": 0.335,
+            "y": 0.377
+          },
+          {
+            "x": 0.383,
+            "y": 0.311
+          },
+          {
+            "x": 0.436,
+            "y": 0.254
+          },
+          {
+            "x": 0.493,
+            "y": 0.218
+          },
+          {
+            "x": 0.517,
+            "y": 0.207
+          },
+          {
+            "x": 0.564,
+            "y": 0.206
+          },
+          {
+            "x": 0.606,
+            "y": 0.231
+          },
+          {
+            "x": 0.654,
+            "y": 0.281
+          },
+          {
+            "x": 0.704,
+            "y": 0.372
+          },
+          {
+            "x": 0.736,
+            "y": 0.421
+          },
+          {
+            "x": 0.777,
+            "y": 0.521
+          },
+          {
+            "x": 0.834,
+            "y": 0.656
+          },
+          {
+            "x": 0.837,
+            "y": 0.681
+          },
+          {
+            "x": 0.837,
+            "y": 0.681
+          }
+        ],
+        "elbowAngle": 57,
+        "shoulderAngle": 85
+      },
+      {
+        "transferIdx": 10,
+        "success": true,
+        "reachToPick_ms": 1103,
+        "transitTime_ms": 1361,
+        "totalTransferCycle_ms": 2464,
+        "pickTime_ms": 1103,
+        "dropTime_ms": 1361,
+        "completionTime_ms": 1154,
+        "avgVelocity": 0.9,
+        "peakVelocity": 1.83,
+        "trajectorySmoothness": 0.35,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 1.201,
+        "directnessRatio": 0.45,
+        "downsampledPath": [
+          {
+            "x": 0.187,
+            "y": 0.733
+          },
+          {
+            "x": 0.187,
+            "y": 0.728
+          },
+          {
+            "x": 0.19,
+            "y": 0.72
+          },
+          {
+            "x": 0.193,
+            "y": 0.693
+          },
+          {
+            "x": 0.21,
+            "y": 0.634
+          },
+          {
+            "x": 0.241,
+            "y": 0.552
+          },
+          {
+            "x": 0.282,
+            "y": 0.465
+          },
+          {
+            "x": 0.34,
+            "y": 0.375
+          },
+          {
+            "x": 0.412,
+            "y": 0.301
+          },
+          {
+            "x": 0.456,
+            "y": 0.267
+          },
+          {
+            "x": 0.528,
+            "y": 0.226
+          },
+          {
+            "x": 0.593,
+            "y": 0.221
+          },
+          {
+            "x": 0.648,
+            "y": 0.266
+          },
+          {
+            "x": 0.7,
+            "y": 0.354
+          },
+          {
+            "x": 0.733,
+            "y": 0.465
+          },
+          {
+            "x": 0.758,
+            "y": 0.545
+          },
+          {
+            "x": 0.76,
+            "y": 0.599
+          },
+          {
+            "x": 0.754,
+            "y": 0.619
+          },
+          {
+            "x": 0.742,
+            "y": 0.622
+          },
+          {
+            "x": 0.728,
+            "y": 0.61
+          },
+          {
+            "x": 0.709,
+            "y": 0.599
+          },
+          {
+            "x": 0.709,
+            "y": 0.599
+          }
+        ],
+        "elbowAngle": 35,
+        "shoulderAngle": 98
+      },
+      {
+        "transferIdx": 11,
+        "success": true,
+        "reachToPick_ms": 1059,
+        "transitTime_ms": 1418,
+        "totalTransferCycle_ms": 2477,
+        "pickTime_ms": 1059,
+        "dropTime_ms": 1418,
+        "completionTime_ms": 1184,
+        "avgVelocity": 0.77,
+        "peakVelocity": 1.45,
+        "trajectorySmoothness": 0.27,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 1.008,
+        "directnessRatio": 0.3,
+        "downsampledPath": [
+          {
+            "x": 0.345,
+            "y": 0.624
+          },
+          {
+            "x": 0.344,
+            "y": 0.623
+          },
+          {
+            "x": 0.342,
+            "y": 0.614
+          },
+          {
+            "x": 0.346,
+            "y": 0.573
+          },
+          {
+            "x": 0.363,
+            "y": 0.501
+          },
+          {
+            "x": 0.393,
+            "y": 0.411
+          },
+          {
+            "x": 0.432,
+            "y": 0.322
+          },
+          {
+            "x": 0.459,
+            "y": 0.27
+          },
+          {
+            "x": 0.507,
+            "y": 0.206
+          },
+          {
+            "x": 0.554,
+            "y": 0.176
+          },
+          {
+            "x": 0.595,
+            "y": 0.19
+          },
+          {
+            "x": 0.633,
+            "y": 0.243
+          },
+          {
+            "x": 0.663,
+            "y": 0.321
+          },
+          {
+            "x": 0.692,
+            "y": 0.417
+          },
+          {
+            "x": 0.696,
+            "y": 0.488
+          },
+          {
+            "x": 0.695,
+            "y": 0.547
+          },
+          {
+            "x": 0.685,
+            "y": 0.57
+          },
+          {
+            "x": 0.67,
+            "y": 0.575
+          },
+          {
+            "x": 0.657,
+            "y": 0.572
+          },
+          {
+            "x": 0.638,
+            "y": 0.567
+          },
+          {
+            "x": 0.638,
+            "y": 0.567
+          }
+        ],
+        "elbowAngle": 16,
+        "shoulderAngle": 107
+      },
+      {
+        "transferIdx": 12,
+        "success": true,
+        "reachToPick_ms": 714,
+        "transitTime_ms": 1434,
+        "totalTransferCycle_ms": 2148,
+        "pickTime_ms": 714,
+        "dropTime_ms": 1434,
+        "completionTime_ms": 1267,
+        "avgVelocity": 0.62,
+        "peakVelocity": 1.79,
+        "trajectorySmoothness": 0.3,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 0.893,
+        "directnessRatio": 0.41,
+        "downsampledPath": [
+          {
+            "x": 0.304,
+            "y": 0.602
+          },
+          {
+            "x": 0.309,
+            "y": 0.601
+          },
+          {
+            "x": 0.318,
+            "y": 0.598
+          },
+          {
+            "x": 0.323,
+            "y": 0.596
+          },
+          {
+            "x": 0.323,
+            "y": 0.596
+          },
+          {
+            "x": 0.323,
+            "y": 0.596
+          },
+          {
+            "x": 0.323,
+            "y": 0.583
+          },
+          {
+            "x": 0.324,
+            "y": 0.566
+          },
+          {
+            "x": 0.337,
+            "y": 0.514
+          },
+          {
+            "x": 0.384,
+            "y": 0.392
+          },
+          {
+            "x": 0.45,
+            "y": 0.295
+          },
+          {
+            "x": 0.497,
+            "y": 0.229
+          },
+          {
+            "x": 0.543,
+            "y": 0.213
+          },
+          {
+            "x": 0.579,
+            "y": 0.25
+          },
+          {
+            "x": 0.615,
+            "y": 0.325
+          },
+          {
+            "x": 0.633,
+            "y": 0.38
+          },
+          {
+            "x": 0.67,
+            "y": 0.475
+          },
+          {
+            "x": 0.68,
+            "y": 0.539
+          },
+          {
+            "x": 0.682,
+            "y": 0.559
+          },
+          {
+            "x": 0.681,
+            "y": 0.579
+          },
+          {
+            "x": 0.681,
+            "y": 0.58
+          },
+          {
+            "x": 0.678,
+            "y": 0.577
+          },
+          {
+            "x": 0.671,
+            "y": 0.576
+          },
+          {
+            "x": 0.671,
+            "y": 0.576
+          }
+        ],
+        "elbowAngle": 24,
+        "shoulderAngle": 99
+      },
+      {
+        "transferIdx": 13,
+        "success": true,
+        "reachToPick_ms": 943,
+        "transitTime_ms": 1460,
+        "totalTransferCycle_ms": 2403,
+        "pickTime_ms": 943,
+        "dropTime_ms": 1460,
+        "completionTime_ms": 1264,
+        "avgVelocity": 0.83,
+        "peakVelocity": 2.14,
+        "trajectorySmoothness": 0.3,
+        "correctiveMovements": 1,
+        "wallCollisions": 0,
+        "pathLength": 1.19,
+        "directnessRatio": 0.42,
+        "downsampledPath": [
+          {
+            "x": 0.215,
+            "y": 0.656
+          },
+          {
+            "x": 0.218,
+            "y": 0.666
+          },
+          {
+            "x": 0.219,
+            "y": 0.666
+          },
+          {
+            "x": 0.225,
+            "y": 0.647
+          },
+          {
+            "x": 0.239,
+            "y": 0.588
+          },
+          {
+            "x": 0.263,
+            "y": 0.497
+          },
+          {
+            "x": 0.299,
+            "y": 0.396
+          },
+          {
+            "x": 0.357,
+            "y": 0.273
+          },
+          {
+            "x": 0.415,
+            "y": 0.211
+          },
+          {
+            "x": 0.484,
+            "y": 0.146
+          },
+          {
+            "x": 0.517,
+            "y": 0.136
+          },
+          {
+            "x": 0.569,
+            "y": 0.139
+          },
+          {
+            "x": 0.613,
+            "y": 0.171
+          },
+          {
+            "x": 0.65,
+            "y": 0.231
+          },
+          {
+            "x": 0.702,
+            "y": 0.354
+          },
+          {
+            "x": 0.732,
+            "y": 0.503
+          },
+          {
+            "x": 0.722,
+            "y": 0.554
+          },
+          {
+            "x": 0.71,
+            "y": 0.554
+          },
+          {
+            "x": 0.704,
+            "y": 0.545
+          },
+          {
+            "x": 0.697,
+            "y": 0.538
+          },
+          {
+            "x": 0.697,
+            "y": 0.538
+          }
+        ],
+        "elbowAngle": 21,
+        "shoulderAngle": 104
+      },
+      {
+        "transferIdx": 14,
+        "success": true,
+        "reachToPick_ms": 1136,
+        "transitTime_ms": 1478,
+        "totalTransferCycle_ms": 2614,
+        "pickTime_ms": 1136,
+        "dropTime_ms": 1478,
+        "completionTime_ms": 1276,
+        "avgVelocity": 0.79,
+        "peakVelocity": 1.59,
+        "trajectorySmoothness": 0.38,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 1.11,
+        "directnessRatio": 0.51,
+        "downsampledPath": [
+          {
+            "x": 0.234,
+            "y": 0.584
+          },
+          {
+            "x": 0.231,
+            "y": 0.584
+          },
+          {
+            "x": 0.227,
+            "y": 0.581
+          },
+          {
+            "x": 0.232,
+            "y": 0.567
+          },
+          {
+            "x": 0.251,
+            "y": 0.529
+          },
+          {
+            "x": 0.285,
+            "y": 0.466
+          },
+          {
+            "x": 0.331,
+            "y": 0.39
+          },
+          {
+            "x": 0.383,
+            "y": 0.316
+          },
+          {
+            "x": 0.443,
+            "y": 0.25
+          },
+          {
+            "x": 0.476,
+            "y": 0.218
+          },
+          {
+            "x": 0.533,
+            "y": 0.188
+          },
+          {
+            "x": 0.585,
+            "y": 0.184
+          },
+          {
+            "x": 0.63,
+            "y": 0.203
+          },
+          {
+            "x": 0.675,
+            "y": 0.247
+          },
+          {
+            "x": 0.717,
+            "y": 0.325
+          },
+          {
+            "x": 0.743,
+            "y": 0.377
+          },
+          {
+            "x": 0.78,
+            "y": 0.473
+          },
+          {
+            "x": 0.799,
+            "y": 0.55
+          },
+          {
+            "x": 0.813,
+            "y": 0.598
+          },
+          {
+            "x": 0.815,
+            "y": 0.625
+          },
+          {
+            "x": 0.811,
+            "y": 0.631
+          },
+          {
+            "x": 0.805,
+            "y": 0.627
+          },
+          {
+            "x": 0.797,
+            "y": 0.621
+          },
+          {
+            "x": 0.797,
+            "y": 0.621
+          }
+        ],
+        "elbowAngle": 32,
+        "shoulderAngle": 108
+      },
+      {
+        "transferIdx": 15,
+        "success": true,
+        "reachToPick_ms": 2451,
+        "transitTime_ms": 3050,
+        "totalTransferCycle_ms": 5501,
+        "pickTime_ms": 2451,
+        "dropTime_ms": 3050,
+        "completionTime_ms": 2828,
+        "avgVelocity": 0.66,
+        "peakVelocity": 1.89,
+        "trajectorySmoothness": 0.24,
+        "correctiveMovements": 7,
+        "wallCollisions": 1,
+        "pathLength": 2.092,
+        "directnessRatio": 0.25,
+        "downsampledPath": [
+          {
+            "x": 0.129,
+            "y": 0.543
+          },
+          {
+            "x": 0.139,
+            "y": 0.541
+          },
+          {
+            "x": 0.212,
+            "y": 0.429
+          },
+          {
+            "x": 0.578,
+            "y": 0.208
+          },
+          {
+            "x": 0.73,
+            "y": 0.394
+          },
+          {
+            "x": 0.725,
+            "y": 0.536
+          },
+          {
+            "x": 0.708,
+            "y": 0.526
+          },
+          {
+            "x": 0.549,
+            "y": 0.474
+          },
+          {
+            "x": 0.406,
+            "y": 0.457
+          },
+          {
+            "x": 0.43,
+            "y": 0.353
+          },
+          {
+            "x": 0.528,
+            "y": 0.23
+          },
+          {
+            "x": 0.661,
+            "y": 0.243
+          },
+          {
+            "x": 0.672,
+            "y": 0.449
+          },
+          {
+            "x": 0.659,
+            "y": 0.572
+          },
+          {
+            "x": 0.662,
+            "y": 0.56
+          },
+          {
+            "x": 0.662,
+            "y": 0.56
+          }
+        ],
+        "elbowAngle": 3,
+        "shoulderAngle": 121
+      },
+      {
+        "transferIdx": 16,
+        "success": true,
+        "reachToPick_ms": 1060,
+        "transitTime_ms": 1561,
+        "totalTransferCycle_ms": 2621,
+        "pickTime_ms": 1060,
+        "dropTime_ms": 1561,
+        "completionTime_ms": 1372,
+        "avgVelocity": 0.73,
+        "peakVelocity": 2.07,
+        "trajectorySmoothness": 0.33,
+        "correctiveMovements": 1,
+        "wallCollisions": 0,
+        "pathLength": 1.12,
+        "directnessRatio": 0.45,
+        "downsampledPath": [
+          {
+            "x": 0.268,
+            "y": 0.663
+          },
+          {
+            "x": 0.27,
+            "y": 0.666
+          },
+          {
+            "x": 0.27,
+            "y": 0.669
+          },
+          {
+            "x": 0.268,
+            "y": 0.671
+          },
+          {
+            "x": 0.262,
+            "y": 0.678
+          },
+          {
+            "x": 0.256,
+            "y": 0.684
+          },
+          {
+            "x": 0.25,
+            "y": 0.68
+          },
+          {
+            "x": 0.247,
+            "y": 0.642
+          },
+          {
+            "x": 0.259,
+            "y": 0.576
+          },
+          {
+            "x": 0.287,
+            "y": 0.486
+          },
+          {
+            "x": 0.343,
+            "y": 0.375
+          },
+          {
+            "x": 0.417,
+            "y": 0.291
+          },
+          {
+            "x": 0.48,
+            "y": 0.231
+          },
+          {
+            "x": 0.558,
+            "y": 0.199
+          },
+          {
+            "x": 0.62,
+            "y": 0.21
+          },
+          {
+            "x": 0.674,
+            "y": 0.263
+          },
+          {
+            "x": 0.723,
+            "y": 0.358
+          },
+          {
+            "x": 0.754,
+            "y": 0.455
+          },
+          {
+            "x": 0.77,
+            "y": 0.524
+          },
+          {
+            "x": 0.772,
+            "y": 0.561
+          },
+          {
+            "x": 0.772,
+            "y": 0.573
+          },
+          {
+            "x": 0.767,
+            "y": 0.567
+          },
+          {
+            "x": 0.763,
+            "y": 0.563
+          },
+          {
+            "x": 0.763,
+            "y": 0.563
+          }
+        ],
+        "elbowAngle": 16,
+        "shoulderAngle": 117
+      },
+      {
+        "transferIdx": 17,
+        "success": true,
+        "reachToPick_ms": 1563,
+        "transitTime_ms": 1466,
+        "totalTransferCycle_ms": 3029,
+        "pickTime_ms": 1563,
+        "dropTime_ms": 1466,
+        "completionTime_ms": 1040,
+        "avgVelocity": 0.84,
+        "peakVelocity": 1.73,
+        "trajectorySmoothness": 0.29,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 1.17,
+        "directnessRatio": 0.37,
+        "downsampledPath": [
+          {
+            "x": 0.266,
+            "y": 0.775
+          },
+          {
+            "x": 0.267,
+            "y": 0.775
+          },
+          {
+            "x": 0.267,
+            "y": 0.772
+          },
+          {
+            "x": 0.266,
+            "y": 0.77
+          },
+          {
+            "x": 0.263,
+            "y": 0.76
+          },
+          {
+            "x": 0.266,
+            "y": 0.705
+          },
+          {
+            "x": 0.287,
+            "y": 0.622
+          },
+          {
+            "x": 0.319,
+            "y": 0.522
+          },
+          {
+            "x": 0.367,
+            "y": 0.4
+          },
+          {
+            "x": 0.393,
+            "y": 0.323
+          },
+          {
+            "x": 0.441,
+            "y": 0.239
+          },
+          {
+            "x": 0.49,
+            "y": 0.183
+          },
+          {
+            "x": 0.529,
+            "y": 0.181
+          },
+          {
+            "x": 0.571,
+            "y": 0.23
+          },
+          {
+            "x": 0.607,
+            "y": 0.325
+          },
+          {
+            "x": 0.638,
+            "y": 0.434
+          },
+          {
+            "x": 0.662,
+            "y": 0.527
+          },
+          {
+            "x": 0.668,
+            "y": 0.594
+          },
+          {
+            "x": 0.675,
+            "y": 0.625
+          },
+          {
+            "x": 0.677,
+            "y": 0.634
+          },
+          {
+            "x": 0.677,
+            "y": 0.635
+          },
+          {
+            "x": 0.677,
+            "y": 0.635
+          }
+        ],
+        "elbowAngle": 8,
+        "shoulderAngle": 118
+      },
+      {
+        "transferIdx": 18,
+        "success": true,
+        "reachToPick_ms": 1027,
+        "transitTime_ms": 1484,
+        "totalTransferCycle_ms": 2511,
+        "pickTime_ms": 1027,
+        "dropTime_ms": 1484,
+        "completionTime_ms": 1294,
+        "avgVelocity": 0.66,
+        "peakVelocity": 1.44,
+        "trajectorySmoothness": 0.39,
+        "correctiveMovements": 2,
+        "wallCollisions": 0,
+        "pathLength": 0.983,
+        "directnessRatio": 0.51,
+        "downsampledPath": [
+          {
+            "x": 0.237,
+            "y": 0.69
+          },
+          {
+            "x": 0.234,
+            "y": 0.696
+          },
+          {
+            "x": 0.23,
+            "y": 0.698
+          },
+          {
+            "x": 0.228,
+            "y": 0.696
+          },
+          {
+            "x": 0.227,
+            "y": 0.681
+          },
+          {
+            "x": 0.237,
+            "y": 0.638
+          },
+          {
+            "x": 0.264,
+            "y": 0.569
+          },
+          {
+            "x": 0.302,
+            "y": 0.483
+          },
+          {
+            "x": 0.359,
+            "y": 0.382
+          },
+          {
+            "x": 0.408,
+            "y": 0.317
+          },
+          {
+            "x": 0.469,
+            "y": 0.259
+          },
+          {
+            "x": 0.533,
+            "y": 0.237
+          },
+          {
+            "x": 0.584,
+            "y": 0.257
+          },
+          {
+            "x": 0.625,
+            "y": 0.306
+          },
+          {
+            "x": 0.644,
+            "y": 0.336
+          },
+          {
+            "x": 0.677,
+            "y": 0.407
+          },
+          {
+            "x": 0.698,
+            "y": 0.473
+          },
+          {
+            "x": 0.708,
+            "y": 0.521
+          },
+          {
+            "x": 0.713,
+            "y": 0.549
+          },
+          {
+            "x": 0.716,
+            "y": 0.558
+          },
+          {
+            "x": 0.717,
+            "y": 0.558
+          },
+          {
+            "x": 0.717,
+            "y": 0.556
+          },
+          {
+            "x": 0.716,
+            "y": 0.555
+          },
+          {
+            "x": 0.716,
+            "y": 0.555
+          }
+        ],
+        "elbowAngle": 9,
+        "shoulderAngle": 110
+      },
+      {
+        "transferIdx": 19,
+        "success": true,
+        "reachToPick_ms": 1041,
+        "transitTime_ms": 1551,
+        "totalTransferCycle_ms": 2592,
+        "pickTime_ms": 1041,
+        "dropTime_ms": 1551,
+        "completionTime_ms": 1366,
+        "avgVelocity": 0.59,
+        "peakVelocity": 1.3,
+        "trajectorySmoothness": 0.47,
+        "correctiveMovements": 3,
+        "wallCollisions": 0,
+        "pathLength": 0.908,
+        "directnessRatio": 0.65,
+        "downsampledPath": [
+          {
+            "x": 0.172,
+            "y": 0.637
+          },
+          {
+            "x": 0.169,
+            "y": 0.64
+          },
+          {
+            "x": 0.165,
+            "y": 0.641
+          },
+          {
+            "x": 0.166,
+            "y": 0.634
+          },
+          {
+            "x": 0.171,
+            "y": 0.625
+          },
+          {
+            "x": 0.18,
+            "y": 0.598
+          },
+          {
+            "x": 0.205,
+            "y": 0.561
+          },
+          {
+            "x": 0.247,
+            "y": 0.516
+          },
+          {
+            "x": 0.304,
+            "y": 0.461
+          },
+          {
+            "x": 0.373,
+            "y": 0.409
+          },
+          {
+            "x": 0.44,
+            "y": 0.368
+          },
+          {
+            "x": 0.474,
+            "y": 0.35
+          },
+          {
+            "x": 0.535,
+            "y": 0.334
+          },
+          {
+            "x": 0.594,
+            "y": 0.34
+          },
+          {
+            "x": 0.642,
+            "y": 0.361
+          },
+          {
+            "x": 0.684,
+            "y": 0.407
+          },
+          {
+            "x": 0.724,
+            "y": 0.461
+          },
+          {
+            "x": 0.739,
+            "y": 0.488
+          },
+          {
+            "x": 0.766,
+            "y": 0.562
+          },
+          {
+            "x": 0.772,
+            "y": 0.588
+          },
+          {
+            "x": 0.771,
+            "y": 0.599
+          },
+          {
+            "x": 0.772,
+            "y": 0.6
+          },
+          {
+            "x": 0.767,
+            "y": 0.599
+          },
+          {
+            "x": 0.76,
+            "y": 0.598
+          },
+          {
+            "x": 0.76,
+            "y": 0.598
+          }
+        ],
+        "elbowAngle": 18,
+        "shoulderAngle": 111
+      },
+      {
+        "transferIdx": 20,
+        "success": true,
+        "reachToPick_ms": 1159,
+        "transitTime_ms": 1538,
+        "totalTransferCycle_ms": 2697,
+        "pickTime_ms": 1159,
+        "dropTime_ms": 1538,
+        "completionTime_ms": 1360,
+        "avgVelocity": 0.58,
+        "peakVelocity": 1.62,
+        "trajectorySmoothness": 0.32,
+        "correctiveMovements": 1,
+        "wallCollisions": 0,
+        "pathLength": 0.963,
+        "directnessRatio": 0.38,
+        "downsampledPath": [
+          {
+            "x": 0.317,
+            "y": 0.728
+          },
+          {
+            "x": 0.314,
+            "y": 0.725
+          },
+          {
+            "x": 0.31,
+            "y": 0.721
+          },
+          {
+            "x": 0.309,
+            "y": 0.709
+          },
+          {
+            "x": 0.31,
+            "y": 0.704
+          },
+          {
+            "x": 0.31,
+            "y": 0.698
+          },
+          {
+            "x": 0.31,
+            "y": 0.675
+          },
+          {
+            "x": 0.32,
+            "y": 0.626
+          },
+          {
+            "x": 0.341,
+            "y": 0.553
+          },
+          {
+            "x": 0.372,
+            "y": 0.461
+          },
+          {
+            "x": 0.417,
+            "y": 0.354
+          },
+          {
+            "x": 0.48,
+            "y": 0.276
+          },
+          {
+            "x": 0.529,
+            "y": 0.252
+          },
+          {
+            "x": 0.557,
+            "y": 0.277
+          },
+          {
+            "x": 0.596,
+            "y": 0.362
+          },
+          {
+            "x": 0.618,
+            "y": 0.447
+          },
+          {
+            "x": 0.65,
+            "y": 0.557
+          },
+          {
+            "x": 0.663,
+            "y": 0.604
+          },
+          {
+            "x": 0.662,
+            "y": 0.619
+          },
+          {
+            "x": 0.662,
+            "y": 0.61
+          },
+          {
+            "x": 0.662,
+            "y": 0.602
+          },
+          {
+            "x": 0.662,
+            "y": 0.602
+          }
+        ],
+        "elbowAngle": 7,
+        "shoulderAngle": 116
+      }
+    ],
+    "test3_pinch_attempts": [
+      {
+        "finger": "open",
+        "label": "Open Hand (Spread 5 Fingers Wide)",
+        "success": true,
+        "accuracy": 0.3581970627703283,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 459,
+        "timeToTouch_ms": 865,
+        "speedBonus": 1,
+        "speedRating": "rapid",
+        "avgVelocity": 0.04,
+        "peakVelocity": 0.07,
+        "trajectorySmoothness": 0.51,
+        "correctiveMovements": 1,
+        "baseScore": 3,
+        "score": 4
+      },
+      {
+        "finger": "index",
+        "label": "Thumb + Index Pinch",
+        "success": true,
+        "accuracy": 0.02577854513885803,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1296,
+        "timeToTouch_ms": 1536,
+        "speedBonus": 0.5,
+        "speedRating": "fluid",
+        "avgVelocity": 0.14,
+        "peakVelocity": 1.11,
+        "trajectorySmoothness": 0.53,
+        "correctiveMovements": 0,
+        "baseScore": 3,
+        "score": 3.5
+      },
+      {
+        "finger": "middle",
+        "label": "Thumb + Middle Pinch",
+        "success": true,
+        "accuracy": 0.028709314757705672,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1901,
+        "timeToTouch_ms": 2786,
+        "speedBonus": 0,
+        "speedRating": "delayed",
+        "avgVelocity": 0.06,
+        "peakVelocity": 0.24,
+        "trajectorySmoothness": 0.45,
+        "correctiveMovements": 10,
+        "baseScore": 3,
+        "score": 3
+      },
+      {
+        "finger": "ring",
+        "label": "Thumb + Ring Pinch",
+        "success": true,
+        "accuracy": 0.02240203096950946,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1370,
+        "timeToTouch_ms": 1551,
+        "speedBonus": 0.5,
+        "speedRating": "fluid",
+        "avgVelocity": 0.06,
+        "peakVelocity": 0.22,
+        "trajectorySmoothness": 0.51,
+        "correctiveMovements": 3,
+        "baseScore": 3,
+        "score": 3.5
+      },
+      {
+        "finger": "pinky",
+        "label": "Thumb + Little / Pinky Pinch",
+        "success": true,
+        "accuracy": 0.011975296808984782,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1133,
+        "timeToTouch_ms": 1372,
+        "speedBonus": 0.5,
+        "speedRating": "fluid",
+        "avgVelocity": 0.07,
+        "peakVelocity": 0.18,
+        "trajectorySmoothness": 0.25,
+        "correctiveMovements": 3,
+        "baseScore": 3,
+        "score": 3.5
+      },
+      {
+        "finger": "pinky",
+        "label": "Thumb + Little / Pinky Pinch",
+        "success": true,
+        "accuracy": 0.0065113221093089585,
+        "dwellActual_ms": 600,
+        "completionTime_ms": 1472,
+        "timeToTouch_ms": 1472,
+        "speedBonus": 0.5,
+        "speedRating": "fluid",
+        "avgVelocity": 0,
+        "peakVelocity": 0,
+        "trajectorySmoothness": 1,
+        "correctiveMovements": 0,
+        "baseScore": 3,
+        "score": 3.5
+      }
+    ],
+    "test4_reactionStrike_trials": [
+      {
+        "hit": true,
+        "reactionTime_ms": 1325,
+        "initiationTime_ms": 262,
+        "completionTime_ms": 1063,
+        "avgVelocity": 0.32,
+        "peakVelocity": 1.3,
+        "trajectorySmoothness": 0.47,
+        "correctiveMovements": 1,
+        "pathLength": 0.373,
+        "directnessRatio": 0.7,
+        "downsampledPath": [
+          {
+            "x": 0.414,
+            "y": 0.685
+          },
+          {
+            "x": 0.438,
+            "y": 0.726
+          },
+          {
+            "x": 0.441,
+            "y": 0.734
+          },
+          {
+            "x": 0.45,
+            "y": 0.738
+          },
+          {
+            "x": 0.459,
+            "y": 0.744
+          },
+          {
+            "x": 0.473,
+            "y": 0.748
+          },
+          {
+            "x": 0.484,
+            "y": 0.743
+          },
+          {
+            "x": 0.487,
+            "y": 0.748
+          },
+          {
+            "x": 0.488,
+            "y": 0.75
+          },
+          {
+            "x": 0.489,
+            "y": 0.746
+          },
+          {
+            "x": 0.486,
+            "y": 0.745
+          },
+          {
+            "x": 0.486,
+            "y": 0.732
+          },
+          {
+            "x": 0.481,
+            "y": 0.705
+          },
+          {
+            "x": 0.502,
+            "y": 0.694
+          },
+          {
+            "x": 0.576,
+            "y": 0.683
+          },
+          {
+            "x": 0.638,
+            "y": 0.653
+          },
+          {
+            "x": 0.653,
+            "y": 0.637
+          },
+          {
+            "x": 0.663,
+            "y": 0.614
+          },
+          {
+            "x": 0.663,
+            "y": 0.614
+          }
+        ],
+        "trajectoryJerk": 3.507,
+        "score": 0
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 803,
+        "initiationTime_ms": 270,
+        "completionTime_ms": 533,
+        "avgVelocity": 0.15,
+        "peakVelocity": 0.4,
+        "trajectorySmoothness": 0.6,
+        "correctiveMovements": 0,
+        "pathLength": 0.123,
+        "directnessRatio": 0.64,
+        "downsampledPath": [
+          {
+            "x": 0.351,
+            "y": 0.505
+          },
+          {
+            "x": 0.33,
+            "y": 0.505
+          },
+          {
+            "x": 0.314,
+            "y": 0.508
+          },
+          {
+            "x": 0.31,
+            "y": 0.511
+          },
+          {
+            "x": 0.31,
+            "y": 0.514
+          },
+          {
+            "x": 0.312,
+            "y": 0.516
+          },
+          {
+            "x": 0.315,
+            "y": 0.519
+          },
+          {
+            "x": 0.323,
+            "y": 0.517
+          },
+          {
+            "x": 0.331,
+            "y": 0.511
+          },
+          {
+            "x": 0.334,
+            "y": 0.491
+          },
+          {
+            "x": 0.341,
+            "y": 0.46
+          },
+          {
+            "x": 0.341,
+            "y": 0.46
+          }
+        ],
+        "trajectoryJerk": 21.147,
+        "score": 0.3
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 774,
+        "initiationTime_ms": 201,
+        "completionTime_ms": 573,
+        "avgVelocity": 0.35,
+        "peakVelocity": 0.56,
+        "trajectorySmoothness": 0.37,
+        "correctiveMovements": 2,
+        "pathLength": 0.26,
+        "directnessRatio": 0.43,
+        "downsampledPath": [
+          {
+            "x": 0.296,
+            "y": 0.48
+          },
+          {
+            "x": 0.325,
+            "y": 0.486
+          },
+          {
+            "x": 0.356,
+            "y": 0.491
+          },
+          {
+            "x": 0.384,
+            "y": 0.497
+          },
+          {
+            "x": 0.398,
+            "y": 0.503
+          },
+          {
+            "x": 0.421,
+            "y": 0.513
+          },
+          {
+            "x": 0.431,
+            "y": 0.518
+          },
+          {
+            "x": 0.416,
+            "y": 0.525
+          },
+          {
+            "x": 0.381,
+            "y": 0.538
+          },
+          {
+            "x": 0.347,
+            "y": 0.551
+          },
+          {
+            "x": 0.329,
+            "y": 0.555
+          },
+          {
+            "x": 0.318,
+            "y": 0.554
+          },
+          {
+            "x": 0.318,
+            "y": 0.554
+          }
+        ],
+        "trajectoryJerk": 4.755,
+        "score": 0.33
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 65,
+        "initiationTime_ms": 0,
+        "completionTime_ms": 65,
+        "avgVelocity": 0,
+        "peakVelocity": 0,
+        "trajectorySmoothness": 1,
+        "correctiveMovements": 0,
+        "pathLength": 0,
+        "directnessRatio": 1,
+        "downsampledPath": [],
+        "trajectoryJerk": 4.302,
+        "score": 1
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 628,
+        "initiationTime_ms": 218,
+        "completionTime_ms": 410,
+        "avgVelocity": 0.16,
+        "peakVelocity": 0.52,
+        "trajectorySmoothness": 0.7,
+        "correctiveMovements": 0,
+        "pathLength": 0.119,
+        "directnessRatio": 0.92,
+        "downsampledPath": [
+          {
+            "x": 0.364,
+            "y": 0.584
+          },
+          {
+            "x": 0.36,
+            "y": 0.589
+          },
+          {
+            "x": 0.357,
+            "y": 0.595
+          },
+          {
+            "x": 0.354,
+            "y": 0.595
+          },
+          {
+            "x": 0.355,
+            "y": 0.597
+          },
+          {
+            "x": 0.354,
+            "y": 0.596
+          },
+          {
+            "x": 0.347,
+            "y": 0.592
+          },
+          {
+            "x": 0.307,
+            "y": 0.578
+          },
+          {
+            "x": 0.26,
+            "y": 0.568
+          },
+          {
+            "x": 0.26,
+            "y": 0.568
+          }
+        ],
+        "trajectoryJerk": 13.184,
+        "score": 0.47
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 1073,
+        "initiationTime_ms": 504,
+        "completionTime_ms": 569,
+        "avgVelocity": 0.47,
+        "peakVelocity": 1.64,
+        "trajectorySmoothness": 0.63,
+        "correctiveMovements": 1,
+        "pathLength": 0.488,
+        "directnessRatio": 0.96,
+        "downsampledPath": [
+          {
+            "x": 0.278,
+            "y": 0.59
+          },
+          {
+            "x": 0.278,
+            "y": 0.59
+          },
+          {
+            "x": 0.278,
+            "y": 0.589
+          },
+          {
+            "x": 0.278,
+            "y": 0.587
+          },
+          {
+            "x": 0.279,
+            "y": 0.584
+          },
+          {
+            "x": 0.291,
+            "y": 0.578
+          },
+          {
+            "x": 0.353,
+            "y": 0.577
+          },
+          {
+            "x": 0.448,
+            "y": 0.603
+          },
+          {
+            "x": 0.533,
+            "y": 0.601
+          },
+          {
+            "x": 0.568,
+            "y": 0.586
+          },
+          {
+            "x": 0.578,
+            "y": 0.579
+          },
+          {
+            "x": 0.597,
+            "y": 0.577
+          },
+          {
+            "x": 0.625,
+            "y": 0.59
+          },
+          {
+            "x": 0.653,
+            "y": 0.599
+          },
+          {
+            "x": 0.699,
+            "y": 0.608
+          },
+          {
+            "x": 0.741,
+            "y": 0.628
+          },
+          {
+            "x": 0.741,
+            "y": 0.628
+          }
+        ],
+        "trajectoryJerk": 5.124,
+        "score": 0.1
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 199,
+        "initiationTime_ms": 199,
+        "completionTime_ms": 60,
+        "avgVelocity": 1.17,
+        "peakVelocity": 2.03,
+        "trajectorySmoothness": 0.62,
+        "correctiveMovements": 0,
+        "pathLength": 0.238,
+        "directnessRatio": 1,
+        "downsampledPath": [
+          {
+            "x": 0.589,
+            "y": 0.572
+          },
+          {
+            "x": 0.441,
+            "y": 0.53
+          },
+          {
+            "x": 0.361,
+            "y": 0.507
+          },
+          {
+            "x": 0.361,
+            "y": 0.507
+          }
+        ],
+        "trajectoryJerk": 96.433,
+        "score": 1
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 620,
+        "initiationTime_ms": 200,
+        "completionTime_ms": 420,
+        "avgVelocity": 0.37,
+        "peakVelocity": 1.48,
+        "trajectorySmoothness": 0.55,
+        "correctiveMovements": 0,
+        "pathLength": 0.291,
+        "directnessRatio": 0.71,
+        "downsampledPath": [
+          {
+            "x": 0.344,
+            "y": 0.543
+          },
+          {
+            "x": 0.339,
+            "y": 0.546
+          },
+          {
+            "x": 0.336,
+            "y": 0.551
+          },
+          {
+            "x": 0.331,
+            "y": 0.555
+          },
+          {
+            "x": 0.318,
+            "y": 0.551
+          },
+          {
+            "x": 0.303,
+            "y": 0.54
+          },
+          {
+            "x": 0.313,
+            "y": 0.52
+          },
+          {
+            "x": 0.384,
+            "y": 0.5
+          },
+          {
+            "x": 0.524,
+            "y": 0.531
+          },
+          {
+            "x": 0.524,
+            "y": 0.531
+          }
+        ],
+        "trajectoryJerk": 3.757,
+        "score": 0.48
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 557,
+        "initiationTime_ms": 181,
+        "completionTime_ms": 376,
+        "avgVelocity": 0.19,
+        "peakVelocity": 0.7,
+        "trajectorySmoothness": 0.75,
+        "correctiveMovements": 0,
+        "pathLength": 0.123,
+        "directnessRatio": 1,
+        "downsampledPath": [
+          {
+            "x": 0.511,
+            "y": 0.513
+          },
+          {
+            "x": 0.504,
+            "y": 0.507
+          },
+          {
+            "x": 0.503,
+            "y": 0.507
+          },
+          {
+            "x": 0.505,
+            "y": 0.506
+          },
+          {
+            "x": 0.505,
+            "y": 0.503
+          },
+          {
+            "x": 0.504,
+            "y": 0.503
+          },
+          {
+            "x": 0.519,
+            "y": 0.505
+          },
+          {
+            "x": 0.556,
+            "y": 0.488
+          },
+          {
+            "x": 0.587,
+            "y": 0.449
+          },
+          {
+            "x": 0.587,
+            "y": 0.449
+          }
+        ],
+        "trajectoryJerk": 8.892,
+        "score": 0.54
+      },
+      {
+        "hit": true,
+        "reactionTime_ms": 770,
+        "initiationTime_ms": 526,
+        "completionTime_ms": 244,
+        "avgVelocity": 0.29,
+        "peakVelocity": 0.97,
+        "trajectorySmoothness": 0.67,
+        "correctiveMovements": 0,
+        "pathLength": 0.236,
+        "directnessRatio": 1,
+        "downsampledPath": [
+          {
+            "x": 0.599,
+            "y": 0.4
+          },
+          {
+            "x": 0.598,
+            "y": 0.4
+          },
+          {
+            "x": 0.6,
+            "y": 0.401
+          },
+          {
+            "x": 0.602,
+            "y": 0.403
+          },
+          {
+            "x": 0.601,
+            "y": 0.405
+          },
+          {
+            "x": 0.601,
+            "y": 0.407
+          },
+          {
+            "x": 0.603,
+            "y": 0.408
+          },
+          {
+            "x": 0.619,
+            "y": 0.414
+          },
+          {
+            "x": 0.666,
+            "y": 0.446
+          },
+          {
+            "x": 0.717,
+            "y": 0.484
+          },
+          {
+            "x": 0.737,
+            "y": 0.501
+          },
+          {
+            "x": 0.783,
+            "y": 0.541
+          },
+          {
+            "x": 0.783,
+            "y": 0.541
+          }
+        ],
+        "trajectoryJerk": 6.043,
+        "score": 0.33
+      }
+    ],
+    "test5_romSweep_summary": {
+      "maxShoulder": 179,
+      "maxElbow": 180,
+      "maxVertical": 180,
+      "coveragePct": 85,
+      "cumulativeDeg": 1131,
+      "laps": 3.1,
+      "pathSimilarity": 80,
+      "avgAngularSpeed": 80,
+      "jerk": 0.75,
+      "smoothness": 0.25,
+      "hesitations": 49
+    }
+  },
+  "metricDefinitionsGlossary": {
+    "Completion Time (MT)": "Movement Time elapsed from sustained kinematic onset (velocity >= 0.045 units/s) until final target arrival or grasp completion.",
+    "Initiation / Reaction Latency": "Latency from visual stimulus spawn until the participant first initiates hand movement towards the target.",
+    "Trajectory Smoothness": "0 to 1 normalized metric combining straight-line path directness and normalized dimensionless jerk. Higher values indicate smooth, coordinated, bell-shaped velocity profiles.",
+    "Velocity (Avg & Peak)": "Speed of hand movement in normalized workspace units per second, filtered with a 3-point moving average to eliminate vision micro-jitter.",
+    "Corrective Movements": "Count of submovement velocity peaks (prominence >= 12% peak velocity) where the subject hesitated or made secondary trajectory corrections, plus task error contacts (partition collisions)."
+  }
+}

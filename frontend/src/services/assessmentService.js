@@ -44,6 +44,28 @@ export const saveClinicalSession = async (assessmentId, testData) => {
   return handleResponse(res);
 };
 
+// ── Explicitly save / sync matrix files user-wise to server ─────────────────
+export const saveMatrixFilesToServer = async (assessmentId, data) => {
+  const res = await fetch(`${API_BASE_URL}/assessment/${assessmentId}/save-matrix-files`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse(res);
+};
+
+// ── List user's saved matrix files ──────────────────────────────────────────
+export const listUserMatrixFiles = async (userId = null) => {
+  const url = userId
+    ? `${API_BASE_URL}/assessment/user-files?userId=${encodeURIComponent(userId)}`
+    : `${API_BASE_URL}/assessment/user-files`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+};
+
 // ── Finalise assessment (trigger metric computation) ────────────────────────
 export const finaliseAssessment = async (assessmentId) => {
   const res = await fetch(`${API_BASE_URL}/assessment/${assessmentId}/finalise`, {
