@@ -1,6 +1,10 @@
 // Toggle this to false when pushing to production/Vercel
 export const IS_LOCAL = false;
 
+// ─── Sidebar Navigation Configuration ─────────────────────────────────────────
+// Toggle to show/hide Assessment button in the frontend sidebar by default
+export const DEFAULT_SHOW_ASSESSMENT_SIDEBAR = true;
+
 // ─── Lighting Detection Configuration ────────────────────────────────────────
 // Toggle poor lighting detection on/off globally
 export const ENABLE_LIGHTING_DETECTION = true;

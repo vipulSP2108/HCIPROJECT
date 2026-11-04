@@ -15,7 +15,8 @@ import {
   UploadCloud,
   Trash2,
   Wifi,
-  Settings
+  Settings,
+  Activity
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import offlineBuffer from "../../services/offlineBuffer";
@@ -42,6 +43,25 @@ function PatientSetting() {
   const [offlineSessions, setOfflineSessions] = useState([]);
   const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
   const [isSyncingId, setIsSyncingId] = useState(null);
+  const [showAssessment, setShowAssessment] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hci_show_assessment_sidebar');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const toggleAssessment = () => {
+    const newVal = !showAssessment;
+    setShowAssessment(newVal);
+    try {
+      localStorage.setItem('hci_show_assessment_sidebar', newVal.toString());
+      window.dispatchEvent(new Event('assessment_sidebar_visibility_changed'));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     fetchProfileDetails();
@@ -228,6 +248,39 @@ function PatientSetting() {
               track physical progress over time.
             </div>
           </div>
+        </div>
+
+        {/* Navigation & Sidebar Preferences */}
+        <div className="premium-card p-8 mt-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-primary-500" />
+              Navigation & Sidebar Display
+            </h2>
+            <div className="flex items-center gap-3">
+              <span className={`text-xs font-bold uppercase tracking-widest ${showAssessment ? "text-primary-600" : "text-gray-400"}`}>
+                {showAssessment ? "Visible" : "Hidden"}
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={showAssessment}
+                onClick={toggleAssessment}
+                className={`w-12 h-6 rounded-full relative transition-colors duration-300 ${
+                  showAssessment ? "bg-primary-500" : "bg-gray-300"
+                }`}
+              >
+                <div
+                  className={`w-4 h-4 rounded-full bg-white transition-transform duration-300 absolute top-1 ${
+                    showAssessment ? "translate-x-7" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500">
+            Show or hide the Motor Assessment button in the navigation sidebar. Turn off to hide assessment workflows.
+          </p>
         </div>
 
         {/* Camera Lighting & Quality Settings */}

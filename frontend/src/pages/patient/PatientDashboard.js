@@ -95,6 +95,39 @@ export default function PatientDashboard({ userId }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Sidebar Assessment button visibility toggle
+  const [showAssessment, setShowAssessment] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hci_show_assessment_sidebar');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    const handleAssessmentVisibility = () => {
+      try {
+        const saved = localStorage.getItem('hci_show_assessment_sidebar');
+        setShowAssessment(saved !== null ? saved === 'true' : true);
+      } catch {
+        setShowAssessment(true);
+      }
+    };
+    window.addEventListener('assessment_sidebar_visibility_changed', handleAssessmentVisibility);
+    window.addEventListener('storage', handleAssessmentVisibility);
+    return () => {
+      window.removeEventListener('assessment_sidebar_visibility_changed', handleAssessmentVisibility);
+      window.removeEventListener('storage', handleAssessmentVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showAssessment && activeSection === "Assessment") {
+      setActiveSection("Dashboard");
+    }
+  }, [showAssessment, activeSection]);
+
   // Reminders and logic
   const [reminders] = useState([]);
 
@@ -280,13 +313,15 @@ export default function PatientDashboard({ userId }) {
               onClick={() => changeSection("Calendar")}
               collapsed={isCollapsed}
             />
-            <SidebarItem
-              icon={<Activity size={18} />}
-              label="Assessment"
-              active={activeSection === "Assessment"}
-              onClick={() => changeSection("Assessment")}
-              collapsed={isCollapsed}
-            />
+            {showAssessment && (
+              <SidebarItem
+                icon={<Activity size={18} />}
+                label="Assessment"
+                active={activeSection === "Assessment"}
+                onClick={() => changeSection("Assessment")}
+                collapsed={isCollapsed}
+              />
+            )}
           </nav>
         </div>
 
@@ -387,6 +422,16 @@ export default function PatientDashboard({ userId }) {
               userData={userData}
               navigate={navigate}
               isDarkMode={isDarkMode}
+              showAssessment={showAssessment}
+              onToggleAssessment={(val) => {
+                setShowAssessment(val);
+                try {
+                  localStorage.setItem('hci_show_assessment_sidebar', val ? 'true' : 'false');
+                  window.dispatchEvent(new Event('assessment_sidebar_visibility_changed'));
+                } catch (e) {
+                  console.error(e);
+                }
+              }}
             />
           )}
           {activeSection === "Help Center" && (
@@ -3780,10 +3825,36 @@ const CalendarContent = ({ isDarkMode, reminders, userData }) => {
 };
 
 // Updated SettingsContent with a premium dark mode layout
-const SettingsContent = ({ isDarkMode }) => {
+const SettingsContent = ({ isDarkMode, userData, navigate, showAssessment: propShowAssessment, onToggleAssessment }) => {
   const [offlineSessions, setOfflineSessions] = useState([]);
   const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
   const [isSyncingId, setIsSyncingId] = useState(null);
+  const [internalShowAssessment, setInternalShowAssessment] = useState(() => {
+    if (typeof propShowAssessment === 'boolean') return propShowAssessment;
+    try {
+      const saved = localStorage.getItem('hci_show_assessment_sidebar');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const activeShowAssessment = typeof propShowAssessment === 'boolean' ? propShowAssessment : internalShowAssessment;
+
+  const handleAssessmentToggle = () => {
+    const nextVal = !activeShowAssessment;
+    setInternalShowAssessment(nextVal);
+    if (onToggleAssessment) {
+      onToggleAssessment(nextVal);
+    } else {
+      try {
+        localStorage.setItem('hci_show_assessment_sidebar', nextVal ? 'true' : 'false');
+        window.dispatchEvent(new Event('assessment_sidebar_visibility_changed'));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
   useEffect(() => {
     setOfflineSessions(offlineBuffer.getSessions());
@@ -3845,6 +3916,51 @@ const SettingsContent = ({ isDarkMode }) => {
               General Preferences
             </h2>
             <div className="space-y-6">
+              {/* Motor Assessment Navigation Sidebar Toggle */}
+              <div className="flex items-center justify-between p-4 md:p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl md:rounded-[2rem] border border-transparent dark:border-gray-700/50 gap-2 md:gap-0">
+                <div className="flex items-center gap-4 md:gap-6">
+                  <div className={`p-3 md:p-4 rounded-2xl shadow-sm shrink-0 transition-colors ${
+                    activeShowAssessment
+                      ? "bg-primary-50 dark:bg-primary-950/40 text-primary-500"
+                      : "bg-gray-200 dark:bg-gray-700 text-gray-400"
+                  }`}>
+                    <Activity size={20} className="md:w-6 md:h-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-lg font-bold dark:text-white">
+                        Motor Assessment in Sidebar
+                      </h4>
+                      <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                        activeShowAssessment
+                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400"
+                          : "bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                      }`}>
+                        {activeShowAssessment ? "Visible" : "Hidden"}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-400 font-medium">
+                      Toggle the Assessment button on or off in the navigation sidebar. Turn off to hide assessment workflows.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={activeShowAssessment}
+                  onClick={handleAssessmentToggle}
+                  className={`w-14 h-8 shrink-0 rounded-full relative flex items-center px-1 transition-colors duration-300 cursor-pointer ${
+                    activeShowAssessment ? "bg-primary-500" : "bg-gray-300 dark:bg-gray-700"
+                  }`}
+                >
+                  <div
+                    className={`w-6 h-6 bg-white rounded-full shadow-md shrink-0 transition-transform duration-300 ${
+                      activeShowAssessment ? "translate-x-6" : "translate-x-0"
+                    }`}
+                  />
+                </button>
+              </div>
+
               <div className="flex items-center justify-between p-4 md:p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl md:rounded-[2rem] border border-transparent dark:border-gray-700/50 gap-2 md:gap-0">
                 <div className="flex items-center gap-4 md:gap-6">
                   <div className="p-3 md:p-4 bg-white dark:bg-gray-900 rounded-2xl text-primary-500 shadow-sm shrink-0">

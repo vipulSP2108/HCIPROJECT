@@ -64,6 +64,7 @@ const Sidebar = ({
   isCollapsed,
   setIsCollapsed,
   isDarkMode,
+  showAssessment = true,
 }) => (
   <aside
     className={`fixed top-0 left-0 h-screen bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 flex flex-col justify-between overflow-hidden z-20 transition-all duration-500 ${isCollapsed ? "w-20" : "w-72"}`}
@@ -143,13 +144,15 @@ const Sidebar = ({
           onClick={() => setActiveView("messages")}
           collapsed={isCollapsed}
         />
-        <SidebarItem
-          icon={<ClipboardList size={18} />}
-          label="Assessment"
-          active={activeView === "assessment"}
-          onClick={() => setActiveView("assessment")}
-          collapsed={isCollapsed}
-        />
+        {showAssessment && (
+          <SidebarItem
+            icon={<ClipboardList size={18} />}
+            label="Assessment"
+            active={activeView === "assessment"}
+            onClick={() => setActiveView("assessment")}
+            collapsed={isCollapsed}
+          />
+        )}
       </nav>
     </div>
 
@@ -1079,6 +1082,39 @@ const DoctorDashboard = () => {
   const [isCollapsed, setIsCollapsed] = useState(false); // Sidebar collapse state
   const [configModalPatientId, setConfigModalPatientId] = useState(null);
 
+  // Sidebar Assessment button visibility toggle
+  const [showAssessment, setShowAssessment] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hci_show_assessment_sidebar');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    const handleAssessmentVisibility = () => {
+      try {
+        const saved = localStorage.getItem('hci_show_assessment_sidebar');
+        setShowAssessment(saved !== null ? saved === 'true' : true);
+      } catch {
+        setShowAssessment(true);
+      }
+    };
+    window.addEventListener('assessment_sidebar_visibility_changed', handleAssessmentVisibility);
+    window.addEventListener('storage', handleAssessmentVisibility);
+    return () => {
+      window.removeEventListener('assessment_sidebar_visibility_changed', handleAssessmentVisibility);
+      window.removeEventListener('storage', handleAssessmentVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showAssessment && activeView === "assessment") {
+      setActiveView("dashboard");
+    }
+  }, [showAssessment, activeView]);
+
   // State for patients/caretakers
   const [patients, setPatients] = useState([]);
   const [caretakers, setCaretakers] = useState([]);
@@ -1147,6 +1183,7 @@ const DoctorDashboard = () => {
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
         isDarkMode={isDarkMode}
+        showAssessment={showAssessment}
       />
 
       {/* Main Content Area (Scrollable, with offset) */}
