@@ -1,5 +1,5 @@
 import React from "react";
-import { ShieldCheck, Sparkles, Compass, ChevronRight } from "lucide-react";
+import { ShieldCheck, Sparkles, ChevronRight } from "lucide-react";
 import AssessmentTopBar from "../AssessmentTopBar";
 import { CLINICAL_TESTS } from "../constants/clinicalTestBattery";
 
@@ -159,14 +159,6 @@ export default function ClinicalIntroScreen({
           </div>
 
           <div className="flex flex-col gap-3">
-            <button
-              type="button"
-              onClick={onOpenCalibration}
-              className="w-full py-3.5 bg-gray-100 dark:bg-gray-800/90 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold text-sm rounded-2xl border border-gray-200 dark:border-gray-700 transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-            >
-              <Compass size={17} className="text-primary-500" />
-              <span>Pre-Test Camera & Motion Calibration (Tilt, Distance, Centering)</span>
-            </button>
             {completedTestIds.size > 0 && (
               <button
                 type="button"

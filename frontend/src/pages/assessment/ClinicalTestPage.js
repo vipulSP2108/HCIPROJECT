@@ -163,6 +163,11 @@ export default function ClinicalTestPage() {
     }
   };
 
+  const handleInitiateBattery = () => {
+    // 1st thing to start is Pre-Test Camera & Motion Calibration
+    setIsCalibrationModalOpen(true);
+  };
+
   const startBattery = () => {
     setIsCalibrationModalOpen(false);
     const firstUnfinished = CLINICAL_TESTS.findIndex((t) => !completedTestIds.has(t.id));
@@ -190,7 +195,7 @@ export default function ClinicalTestPage() {
           saving={saving}
           handleSaveAndReturn={handleSaveAndReturn}
           onStartSingleTest={startSingleTest}
-          onStartBattery={startBattery}
+          onStartBattery={handleInitiateBattery}
           onOpenCalibration={() => setIsCalibrationModalOpen(true)}
           onNavigateHub={() => navigate(assessmentId ? `/assessment/run/${assessmentId}` : "/patient/dashboard")}
         />

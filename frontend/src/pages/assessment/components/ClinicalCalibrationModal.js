@@ -1,7 +1,7 @@
 // ClinicalCalibrationModal.js - Pre-Test Camera & Motion Calibration Modal for Track B
 // Evaluates Centering (X-midpoint), Distance (Shoulder Span), and Camera Tilt (Angle)
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Camera } from "@mediapipe/camera_utils";
 import { Pose } from "@mediapipe/pose";
 import {
@@ -249,15 +249,43 @@ export default function ClinicalCalibrationModal({
     };
   }, [isOpen]);
 
-  const handleStart = () => {
+  const onStartBatteryRef = useRef(onStartBattery);
+  onStartBatteryRef.current = onStartBattery;
+
+  const handleStart = useCallback(() => {
     stopCamera();
-    if (onStartBattery) onStartBattery();
-  };
+    if (onStartBatteryRef.current) onStartBatteryRef.current();
+  }, []);
 
   const handleClose = () => {
     stopCamera();
     if (onClose) onClose();
   };
+
+  // Hands-free auto-progression countdown once optimal posture is maintained
+  const [autoStartCount, setAutoStartCount] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen || !postureStatus.isReady) {
+      setAutoStartCount(null);
+      return;
+    }
+
+    setAutoStartCount(3);
+    const interval = setInterval(() => {
+      setAutoStartCount((prev) => {
+        if (prev === null) return 3;
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleStart();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isOpen, postureStatus.isReady, handleStart]);
 
   if (!isOpen) return null;
 
@@ -271,7 +299,7 @@ export default function ClinicalCalibrationModal({
               <CameraIcon size={20} />
             </div>
             <div>
-              <h3 className="text-base font-black text-white">Camera & Motion Calibration</h3>
+              <h3 className="text-base font-black text-white">Pre-Test Camera & Motion Calibration</h3>
               <p className="text-xs text-gray-400">Verify tilt, distance, and centering for accurate clinical scoring</p>
             </div>
           </div>
@@ -323,7 +351,11 @@ export default function ClinicalCalibrationModal({
             <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${postureStatus.isReady ? "bg-emerald-400 animate-pulse" : "bg-sky-400"}`} />
               <span className="text-[11px] font-bold text-gray-200">
-                {postureStatus.isReady ? "Optimal Positioning" : "Adjust to Match Frame"}
+                {postureStatus.isReady
+                  ? (autoStartCount !== null && autoStartCount > 0
+                      ? `Optimal Posture • Starting Battery in ${autoStartCount}s`
+                      : "Optimal Positioning (Ready)")
+                  : "Adjust to Match Frame"}
               </span>
             </div>
           )}
@@ -390,9 +422,17 @@ export default function ClinicalCalibrationModal({
           <button
             type="button"
             onClick={handleStart}
-            className="px-6 py-3 rounded-xl bg-primary-500 hover:bg-primary-600 active:scale-98 text-white font-black text-xs shadow-lg shadow-primary-500/25 transition-all flex items-center gap-2 cursor-pointer"
+            className={`px-6 py-3 rounded-xl font-black text-xs shadow-lg transition-all flex items-center gap-2 cursor-pointer ${
+              postureStatus.isReady
+                ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/30 scale-[1.02]"
+                : "bg-primary-500 hover:bg-primary-600 text-white shadow-primary-500/25 active:scale-98"
+            }`}
           >
-            <span>Begin Complete Battery</span>
+            <span>
+              {autoStartCount !== null && autoStartCount > 0
+                ? `Optimal Posture! Starting in ${autoStartCount}s... (or click to start)`
+                : "Begin Complete Battery"}
+            </span>
             <ArrowRight size={16} />
           </button>
         </div>
