@@ -905,17 +905,13 @@ const BoardDrawingGame = () => {
       }
       shapeType = seq[sequenceIndexRef.current];
       sequenceIndexRef.current++;
+    } else if (assessmentId || selectedShapeRef.current === "random") {
+      const available = allowedShapesRef.current.filter(s => s !== "random");
+      const listToUse = available.length > 0 ? available : (globalSettings?.testingShapeSequence?.length > 0 ? globalSettings.testingShapeSequence : TESTING_SHAPE_SEQUENCE);
+      shapeType = listToUse[sequenceIndexRef.current % listToUse.length];
+      sequenceIndexRef.current++;
     } else {
-      if (selectedShapeRef.current === "random") {
-        const available = allowedShapesRef.current.filter(s => s !== "random");
-        if (available.length === 0) {
-          shapeType = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-        } else {
-          shapeType = available[Math.floor(Math.random() * available.length)];
-        }
-      } else {
-        shapeType = selectedShapeRef.current;
-      }
+      shapeType = selectedShapeRef.current;
     }
 
     const points = generateShapePoints(shapeType);

@@ -1,0 +1,1635 @@
+[
+  {
+    "_id": "6aec9d0d8dba51e9843dc73a",
+    "user": "6aead3aeddbab47f9d68adff",
+    "phase": "pre",
+    "activeArm": "Left",
+    "completedAt": "2026-11-05T15:13:17.088Z",
+    "test1_grossReach": {
+      "zones": [
+        {
+          "zone": "mouth",
+          "success": true,
+          "latency_ms": 1679,
+          "completionTime_ms": 535,
+          "reactionLatency_ms": 1144,
+          "avgVelocity": 0.13,
+          "peakVelocity": 0.66,
+          "trajectorySmoothness": 0.65,
+          "correctiveMovements": 3,
+          "pathLength": 0.082,
+          "directnessRatio": 1,
+          "downsampledPath": [
+            {
+              "x": 0.491,
+              "y": 0.69
+            },
+            {
+              "x": 0.506,
+              "y": 0.66
+            },
+            {
+              "x": 0.509,
+              "y": 0.656
+            },
+            {
+              "x": 0.517,
+              "y": 0.648
+            },
+            {
+              "x": 0.516,
+              "y": 0.646
+            },
+            {
+              "x": 0.521,
+              "y": 0.639
+            },
+            {
+              "x": 0.524,
+              "y": 0.635
+            },
+            {
+              "x": 0.525,
+              "y": 0.633
+            },
+            {
+              "x": 0.525,
+              "y": 0.632
+            },
+            {
+              "x": 0.526,
+              "y": 0.632
+            },
+            {
+              "x": 0.525,
+              "y": 0.63
+            },
+            {
+              "x": 0.525,
+              "y": 0.63
+            },
+            {
+              "x": 0.522,
+              "y": 0.633
+            },
+            {
+              "x": 0.523,
+              "y": 0.633
+            },
+            {
+              "x": 0.521,
+              "y": 0.633
+            },
+            {
+              "x": 0.52,
+              "y": 0.632
+            },
+            {
+              "x": 0.518,
+              "y": 0.632
+            },
+            {
+              "x": 0.518,
+              "y": 0.632
+            }
+          ],
+          "shoulderAngle": 90,
+          "elbowAngle": 22,
+          "compensationDetected": false,
+          "score": 3
+        },
+        {
+          "zone": "top_head",
+          "success": true,
+          "latency_ms": 2468,
+          "completionTime_ms": 2327,
+          "reactionLatency_ms": 141,
+          "avgVelocity": 0.13,
+          "peakVelocity": 1.14,
+          "trajectorySmoothness": 0.59,
+          "correctiveMovements": 12,
+          "pathLength": 0.326,
+          "directnessRatio": 0.95,
+          "downsampledPath": [
+            {
+              "x": 0.514,
+              "y": 0.631
+            },
+            {
+              "x": 0.508,
+              "y": 0.632
+            },
+            {
+              "x": 0.508,
+              "y": 0.626
+            },
+            {
+              "x": 0.486,
+              "y": 0.547
+            },
+            {
+              "x": 0.494,
+              "y": 0.507
+            },
+            {
+              "x": 0.493,
+              "y": 0.494
+            },
+            {
+              "x": 0.488,
+              "y": 0.49
+            },
+            {
+              "x": 0.488,
+              "y": 0.49
+            },
+            {
+              "x": 0.485,
+              "y": 0.461
+            },
+            {
+              "x": 0.486,
+              "y": 0.452
+            },
+            {
+              "x": 0.49,
+              "y": 0.448
+            },
+            {
+              "x": 0.493,
+              "y": 0.443
+            },
+            {
+              "x": 0.501,
+              "y": 0.398
+            },
+            {
+              "x": 0.504,
+              "y": 0.4
+            },
+            {
+              "x": 0.507,
+              "y": 0.405
+            },
+            {
+              "x": 0.507,
+              "y": 0.412
+            },
+            {
+              "x": 0.506,
+              "y": 0.412
+            }
+          ],
+          "shoulderAngle": 100,
+          "elbowAngle": 5,
+          "compensationDetected": false,
+          "score": 3
+        },
+        {
+          "zone": "behind_head",
+          "success": true,
+          "latency_ms": 706,
+          "completionTime_ms": 143,
+          "reactionLatency_ms": 563,
+          "avgVelocity": 0.1,
+          "peakVelocity": 0.71,
+          "trajectorySmoothness": 0.63,
+          "correctiveMovements": 1,
+          "pathLength": 0.088,
+          "directnessRatio": 1,
+          "downsampledPath": [
+            {
+              "x": 0.507,
+              "y": 0.411
+            },
+            {
+              "x": 0.506,
+              "y": 0.411
+            },
+            {
+              "x": 0.507,
+              "y": 0.41
+            },
+            {
+              "x": 0.507,
+              "y": 0.41
+            },
+            {
+              "x": 0.507,
+              "y": 0.411
+            },
+            {
+              "x": 0.507,
+              "y": 0.41
+            },
+            {
+              "x": 0.507,
+              "y": 0.411
+            },
+            {
+              "x": 0.508,
+              "y": 0.411
+            },
+            {
+              "x": 0.507,
+              "y": 0.411
+            },
+            {
+              "x": 0.507,
+              "y": 0.411
+            },
+            {
+              "x": 0.507,
+              "y": 0.411
+            },
+            {
+              "x": 0.507,
+              "y": 0.411
+            },
+            {
+              "x": 0.506,
+              "y": 0.409
+            },
+            {
+              "x": 0.506,
+              "y": 0.409
+            },
+            {
+              "x": 0.504,
+              "y": 0.409
+            },
+            {
+              "x": 0.504,
+              "y": 0.409
+            },
+            {
+              "x": 0.493,
+              "y": 0.417
+            },
+            {
+              "x": 0.495,
+              "y": 0.416
+            },
+            {
+              "x": 0.496,
+              "y": 0.417
+            },
+            {
+              "x": 0.467,
+              "y": 0.432
+            },
+            {
+              "x": 0.442,
+              "y": 0.44
+            },
+            {
+              "x": 0.442,
+              "y": 0.44
+            }
+          ],
+          "shoulderAngle": 98,
+          "elbowAngle": 7,
+          "compensationDetected": false,
+          "score": 3
+        }
+      ],
+      "totalScore": 9,
+      "avgCompletionTime_ms": 1002,
+      "avgVelocity": 0.12,
+      "peakVelocity": 1.14,
+      "trajectorySmoothness": 0.62,
+      "totalCorrectiveMovements": 16
+    },
+    "test2_objectTransfer": {
+      "durationSec": 60,
+      "trials": [
+        {
+          "success": true,
+          "pickTime_ms": 1743,
+          "dropTime_ms": 1858,
+          "completionTime_ms": 1598,
+          "avgVelocity": 0.61,
+          "peakVelocity": 1.75,
+          "trajectorySmoothness": 0.25,
+          "correctiveMovements": 12,
+          "pathLength": 1.001,
+          "directnessRatio": 0.41,
+          "downsampledPath": [
+            {
+              "x": 0.263,
+              "y": 0.611
+            },
+            {
+              "x": 0.234,
+              "y": 0.609
+            },
+            {
+              "x": 0.235,
+              "y": 0.57
+            },
+            {
+              "x": 0.247,
+              "y": 0.499
+            },
+            {
+              "x": 0.3,
+              "y": 0.361
+            },
+            {
+              "x": 0.405,
+              "y": 0.279
+            },
+            {
+              "x": 0.448,
+              "y": 0.21
+            },
+            {
+              "x": 0.478,
+              "y": 0.183
+            },
+            {
+              "x": 0.538,
+              "y": 0.199
+            },
+            {
+              "x": 0.598,
+              "y": 0.271
+            },
+            {
+              "x": 0.616,
+              "y": 0.321
+            },
+            {
+              "x": 0.635,
+              "y": 0.369
+            },
+            {
+              "x": 0.651,
+              "y": 0.505
+            },
+            {
+              "x": 0.654,
+              "y": 0.511
+            },
+            {
+              "x": 0.658,
+              "y": 0.51
+            },
+            {
+              "x": 0.658,
+              "y": 0.509
+            },
+            {
+              "x": 0.658,
+              "y": 0.509
+            }
+          ],
+          "elbowAngle": 31,
+          "shoulderAngle": 90
+        },
+        {
+          "success": true,
+          "pickTime_ms": 2137,
+          "dropTime_ms": 1798,
+          "completionTime_ms": 1350,
+          "avgVelocity": 0.53,
+          "peakVelocity": 2.23,
+          "trajectorySmoothness": 0.27,
+          "correctiveMovements": 14,
+          "pathLength": 0.963,
+          "directnessRatio": 0.43,
+          "downsampledPath": [
+            {
+              "x": 0.303,
+              "y": 0.646
+            },
+            {
+              "x": 0.303,
+              "y": 0.646
+            },
+            {
+              "x": 0.302,
+              "y": 0.646
+            },
+            {
+              "x": 0.301,
+              "y": 0.645
+            },
+            {
+              "x": 0.301,
+              "y": 0.63
+            },
+            {
+              "x": 0.302,
+              "y": 0.588
+            },
+            {
+              "x": 0.298,
+              "y": 0.511
+            },
+            {
+              "x": 0.311,
+              "y": 0.343
+            },
+            {
+              "x": 0.351,
+              "y": 0.267
+            },
+            {
+              "x": 0.428,
+              "y": 0.225
+            },
+            {
+              "x": 0.461,
+              "y": 0.226
+            },
+            {
+              "x": 0.512,
+              "y": 0.303
+            },
+            {
+              "x": 0.665,
+              "y": 0.462
+            },
+            {
+              "x": 0.683,
+              "y": 0.495
+            },
+            {
+              "x": 0.705,
+              "y": 0.533
+            },
+            {
+              "x": 0.708,
+              "y": 0.54
+            },
+            {
+              "x": 0.708,
+              "y": 0.553
+            },
+            {
+              "x": 0.708,
+              "y": 0.553
+            }
+          ],
+          "elbowAngle": 41,
+          "shoulderAngle": 88
+        },
+        {
+          "success": true,
+          "pickTime_ms": 2341,
+          "dropTime_ms": 3672,
+          "completionTime_ms": 3537,
+          "avgVelocity": 1.32,
+          "peakVelocity": 21.65,
+          "trajectorySmoothness": 0.1,
+          "correctiveMovements": 4,
+          "pathLength": 4.885,
+          "directnessRatio": 0.1,
+          "downsampledPath": [
+            {
+              "x": 0.239,
+              "y": 0.704
+            },
+            {
+              "x": 0.237,
+              "y": 0.708
+            },
+            {
+              "x": 0.244,
+              "y": 0.653
+            },
+            {
+              "x": 0.273,
+              "y": 0.379
+            },
+            {
+              "x": 0.649,
+              "y": 1.169
+            },
+            {
+              "x": 0.661,
+              "y": 0.364
+            },
+            {
+              "x": 0.722,
+              "y": 0.467
+            },
+            {
+              "x": 0.712,
+              "y": 0.464
+            },
+            {
+              "x": 0.628,
+              "y": 1.141
+            },
+            {
+              "x": 0.581,
+              "y": 0.185
+            },
+            {
+              "x": 0.596,
+              "y": 0.16
+            },
+            {
+              "x": 0.607,
+              "y": 0.2
+            },
+            {
+              "x": 0.639,
+              "y": 0.31
+            },
+            {
+              "x": 0.67,
+              "y": 0.435
+            },
+            {
+              "x": 0.695,
+              "y": 0.481
+            },
+            {
+              "x": 0.704,
+              "y": 0.521
+            },
+            {
+              "x": 0.697,
+              "y": 0.538
+            },
+            {
+              "x": 0.697,
+              "y": 0.538
+            }
+          ],
+          "elbowAngle": 33,
+          "shoulderAngle": 88
+        },
+        {
+          "success": true,
+          "pickTime_ms": 1839,
+          "dropTime_ms": 2088,
+          "completionTime_ms": 1618,
+          "avgVelocity": 0.47,
+          "peakVelocity": 2.1,
+          "trajectorySmoothness": 0.23,
+          "correctiveMovements": 20,
+          "pathLength": 0.939,
+          "directnessRatio": 0.37,
+          "downsampledPath": [
+            {
+              "x": 0.37,
+              "y": 0.738
+            },
+            {
+              "x": 0.364,
+              "y": 0.737
+            },
+            {
+              "x": 0.359,
+              "y": 0.737
+            },
+            {
+              "x": 0.295,
+              "y": 0.553
+            },
+            {
+              "x": 0.305,
+              "y": 0.469
+            },
+            {
+              "x": 0.358,
+              "y": 0.416
+            },
+            {
+              "x": 0.389,
+              "y": 0.396
+            },
+            {
+              "x": 0.456,
+              "y": 0.346
+            },
+            {
+              "x": 0.502,
+              "y": 0.307
+            },
+            {
+              "x": 0.535,
+              "y": 0.308
+            },
+            {
+              "x": 0.571,
+              "y": 0.345
+            },
+            {
+              "x": 0.6,
+              "y": 0.403
+            },
+            {
+              "x": 0.641,
+              "y": 0.525
+            },
+            {
+              "x": 0.663,
+              "y": 0.56
+            },
+            {
+              "x": 0.676,
+              "y": 0.575
+            }
+          ],
+          "elbowAngle": 28,
+          "shoulderAngle": 100
+        },
+        {
+          "success": true,
+          "pickTime_ms": 1723,
+          "dropTime_ms": 1981,
+          "completionTime_ms": 1657,
+          "avgVelocity": 0.43,
+          "peakVelocity": 1.47,
+          "trajectorySmoothness": 0.32,
+          "correctiveMovements": 19,
+          "pathLength": 0.795,
+          "directnessRatio": 0.52,
+          "downsampledPath": [
+            {
+              "x": 0.249,
+              "y": 0.612
+            },
+            {
+              "x": 0.247,
+              "y": 0.603
+            },
+            {
+              "x": 0.252,
+              "y": 0.58
+            },
+            {
+              "x": 0.294,
+              "y": 0.475
+            },
+            {
+              "x": 0.336,
+              "y": 0.425
+            },
+            {
+              "x": 0.413,
+              "y": 0.343
+            },
+            {
+              "x": 0.45,
+              "y": 0.318
+            },
+            {
+              "x": 0.48,
+              "y": 0.291
+            },
+            {
+              "x": 0.563,
+              "y": 0.293
+            },
+            {
+              "x": 0.584,
+              "y": 0.312
+            },
+            {
+              "x": 0.608,
+              "y": 0.343
+            },
+            {
+              "x": 0.633,
+              "y": 0.404
+            },
+            {
+              "x": 0.641,
+              "y": 0.432
+            },
+            {
+              "x": 0.649,
+              "y": 0.47
+            },
+            {
+              "x": 0.651,
+              "y": 0.485
+            },
+            {
+              "x": 0.655,
+              "y": 0.501
+            },
+            {
+              "x": 0.654,
+              "y": 0.506
+            },
+            {
+              "x": 0.652,
+              "y": 0.516
+            },
+            {
+              "x": 0.65,
+              "y": 0.521
+            },
+            {
+              "x": 0.65,
+              "y": 0.521
+            }
+          ],
+          "elbowAngle": 24,
+          "shoulderAngle": 101
+        },
+        {
+          "success": true,
+          "pickTime_ms": 1784,
+          "dropTime_ms": 1867,
+          "completionTime_ms": 1768,
+          "avgVelocity": 0.5,
+          "peakVelocity": 1.79,
+          "trajectorySmoothness": 0.31,
+          "correctiveMovements": 18,
+          "pathLength": 0.941,
+          "directnessRatio": 0.51,
+          "downsampledPath": [
+            {
+              "x": 0.235,
+              "y": 0.728
+            },
+            {
+              "x": 0.235,
+              "y": 0.719
+            },
+            {
+              "x": 0.232,
+              "y": 0.717
+            },
+            {
+              "x": 0.246,
+              "y": 0.64
+            },
+            {
+              "x": 0.314,
+              "y": 0.482
+            },
+            {
+              "x": 0.357,
+              "y": 0.435
+            },
+            {
+              "x": 0.428,
+              "y": 0.331
+            },
+            {
+              "x": 0.487,
+              "y": 0.285
+            },
+            {
+              "x": 0.537,
+              "y": 0.299
+            },
+            {
+              "x": 0.56,
+              "y": 0.313
+            },
+            {
+              "x": 0.602,
+              "y": 0.385
+            },
+            {
+              "x": 0.618,
+              "y": 0.417
+            },
+            {
+              "x": 0.643,
+              "y": 0.47
+            },
+            {
+              "x": 0.656,
+              "y": 0.5
+            },
+            {
+              "x": 0.681,
+              "y": 0.549
+            },
+            {
+              "x": 0.686,
+              "y": 0.568
+            },
+            {
+              "x": 0.693,
+              "y": 0.59
+            },
+            {
+              "x": 0.693,
+              "y": 0.59
+            }
+          ],
+          "elbowAngle": 24,
+          "shoulderAngle": 95
+        },
+        {
+          "success": true,
+          "pickTime_ms": 1976,
+          "dropTime_ms": 1724,
+          "completionTime_ms": 1596,
+          "avgVelocity": 0.48,
+          "peakVelocity": 1.54,
+          "trajectorySmoothness": 0.29,
+          "correctiveMovements": 19,
+          "pathLength": 0.852,
+          "directnessRatio": 0.47,
+          "downsampledPath": [
+            {
+              "x": 0.324,
+              "y": 0.692
+            },
+            {
+              "x": 0.325,
+              "y": 0.696
+            },
+            {
+              "x": 0.326,
+              "y": 0.691
+            },
+            {
+              "x": 0.331,
+              "y": 0.665
+            },
+            {
+              "x": 0.334,
+              "y": 0.619
+            },
+            {
+              "x": 0.344,
+              "y": 0.555
+            },
+            {
+              "x": 0.38,
+              "y": 0.436
+            },
+            {
+              "x": 0.405,
+              "y": 0.403
+            },
+            {
+              "x": 0.461,
+              "y": 0.37
+            },
+            {
+              "x": 0.484,
+              "y": 0.345
+            },
+            {
+              "x": 0.515,
+              "y": 0.328
+            },
+            {
+              "x": 0.534,
+              "y": 0.341
+            },
+            {
+              "x": 0.587,
+              "y": 0.418
+            },
+            {
+              "x": 0.617,
+              "y": 0.448
+            },
+            {
+              "x": 0.646,
+              "y": 0.483
+            },
+            {
+              "x": 0.691,
+              "y": 0.568
+            },
+            {
+              "x": 0.717,
+              "y": 0.616
+            },
+            {
+              "x": 0.721,
+              "y": 0.628
+            },
+            {
+              "x": 0.721,
+              "y": 0.629
+            }
+          ],
+          "elbowAngle": 31,
+          "shoulderAngle": 91
+        },
+        {
+          "success": true,
+          "pickTime_ms": 1792,
+          "dropTime_ms": 5584,
+          "completionTime_ms": 5453,
+          "avgVelocity": 0.34,
+          "peakVelocity": 1.51,
+          "trajectorySmoothness": 0.2,
+          "correctiveMovements": 60,
+          "pathLength": 1.877,
+          "directnessRatio": 0.32,
+          "downsampledPath": [
+            {
+              "x": 0.171,
+              "y": 0.613
+            },
+            {
+              "x": 0.223,
+              "y": 0.611
+            },
+            {
+              "x": 0.376,
+              "y": 0.383
+            },
+            {
+              "x": 0.491,
+              "y": 0.512
+            },
+            {
+              "x": 0.522,
+              "y": 0.518
+            },
+            {
+              "x": 0.515,
+              "y": 0.503
+            },
+            {
+              "x": 0.483,
+              "y": 0.579
+            },
+            {
+              "x": 0.394,
+              "y": 0.538
+            },
+            {
+              "x": 0.453,
+              "y": 0.497
+            },
+            {
+              "x": 0.449,
+              "y": 0.55
+            },
+            {
+              "x": 0.445,
+              "y": 0.428
+            },
+            {
+              "x": 0.5,
+              "y": 0.497
+            },
+            {
+              "x": 0.503,
+              "y": 0.321
+            },
+            {
+              "x": 0.606,
+              "y": 0.415
+            },
+            {
+              "x": 0.746,
+              "y": 0.549
+            },
+            {
+              "x": 0.773,
+              "y": 0.604
+            }
+          ],
+          "elbowAngle": 56,
+          "shoulderAngle": 81
+        }
+      ],
+      "blocksTransferred": 8,
+      "missCount": 4,
+      "collisionPenalty": 0.4,
+      "score": 7.6,
+      "avgPickTime_ms": 1917,
+      "avgDropTime_ms": 2572,
+      "avgCompletionTime_ms": 4488,
+      "avgVelocity": 0.58,
+      "peakVelocity": 21.65,
+      "trajectorySmoothness": 0.25,
+      "totalCorrectiveMovements": 170,
+      "elbowAngle_mean": 158,
+      "shoulderAngle_mean": 102,
+      "aratProxyScore": 3
+    },
+    "test3_pinch": {
+      "handOpenSuccess": true,
+      "handOpenSpread": 0.2997276091728379,
+      "pinchAttempts": [
+        {
+          "finger": "open",
+          "success": true,
+          "accuracy": 0.2997276091728379,
+          "dwellActual_ms": 600,
+          "completionTime_ms": 550,
+          "avgVelocity": 0.24,
+          "peakVelocity": 0.97,
+          "trajectorySmoothness": 0.3,
+          "correctiveMovements": 7,
+          "score": 4
+        },
+        {
+          "finger": "index",
+          "success": true,
+          "accuracy": 0.023050817756021094,
+          "dwellActual_ms": 600,
+          "completionTime_ms": 6263,
+          "avgVelocity": 0.14,
+          "peakVelocity": 1.89,
+          "trajectorySmoothness": 0.18,
+          "correctiveMovements": 13,
+          "score": 3
+        },
+        {
+          "finger": "middle",
+          "success": true,
+          "accuracy": 0.030150374401086165,
+          "dwellActual_ms": 600,
+          "completionTime_ms": 3122,
+          "avgVelocity": 0.1,
+          "peakVelocity": 1.28,
+          "trajectorySmoothness": 0.1,
+          "correctiveMovements": 8,
+          "score": 3
+        },
+        {
+          "finger": "ring",
+          "success": true,
+          "accuracy": 0.03682138040295826,
+          "dwellActual_ms": 600,
+          "completionTime_ms": 2560,
+          "avgVelocity": 0.07,
+          "peakVelocity": 0.3,
+          "trajectorySmoothness": 0.14,
+          "correctiveMovements": 31,
+          "score": 3
+        },
+        {
+          "finger": "pinky",
+          "success": true,
+          "accuracy": 0.03103046417941651,
+          "dwellActual_ms": 600,
+          "completionTime_ms": 834,
+          "avgVelocity": 0.1,
+          "peakVelocity": 0.39,
+          "trajectorySmoothness": 0.1,
+          "correctiveMovements": 9,
+          "score": 4
+        }
+      ],
+      "totalScore": 17,
+      "avgCompletionTime_ms": 2666,
+      "avgVelocity": 0.13,
+      "trajectorySmoothness": 0.16,
+      "totalCorrectiveMovements": 68
+    },
+    "test4_reactionStrike": {
+      "trials": [
+        {
+          "reactionTime_ms": 2473,
+          "initiationTime_ms": 199,
+          "completionTime_ms": 2274,
+          "avgVelocity": 0.15,
+          "peakVelocity": 0.67,
+          "trajectorySmoothness": 0.37,
+          "correctiveMovements": 23,
+          "pathLength": 0.345,
+          "directnessRatio": 0.59,
+          "downsampledPath": [
+            {
+              "x": 0.456,
+              "y": 0.621
+            },
+            {
+              "x": 0.453,
+              "y": 0.606
+            },
+            {
+              "x": 0.456,
+              "y": 0.609
+            },
+            {
+              "x": 0.461,
+              "y": 0.599
+            },
+            {
+              "x": 0.462,
+              "y": 0.562
+            },
+            {
+              "x": 0.461,
+              "y": 0.558
+            },
+            {
+              "x": 0.464,
+              "y": 0.552
+            },
+            {
+              "x": 0.426,
+              "y": 0.498
+            },
+            {
+              "x": 0.406,
+              "y": 0.476
+            },
+            {
+              "x": 0.401,
+              "y": 0.474
+            },
+            {
+              "x": 0.385,
+              "y": 0.462
+            },
+            {
+              "x": 0.36,
+              "y": 0.447
+            },
+            {
+              "x": 0.342,
+              "y": 0.454
+            },
+            {
+              "x": 0.322,
+              "y": 0.468
+            },
+            {
+              "x": 0.29,
+              "y": 0.501
+            }
+          ],
+          "hit": true,
+          "trajectoryJerk": 17.818,
+          "score": 0
+        },
+        {
+          "reactionTime_ms": 1843,
+          "initiationTime_ms": 129,
+          "completionTime_ms": 1714,
+          "avgVelocity": 0.28,
+          "peakVelocity": 1.2,
+          "trajectorySmoothness": 0.6,
+          "correctiveMovements": 22,
+          "pathLength": 0.509,
+          "directnessRatio": 0.98,
+          "downsampledPath": [
+            {
+              "x": 0.282,
+              "y": 0.566
+            },
+            {
+              "x": 0.297,
+              "y": 0.546
+            },
+            {
+              "x": 0.321,
+              "y": 0.545
+            },
+            {
+              "x": 0.331,
+              "y": 0.544
+            },
+            {
+              "x": 0.341,
+              "y": 0.538
+            },
+            {
+              "x": 0.379,
+              "y": 0.548
+            },
+            {
+              "x": 0.405,
+              "y": 0.555
+            },
+            {
+              "x": 0.497,
+              "y": 0.564
+            },
+            {
+              "x": 0.508,
+              "y": 0.559
+            },
+            {
+              "x": 0.54,
+              "y": 0.542
+            },
+            {
+              "x": 0.565,
+              "y": 0.548
+            },
+            {
+              "x": 0.587,
+              "y": 0.55
+            },
+            {
+              "x": 0.618,
+              "y": 0.554
+            },
+            {
+              "x": 0.629,
+              "y": 0.553
+            },
+            {
+              "x": 0.65,
+              "y": 0.552
+            },
+            {
+              "x": 0.668,
+              "y": 0.557
+            },
+            {
+              "x": 0.705,
+              "y": 0.566
+            },
+            {
+              "x": 0.72,
+              "y": 0.567
+            },
+            {
+              "x": 0.732,
+              "y": 0.565
+            }
+          ],
+          "hit": true,
+          "trajectoryJerk": 34.683,
+          "score": 0
+        },
+        {
+          "reactionTime_ms": 2698,
+          "initiationTime_ms": 134,
+          "completionTime_ms": 2564,
+          "avgVelocity": 0.3,
+          "peakVelocity": 1.09,
+          "trajectorySmoothness": 0.33,
+          "correctiveMovements": 31,
+          "pathLength": 0.845,
+          "directnessRatio": 0.53,
+          "downsampledPath": [
+            {
+              "x": 0.776,
+              "y": 0.595
+            },
+            {
+              "x": 0.751,
+              "y": 0.602
+            },
+            {
+              "x": 0.731,
+              "y": 0.608
+            },
+            {
+              "x": 0.701,
+              "y": 0.609
+            },
+            {
+              "x": 0.659,
+              "y": 0.605
+            },
+            {
+              "x": 0.529,
+              "y": 0.589
+            },
+            {
+              "x": 0.481,
+              "y": 0.535
+            },
+            {
+              "x": 0.433,
+              "y": 0.513
+            },
+            {
+              "x": 0.328,
+              "y": 0.553
+            },
+            {
+              "x": 0.276,
+              "y": 0.54
+            },
+            {
+              "x": 0.272,
+              "y": 0.468
+            },
+            {
+              "x": 0.306,
+              "y": 0.452
+            },
+            {
+              "x": 0.321,
+              "y": 0.455
+            },
+            {
+              "x": 0.326,
+              "y": 0.46
+            },
+            {
+              "x": 0.326,
+              "y": 0.44
+            },
+            {
+              "x": 0.319,
+              "y": 0.399
+            },
+            {
+              "x": 0.324,
+              "y": 0.386
+            },
+            {
+              "x": 0.335,
+              "y": 0.381
+            }
+          ],
+          "hit": true,
+          "trajectoryJerk": 34.531,
+          "score": 0
+        },
+        {
+          "reactionTime_ms": 2344,
+          "initiationTime_ms": 126,
+          "completionTime_ms": 2218,
+          "avgVelocity": 0.16,
+          "peakVelocity": 0.65,
+          "trajectorySmoothness": 0.4,
+          "correctiveMovements": 27,
+          "pathLength": 0.382,
+          "directnessRatio": 0.63,
+          "downsampledPath": [
+            {
+              "x": 0.435,
+              "y": 0.41
+            },
+            {
+              "x": 0.437,
+              "y": 0.431
+            },
+            {
+              "x": 0.441,
+              "y": 0.447
+            },
+            {
+              "x": 0.429,
+              "y": 0.462
+            },
+            {
+              "x": 0.417,
+              "y": 0.487
+            },
+            {
+              "x": 0.416,
+              "y": 0.494
+            },
+            {
+              "x": 0.426,
+              "y": 0.514
+            },
+            {
+              "x": 0.46,
+              "y": 0.557
+            },
+            {
+              "x": 0.464,
+              "y": 0.57
+            },
+            {
+              "x": 0.474,
+              "y": 0.581
+            },
+            {
+              "x": 0.482,
+              "y": 0.597
+            },
+            {
+              "x": 0.489,
+              "y": 0.606
+            },
+            {
+              "x": 0.489,
+              "y": 0.617
+            },
+            {
+              "x": 0.487,
+              "y": 0.623
+            },
+            {
+              "x": 0.476,
+              "y": 0.635
+            },
+            {
+              "x": 0.459,
+              "y": 0.647
+            },
+            {
+              "x": 0.438,
+              "y": 0.65
+            },
+            {
+              "x": 0.39,
+              "y": 0.643
+            }
+          ],
+          "hit": true,
+          "trajectoryJerk": 44.754,
+          "score": 0
+        },
+        {
+          "reactionTime_ms": 1251,
+          "initiationTime_ms": 103,
+          "completionTime_ms": 1148,
+          "avgVelocity": 0.16,
+          "peakVelocity": 0.56,
+          "trajectorySmoothness": 0.49,
+          "correctiveMovements": 8,
+          "pathLength": 0.194,
+          "directnessRatio": 0.77,
+          "downsampledPath": [
+            {
+              "x": 0.402,
+              "y": 0.585
+            },
+            {
+              "x": 0.415,
+              "y": 0.566
+            },
+            {
+              "x": 0.423,
+              "y": 0.55
+            },
+            {
+              "x": 0.432,
+              "y": 0.543
+            },
+            {
+              "x": 0.436,
+              "y": 0.543
+            },
+            {
+              "x": 0.441,
+              "y": 0.541
+            },
+            {
+              "x": 0.463,
+              "y": 0.551
+            },
+            {
+              "x": 0.471,
+              "y": 0.561
+            },
+            {
+              "x": 0.473,
+              "y": 0.563
+            },
+            {
+              "x": 0.47,
+              "y": 0.566
+            },
+            {
+              "x": 0.471,
+              "y": 0.569
+            },
+            {
+              "x": 0.479,
+              "y": 0.572
+            },
+            {
+              "x": 0.487,
+              "y": 0.577
+            },
+            {
+              "x": 0.488,
+              "y": 0.578
+            },
+            {
+              "x": 0.519,
+              "y": 0.592
+            },
+            {
+              "x": 0.519,
+              "y": 0.592
+            }
+          ],
+          "hit": true,
+          "trajectoryJerk": 27.089,
+          "score": 0
+        },
+        {
+          "reactionTime_ms": 2930,
+          "initiationTime_ms": 101,
+          "completionTime_ms": 2829,
+          "avgVelocity": 0.23,
+          "peakVelocity": 1.05,
+          "trajectorySmoothness": 0.45,
+          "correctiveMovements": 36,
+          "pathLength": 0.701,
+          "directnessRatio": 0.72,
+          "downsampledPath": [
+            {
+              "x": 0.563,
+              "y": 0.67
+            },
+            {
+              "x": 0.535,
+              "y": 0.679
+            },
+            {
+              "x": 0.506,
+              "y": 0.661
+            },
+            {
+              "x": 0.441,
+              "y": 0.594
+            },
+            {
+              "x": 0.37,
+              "y": 0.538
+            },
+            {
+              "x": 0.329,
+              "y": 0.532
+            },
+            {
+              "x": 0.226,
+              "y": 0.463
+            },
+            {
+              "x": 0.246,
+              "y": 0.431
+            },
+            {
+              "x": 0.247,
+              "y": 0.39
+            },
+            {
+              "x": 0.238,
+              "y": 0.365
+            },
+            {
+              "x": 0.229,
+              "y": 0.36
+            },
+            {
+              "x": 0.22,
+              "y": 0.346
+            },
+            {
+              "x": 0.238,
+              "y": 0.349
+            },
+            {
+              "x": 0.255,
+              "y": 0.35
+            },
+            {
+              "x": 0.271,
+              "y": 0.334
+            },
+            {
+              "x": 0.275,
+              "y": 0.314
+            }
+          ],
+          "hit": true,
+          "trajectoryJerk": 27.114,
+          "score": 0
+        }
+      ],
+      "trialScores": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "avgReactionTime_ms": 2257,
+      "medianRT_ms": 2473,
+      "p90RT_ms": 2930,
+      "avgCompletionTime_ms": 2125,
+      "avgVelocity": 0.21,
+      "peakVelocity": 1.2,
+      "hitAccuracy": 1,
+      "movementJerk": 30.74,
+      "smoothnessScore": 0.44,
+      "totalCorrectiveMovements": 147,
+      "reactionScore": 0,
+      "score": 0
+    },
+    "test5_romSweep": {
+      "maxShoulderAbduction_deg": 178,
+      "maxElbowExtension_deg": 180,
+      "maxVerticalAngle_deg": 144,
+      "circleCoveragePct": 98,
+      "cumulativeDegreesSwept": 881,
+      "lapsCompleted": 2.4,
+      "pathSimilarityPct": 92,
+      "avgAngularSpeed_deg_s": 137,
+      "avgVelocity": 137,
+      "peakVelocity": 3396,
+      "trajectoryJerk": 0.95,
+      "trajectorySmoothness": 0.21,
+      "correctiveMovements": 76,
+      "sweepDuration_ms": 24000,
+      "totalScore": 9
+    },
+    "startedAt": "2026-11-05T15:13:17.106Z",
+    "createdAt": "2026-11-05T15:13:17.230Z",
+    "updatedAt": "2026-11-05T15:13:17.230Z",
+    "__v": 0
+  }
+]

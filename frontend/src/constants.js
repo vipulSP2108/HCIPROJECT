@@ -115,7 +115,7 @@ export const SHAPE_TRACING_DRAW_FPS = 30;
 // ];
 
 export const TESTING_SHAPE_SEQUENCE = [
-  'circle', 'triangle', 'square', 'spiral', 'star'
+  'circle', 'triangle', 'square', 'star', 'hexagon', 'diamond', 'ellipse', 'heart', 'spiral', 'infinity', 'zigzag'
 ];
 
 // Sequence of key indices for Piano game (loops if exhausted)
@@ -172,8 +172,8 @@ export const TESTING_FRUIT_BASKET_SEQUENCE = [
 export const ASSESSMENT_PHASES = ['pre', 'ongoing', 'post'];
 export const ASSESSMENT_TRACKS = ['game', 'clinical', 'both'];
 
-// Default game battery prescribed for a Track A assessment
-export const ASSESSMENT_DEFAULT_GAMES = ['piano', 'fruit_basket', 'board_drawing', 'shape_tracing'];
+// Default game battery prescribed for a Track A assessment (3 canonical games)
+export const ASSESSMENT_DEFAULT_GAMES = ['piano', 'fruit_basket', 'board_drawing'];
 
 // Track A — composite score weights (must sum to 1.0)
 export const ASSESSMENT_WEIGHT_MOTOR        = 0.35;

@@ -35,8 +35,24 @@ export default function ClinicalTestPage() {
     }
   }, []);
 
-  const [results, setResults] = useState(emptyPayload());
-  const [completedTestIds, setCompletedTestIds] = useState(() => new Set());
+  const storageKey = assessmentId ? `clinical_results_${assessmentId}` : "clinical_results_draft";
+
+  const [results, setResults] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return emptyPayload();
+  });
+
+  const [completedTestIds, setCompletedTestIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`${storageKey}_completed`);
+      if (saved) return new Set(JSON.parse(saved));
+    } catch {}
+    return new Set();
+  });
+
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [isCalibrationModalOpen, setIsCalibrationModalOpen] = useState(false);
@@ -53,11 +69,20 @@ export default function ClinicalTestPage() {
       }
       lastCompletedTimeRef.current = now;
 
-      setResults((prev) => ({
-        ...prev,
-        [testId]: testResult,
-      }));
-      setCompletedTestIds((prev) => new Set(prev).add(testId));
+      setResults((prev) => {
+        const next = {
+          ...prev,
+          [testId]: testResult,
+        };
+        try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch {}
+        return next;
+      });
+
+      setCompletedTestIds((prev) => {
+        const next = new Set(prev).add(testId);
+        try { localStorage.setItem(`${storageKey}_completed`, JSON.stringify(Array.from(next))); } catch {}
+        return next;
+      });
 
       if (!isGlobalRun) {
         setPhase("intro");
@@ -70,7 +95,7 @@ export default function ClinicalTestPage() {
         setPhase("summary");
       }
     },
-    [currentTestIdx, isGlobalRun]
+    [currentTestIdx, isGlobalRun, storageKey]
   );
 
   const handleSaveAndReturn = async () => {
@@ -154,6 +179,10 @@ export default function ClinicalTestPage() {
 
     try {
       await saveClinicalSession(assessmentId, payload);
+      try {
+        localStorage.removeItem(storageKey);
+        localStorage.removeItem(`${storageKey}_completed`);
+      } catch {}
       navigate(`/assessment/run/${assessmentId}`);
     } catch (err) {
       console.error("[ClinicalTestPage] Save failed:", err);
@@ -161,11 +190,6 @@ export default function ClinicalTestPage() {
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleInitiateBattery = () => {
-    // 1st thing to start is Pre-Test Camera & Motion Calibration
-    setIsCalibrationModalOpen(true);
   };
 
   const startBattery = () => {
@@ -195,7 +219,7 @@ export default function ClinicalTestPage() {
           saving={saving}
           handleSaveAndReturn={handleSaveAndReturn}
           onStartSingleTest={startSingleTest}
-          onStartBattery={handleInitiateBattery}
+          onStartBattery={startBattery}
           onOpenCalibration={() => setIsCalibrationModalOpen(true)}
           onNavigateHub={() => navigate(assessmentId ? `/assessment/run/${assessmentId}` : "/patient/dashboard")}
         />

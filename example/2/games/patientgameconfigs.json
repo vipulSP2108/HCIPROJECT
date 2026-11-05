@@ -1,0 +1,119 @@
+[
+  {
+    "_id": "6aec8ab61cbad7c0cf2271fd",
+    "patientId": "6aead3afddbab47f9d68ae05",
+    "games": {
+      "piano": {
+        "responseTimer": {
+          "modality": "STRICT",
+          "value": 3,
+          "minBound": null,
+          "maxBound": null
+        },
+        "disabledKeys": {
+          "modality": "STRICT",
+          "value": "",
+          "minBound": null,
+          "maxBound": null
+        },
+        "wristKeysCount": {
+          "modality": "STRICT",
+          "value": 9,
+          "minBound": null,
+          "maxBound": null
+        },
+        "wristKeyTimer": {
+          "modality": "STRICT",
+          "value": 2,
+          "minBound": null,
+          "maxBound": null
+        },
+        "sessionLength": {
+          "modality": "STRICT",
+          "value": 300,
+          "minBound": null,
+          "maxBound": null
+        }
+      },
+      "boardDrawing": {
+        "assistiveMode": {
+          "modality": "STRICT",
+          "value": 0,
+          "minBound": null,
+          "maxBound": null
+        },
+        "greenZone": {
+          "modality": "STRICT",
+          "value": 2.5,
+          "minBound": null,
+          "maxBound": null
+        },
+        "yellowZone": {
+          "modality": "STRICT",
+          "value": 5,
+          "minBound": null,
+          "maxBound": null
+        },
+        "sessionLength": {
+          "modality": "STRICT",
+          "value": 300,
+          "minBound": null,
+          "maxBound": null
+        },
+        "patientFreedom": {
+          "modality": "STRICT",
+          "value": "",
+          "minBound": null,
+          "maxBound": null
+        },
+        "allowedShapes": {
+          "modality": "STRICT",
+          "value": "random,circle,square,spiral,star",
+          "minBound": null,
+          "maxBound": null
+        }
+      },
+      "fruitBasket": {
+        "cooldownSeconds": {
+          "modality": "STRICT",
+          "value": 3,
+          "minBound": null,
+          "maxBound": null
+        },
+        "maxAttempts": {
+          "modality": "STRICT",
+          "value": 3,
+          "minBound": null,
+          "maxBound": null
+        },
+        "trialTimeoutSeconds": {
+          "modality": "STRICT",
+          "value": 10,
+          "minBound": null,
+          "maxBound": null
+        },
+        "sessionLength": {
+          "modality": "STRICT",
+          "value": 300,
+          "minBound": null,
+          "maxBound": null
+        },
+        "assistiveMode": {
+          "modality": "STRICT",
+          "value": 2,
+          "minBound": null,
+          "maxBound": null
+        },
+        "patientFreedom": {
+          "modality": "STRICT",
+          "value": "",
+          "minBound": null,
+          "maxBound": null
+        }
+      }
+    },
+    "createdAt": "2026-11-05T13:55:02.319Z",
+    "updatedAt": "2026-11-05T13:55:02.319Z",
+    "__v": 0
+  }
+]

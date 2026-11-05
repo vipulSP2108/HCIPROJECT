@@ -298,12 +298,15 @@ const ShapeTracingGame = () => {
   // ==================== SPAWN SHAPE ====================
   const spawnShape = useCallback(() => {
     let type;
-    if (globalSettings?.testingMode) {
+    if (globalSettings?.testingMode || assessmentId) {
       const seq = globalSettings?.testingShapeSequence?.length > 0 ? globalSettings.testingShapeSequence : TESTING_SHAPE_SEQUENCE;
       type = seq[sequenceIndexRef.current % seq.length];
       sequenceIndexRef.current++;
+    } else if (selectedShapeRef.current === "random") {
+      type = SHAPES[sequenceIndexRef.current % SHAPES.length];
+      sequenceIndexRef.current++;
     } else {
-      type = selectedShapeRef.current === "random" ? SHAPES[Math.floor(Math.random() * SHAPES.length)] : selectedShapeRef.current;
+      type = selectedShapeRef.current;
     }
 
     const points = generateShapePoints(type);

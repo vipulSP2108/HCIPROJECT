@@ -8,6 +8,7 @@ import { Hands } from "@mediapipe/hands";
 import {
   X,
   AlertCircle,
+  ArrowRight,
   RefreshCw,
   Target,
   UserCheck,
@@ -106,25 +107,25 @@ export default function ClinicalCalibrationModal({
         osc.start();
         osc.stop(ctx.currentTime + 0.4);
       }
-    } catch (e) {}
+    } catch (e) { }
   }, []);
 
   // Stop camera and cleanup
   const stopCamera = () => {
     if (cameraRef.current) {
-      try { cameraRef.current.stop(); } catch (e) {}
+      try { cameraRef.current.stop(); } catch (e) { }
       cameraRef.current = null;
     }
     if (poseRef.current) {
-      try { poseRef.current.close(); } catch (e) {}
+      try { poseRef.current.close(); } catch (e) { }
       poseRef.current = null;
     }
     if (handsRef.current) {
-      try { handsRef.current.close(); } catch (e) {}
+      try { handsRef.current.close(); } catch (e) { }
       handsRef.current = null;
     }
     if (streamRef.current) {
-      try { streamRef.current.getTracks().forEach((track) => track.stop()); } catch (e) {}
+      try { streamRef.current.getTracks().forEach((track) => track.stop()); } catch (e) { }
       streamRef.current = null;
     }
     if (videoRef.current) {
@@ -259,7 +260,7 @@ export default function ClinicalCalibrationModal({
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          await videoRef.current.play().catch(() => {});
+          await videoRef.current.play().catch(() => { });
         }
 
         // 2. Setup MediaPipe Hands
@@ -334,10 +335,10 @@ export default function ClinicalCalibrationModal({
             if (!videoRef.current || !isMountedRef.current) return;
             try {
               if (handsRef.current) await handsRef.current.send({ image: videoRef.current });
-            } catch (e) {}
+            } catch (e) { }
             try {
               if (poseRef.current) await poseRef.current.send({ image: videoRef.current });
-            } catch (e) {}
+            } catch (e) { }
           },
           width: 640,
           height: 480,
@@ -480,7 +481,7 @@ export default function ClinicalCalibrationModal({
               verticalAngleDeg = Math.round(90 + Math.max(-20, Math.min(30, pitchDelta)));
             }
 
-            isVerticalOk = verticalAngleDeg >= 85 && verticalAngleDeg <= 95;
+            isVerticalOk = verticalAngleDeg >= 85 && verticalAngleDeg <= 105;
             const isReady = isXOk && isVerticalOk && isLevel && isDistOk;
 
             setPostureStatus({
@@ -491,10 +492,10 @@ export default function ClinicalCalibrationModal({
               isReady,
               centerMsg: isXOk ? "✓ Centered" : currentMidX < 0.38 ? "Shift Right ◄" : "Shift Left ►",
               verticalMsg: isVerticalOk
-                ? `✓ ${verticalAngleDeg}° (85°–95°)`
-                : verticalAngleDeg > 95
-                ? `${verticalAngleDeg}° (Tilt Forward)`
-                : `${verticalAngleDeg}° (Tilt Back)`,
+                ? `✓ ${verticalAngleDeg}° (90°–100°)`
+                : verticalAngleDeg > 105
+                  ? `${verticalAngleDeg}° (Tilt Forward)`
+                  : `${verticalAngleDeg}° (Tilt Back)`,
               distanceMsg: isDistOk ? "✓ Optimal Distance" : shDist < 0.20 ? "Step Closer" : "Step Back Slightly",
               tiltMsg: isLevel ? `✓ Level (${tiltDeg}°)` : `Tilt: ${tiltDeg}° (Level camera)`,
               tiltDeg,
@@ -515,7 +516,7 @@ export default function ClinicalCalibrationModal({
             ctx.stroke();
 
             // Shoulder markers
-            [ { x: lx, y: ly }, { x: rx, y: ry } ].forEach((pt) => {
+            [{ x: lx, y: ly }, { x: rx, y: ry }].forEach((pt) => {
               ctx.beginPath();
               ctx.arc(pt.x, pt.y, 7, 0, Math.PI * 2);
               ctx.fillStyle = isLevel ? "#10B981" : "#F59E0B";
@@ -594,20 +595,20 @@ export default function ClinicalCalibrationModal({
           ctx.lineWidth = 1.5;
           ctx.stroke();
 
-          // Target 85°–95° Green Zone [scale: 70° (bottom) to 120° (top), span 50°]
-          // 95° is at (95 - 70) / 50 = 0.50 -> ySliderY + ySliderH * 0.50
-          // 85° is at (85 - 70) / 50 = 0.30 -> ySliderY + ySliderH * 0.70
-          const greenZoneStart = ySliderY + ySliderH * 0.50;
-          const greenZoneHeight = ySliderH * 0.20;
+          // Target 85°–105° Green Zone [scale: 70° (bottom) to 120° (top), span 50°]
+          // 105° is at (105 - 70) / 50 = 0.70 -> ySliderY + ySliderH * (1 - 0.70) = ySliderY + ySliderH * 0.30
+          // 85° is at (85 - 70) / 50 = 0.30 -> ySliderY + ySliderH * (1 - 0.30) = ySliderY + ySliderH * 0.70
+          const greenZoneStart = ySliderY + ySliderH * 0.30;
+          const greenZoneHeight = ySliderH * 0.40;
           ctx.fillStyle = "rgba(16, 185, 129, 0.28)";
           ctx.fillRect(ySliderX + 4, greenZoneStart, ySliderW - 8, greenZoneHeight);
 
-          // 90° Ideal Center Tick
+          // 95° Ideal Center Tick
           ctx.strokeStyle = "#10B981";
           ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.moveTo(ySliderX + 4, ySliderY + ySliderH * 0.60);
-          ctx.lineTo(ySliderX + ySliderW - 4, ySliderY + ySliderH * 0.60);
+          ctx.moveTo(ySliderX + 4, ySliderY + ySliderH * 0.50);
+          ctx.lineTo(ySliderX + ySliderW - 4, ySliderY + ySliderH * 0.50);
           ctx.stroke();
 
           // Vertical Angle Needle
@@ -625,12 +626,12 @@ export default function ClinicalCalibrationModal({
 
           // Gauge Labels
           ctx.font = "bold 8.5px system-ui, sans-serif";
-          ctx.fillStyle = verticalAngleDeg > 95 ? "#F59E0B" : "rgba(255, 255, 255, 0.7)";
+          ctx.fillStyle = verticalAngleDeg > 105 ? "#F59E0B" : "rgba(255, 255, 255, 0.7)";
           ctx.textAlign = "center";
           ctx.fillText("120° ⚠️", ySliderX + ySliderW / 2, ySliderY + 14);
 
           ctx.fillStyle = isVerticalOk ? "#10B981" : "rgba(255, 255, 255, 0.9)";
-          ctx.fillText(isVerticalOk ? "✓ 85°-95°" : `${verticalAngleDeg}°`, ySliderX + ySliderW / 2, ySliderY + ySliderH * 0.60 - 4);
+          ctx.fillText(isVerticalOk ? `✓ ${verticalAngleDeg}°` : `${verticalAngleDeg}°`, ySliderX + ySliderW / 2, ySliderY + ySliderH * 0.50 - 4);
 
           ctx.fillStyle = verticalAngleDeg < 85 ? "#F59E0B" : "rgba(255, 255, 255, 0.7)";
           ctx.fillText("70° ⚠️", ySliderX + ySliderW / 2, ySliderY + ySliderH - 8);
@@ -837,9 +838,8 @@ export default function ClinicalCalibrationModal({
           ref={videoRef}
           playsInline
           muted
-          className={`w-full h-full object-cover transform -scale-x-100 ${
-            cameraState === "ready" ? "opacity-90" : "opacity-0"
-          }`}
+          className={`w-full h-full object-cover transform -scale-x-100 ${cameraState === "ready" ? "opacity-90" : "opacity-0"
+            }`}
         />
       </div>
 
@@ -859,7 +859,7 @@ export default function ClinicalCalibrationModal({
                   Step {step + 1} of 3 • Clinical Motion Calibration
                 </div>
                 <h3 className="text-sm md:text-base font-black text-white leading-tight">
-                  {step === 0 && "Body Alignment & Laptop Ground Angle (85°–95°)"}
+                  {step === 0 && "Body Alignment & Laptop Ground Angle (90°–100°)"}
                   {step === 1 && (REACH_TARGETS[activeTargetIdx]?.instruction || "Reach to Target Bubble")}
                   {step === 2 && "Calibration Verified • Ready to Begin Battery"}
                 </h3>
@@ -890,25 +890,22 @@ export default function ClinicalCalibrationModal({
             <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-gray-800">
               <div className="flex flex-wrap items-center gap-2">
                 {/* Centering Pill */}
-                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${
-                  postureStatus.isCentered ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
-                }`}>
+                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${postureStatus.isCentered ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
+                  }`}>
                   <span className="text-[9.5px] uppercase font-bold text-gray-400">Centering:</span>
                   <span>{postureStatus.centerMsg}</span>
                 </div>
 
                 {/* Vertical Angle Pill */}
-                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${
-                  postureStatus.isVerticalOk ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
-                }`}>
+                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${postureStatus.isVerticalOk ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
+                  }`}>
                   <span className="text-[9.5px] uppercase font-bold text-gray-400">Vertical:</span>
                   <span>{postureStatus.verticalMsg}</span>
                 </div>
 
                 {/* Tilt Pill */}
-                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${
-                  postureStatus.isLevel ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
-                }`}>
+                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${postureStatus.isLevel ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
+                  }`}>
                   <span className="text-[9.5px] uppercase font-bold text-gray-400">Tilt:</span>
                   <span>{postureStatus.tiltMsg}</span>
                 </div>
@@ -918,11 +915,10 @@ export default function ClinicalCalibrationModal({
               <button
                 type="button"
                 onClick={() => { setStep(1); playChime("hit"); }}
-                className={`py-1.5 px-3.5 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                  postureStatus.isReady
+                className={`py-1.5 px-3.5 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${postureStatus.isReady
                     ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/30 scale-[1.02]"
                     : "bg-primary-500 hover:bg-primary-600 text-white shadow-primary-500/25"
-                }`}
+                  }`}
               >
                 {step0AutoCountdown !== null && step0AutoCountdown > 0 ? (
                   <span>Optimal! Starting in {step0AutoCountdown}s...</span>
@@ -1008,7 +1004,7 @@ export default function ClinicalCalibrationModal({
         <div className="px-5 py-2 bg-gray-900/80 backdrop-blur-md rounded-full border border-gray-700 text-xs font-bold flex items-center gap-3 shadow-lg">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-gray-300">
-            {step === 0 && "Step 1/3: Align upper body with the Horizontal (X) and Distance meters"}
+            {step === 0 && "Step 1/3: Align upper body with the Horizontal (X) and Vertical meters"}
             {step === 1 && `Step 2/3: Pop the 5 target bubbles with your hand (${completedTargets.length}/5 completed)`}
             {step === 2 && "Step 3/3: Calibration Verified • Starting Clinical Battery"}
           </span>

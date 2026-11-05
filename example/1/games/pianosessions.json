@@ -1,0 +1,3456 @@
+[
+  {
+    "_id": "6aec7e6d7deb7860035a0518",
+    "user": "6aead3aeddbab47f9d68adff",
+    "gameType": "piano_ankle",
+    "gameName": "Piano - Wrist Movement",
+    "time": "2026-11-05T13:02:37.526Z",
+    "levelspan": 6,
+    "sessionScore": 310,
+    "systemMetrics": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+      "resolution": "1699x935"
+    },
+    "play": [
+      {
+        "responsetime": 2.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.8,
+        "correct": 1
+      },
+      {
+        "responsetime": 2,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.9,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.6,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.6,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.8,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.8,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      }
+    ],
+    "coordinates": [
+      {
+        "x": 0.497,
+        "y": 0.441,
+        "timestamp": 1793883683949
+      },
+      {
+        "x": 0.486,
+        "y": 0.48,
+        "timestamp": 1793883685120
+      },
+      {
+        "x": 0.157,
+        "y": 0.553,
+        "timestamp": 1793883686161
+      },
+      {
+        "x": 0.311,
+        "y": 0.598,
+        "timestamp": 1793883687161
+      },
+      {
+        "x": 0.47,
+        "y": 0.601,
+        "timestamp": 1793883688252
+      },
+      {
+        "x": 0.16,
+        "y": 0.577,
+        "timestamp": 1793883689924
+      },
+      {
+        "x": 0.074,
+        "y": 0.558,
+        "timestamp": 1793883691044
+      },
+      {
+        "x": 0.707,
+        "y": 0.701,
+        "timestamp": 1793883692057
+      },
+      {
+        "x": 0.213,
+        "y": 0.69,
+        "timestamp": 1793883693140
+      },
+      {
+        "x": 0.169,
+        "y": 0.681,
+        "timestamp": 1793883694304
+      },
+      {
+        "x": 0.398,
+        "y": 0.678,
+        "timestamp": 1793883695307
+      },
+      {
+        "x": 0.212,
+        "y": 0.654,
+        "timestamp": 1793883696307
+      },
+      {
+        "x": 0.073,
+        "y": 0.649,
+        "timestamp": 1793883697424
+      },
+      {
+        "x": 0.706,
+        "y": 0.74,
+        "timestamp": 1793883698449
+      },
+      {
+        "x": 0.69,
+        "y": 0.74,
+        "timestamp": 1793883699469
+      },
+      {
+        "x": 0.908,
+        "y": 0.708,
+        "timestamp": 1793883700469
+      },
+      {
+        "x": 0.825,
+        "y": 0.71,
+        "timestamp": 1793883702203
+      },
+      {
+        "x": 0.147,
+        "y": 0.645,
+        "timestamp": 1793883703453
+      },
+      {
+        "x": 0.267,
+        "y": 0.655,
+        "timestamp": 1793883704453
+      },
+      {
+        "x": 0.469,
+        "y": 0.676,
+        "timestamp": 1793883705569
+      },
+      {
+        "x": 0.32,
+        "y": 0.687,
+        "timestamp": 1793883707382
+      },
+      {
+        "x": 0.781,
+        "y": 0.699,
+        "timestamp": 1793883708386
+      },
+      {
+        "x": 0.551,
+        "y": 0.636,
+        "timestamp": 1793883709386
+      },
+      {
+        "x": 0.596,
+        "y": 0.643,
+        "timestamp": 1793883710398
+      },
+      {
+        "x": 0.064,
+        "y": 0.608,
+        "timestamp": 1793883711398
+      },
+      {
+        "x": 0.073,
+        "y": 0.603,
+        "timestamp": 1793883712594
+      },
+      {
+        "x": 0.607,
+        "y": 0.679,
+        "timestamp": 1793883713617
+      },
+      {
+        "x": 0.477,
+        "y": 0.653,
+        "timestamp": 1793883714619
+      },
+      {
+        "x": 0.085,
+        "y": 0.554,
+        "timestamp": 1793883715619
+      },
+      {
+        "x": 0.104,
+        "y": 0.549,
+        "timestamp": 1793883716783
+      },
+      {
+        "x": 0.608,
+        "y": 0.627,
+        "timestamp": 1793883718315
+      },
+      {
+        "x": 0.591,
+        "y": 0.626,
+        "timestamp": 1793883719315
+      },
+      {
+        "x": 0.498,
+        "y": 0.606,
+        "timestamp": 1793883721174
+      },
+      {
+        "x": 0.623,
+        "y": 0.647,
+        "timestamp": 1793883722198
+      },
+      {
+        "x": 0.62,
+        "y": 0.647,
+        "timestamp": 1793883723386
+      },
+      {
+        "x": 0.313,
+        "y": 0.562,
+        "timestamp": 1793883724523
+      },
+      {
+        "x": 0.38,
+        "y": 0.527,
+        "timestamp": 1793883725524
+      },
+      {
+        "x": 0.439,
+        "y": 0.554,
+        "timestamp": 1793883726527
+      },
+      {
+        "x": 0.507,
+        "y": 0.585,
+        "timestamp": 1793883727548
+      },
+      {
+        "x": 0.734,
+        "y": 0.654,
+        "timestamp": 1793883728590
+      },
+      {
+        "x": 0.719,
+        "y": 0.641,
+        "timestamp": 1793883729604
+      },
+      {
+        "x": 0.669,
+        "y": 0.633,
+        "timestamp": 1793883730682
+      },
+      {
+        "x": 0.251,
+        "y": 0.501,
+        "timestamp": 1793883731682
+      },
+      {
+        "x": 0.134,
+        "y": 0.483,
+        "timestamp": 1793883732778
+      },
+      {
+        "x": 0.739,
+        "y": 0.635,
+        "timestamp": 1793883733882
+      },
+      {
+        "x": 0.213,
+        "y": 0.482,
+        "timestamp": 1793883734882
+      },
+      {
+        "x": 0.18,
+        "y": 0.494,
+        "timestamp": 1793883736115
+      },
+      {
+        "x": 0.335,
+        "y": 0.556,
+        "timestamp": 1793883737115
+      },
+      {
+        "x": 0.299,
+        "y": 0.541,
+        "timestamp": 1793883738641
+      },
+      {
+        "x": 0.79,
+        "y": 0.614,
+        "timestamp": 1793883739644
+      },
+      {
+        "x": 0.756,
+        "y": 0.614,
+        "timestamp": 1793883740648
+      },
+      {
+        "x": 0.88,
+        "y": 0.657,
+        "timestamp": 1793883741652
+      },
+      {
+        "x": 0.296,
+        "y": 0.536,
+        "timestamp": 1793883742727
+      },
+      {
+        "x": 0.295,
+        "y": 0.535,
+        "timestamp": 1793883743824
+      },
+      {
+        "x": 0.508,
+        "y": 0.579,
+        "timestamp": 1793883744857
+      },
+      {
+        "x": 0.539,
+        "y": 0.587,
+        "timestamp": 1793883745882
+      },
+      {
+        "x": 0.09,
+        "y": 0.554,
+        "timestamp": 1793883746996
+      },
+      {
+        "x": 0.091,
+        "y": 0.55,
+        "timestamp": 1793883748032
+      },
+      {
+        "x": 0.51,
+        "y": 0.627,
+        "timestamp": 1793883749036
+      },
+      {
+        "x": 0.495,
+        "y": 0.618,
+        "timestamp": 1793883750036
+      },
+      {
+        "x": 0.92,
+        "y": 0.724,
+        "timestamp": 1793883751036
+      },
+      {
+        "x": 0.897,
+        "y": 0.721,
+        "timestamp": 1793883752069
+      },
+      {
+        "x": 0.973,
+        "y": 0.842,
+        "timestamp": 1793883753073
+      }
+    ],
+    "mode": "laptop",
+    "fingerTimeouts": {
+      "thumb": 5,
+      "index": 5,
+      "middle": 5,
+      "ring": 5,
+      "pinky": 5,
+      "leftPinky": 5,
+      "leftRing": 5,
+      "leftMiddle": 5,
+      "leftIndex": 5,
+      "rightIndex": 5,
+      "rightMiddle": 5,
+      "rightRing": 5,
+      "rightPinky": 5
+    },
+    "laptopMovements": [
+      {
+        "fromKey": "S",
+        "toKey": "G",
+        "dx": 553.11,
+        "dy": 0,
+        "distance": 553.11,
+        "fromX": 296.55,
+        "fromY": 523.5,
+        "toX": 849.66,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0519"
+      },
+      {
+        "fromKey": "G",
+        "toKey": "S",
+        "dx": -553.11,
+        "dy": 0,
+        "distance": 553.11,
+        "fromX": 849.66,
+        "fromY": 523.5,
+        "toX": 296.55,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a051a"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "A",
+        "dx": -184.37,
+        "dy": 0,
+        "distance": 184.37,
+        "fromX": 296.55,
+        "fromY": 523.5,
+        "toX": 112.18,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a051b"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "J",
+        "dx": 1106.22,
+        "dy": 0,
+        "distance": 1106.22,
+        "fromX": 112.18,
+        "fromY": 523.5,
+        "toX": 1218.4,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a051c"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "S",
+        "dx": -921.85,
+        "dy": 0,
+        "distance": 921.85,
+        "fromX": 1218.4,
+        "fromY": 523.5,
+        "toX": 296.55,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a051d"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "F",
+        "dx": 368.74,
+        "dy": 0,
+        "distance": 368.74,
+        "fromX": 296.55,
+        "fromY": 523.5,
+        "toX": 665.29,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a051e"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "A",
+        "dx": -553.11,
+        "dy": 0,
+        "distance": 553.11,
+        "fromX": 665.29,
+        "fromY": 523.5,
+        "toX": 112.18,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a051f"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "J",
+        "dx": 1106.22,
+        "dy": 0,
+        "distance": 1106.22,
+        "fromX": 112.18,
+        "fromY": 523.5,
+        "toX": 1218.4,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0520"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "L",
+        "dx": 368.74,
+        "dy": 0,
+        "distance": 368.74,
+        "fromX": 1218.4,
+        "fromY": 523.5,
+        "toX": 1587.15,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0521"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "K",
+        "dx": -184.37,
+        "dy": 0,
+        "distance": 184.38,
+        "fromX": 1587.15,
+        "fromY": 523.5,
+        "toX": 1402.77,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0522"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "S",
+        "dx": -1106.22,
+        "dy": 0,
+        "distance": 1106.22,
+        "fromX": 1402.77,
+        "fromY": 523.5,
+        "toX": 296.55,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0523"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "G",
+        "dx": 553.11,
+        "dy": 0,
+        "distance": 553.11,
+        "fromX": 296.55,
+        "fromY": 523.5,
+        "toX": 849.66,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0524"
+      },
+      {
+        "fromKey": "G",
+        "toKey": "D",
+        "dx": -368.74,
+        "dy": 0,
+        "distance": 368.74,
+        "fromX": 849.66,
+        "fromY": 523.5,
+        "toX": 480.92,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0525"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "K",
+        "dx": 921.85,
+        "dy": 0,
+        "distance": 921.85,
+        "fromX": 480.92,
+        "fromY": 523.5,
+        "toX": 1402.77,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0526"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "H",
+        "dx": -368.74,
+        "dy": 0,
+        "distance": 368.74,
+        "fromX": 1402.77,
+        "fromY": 523.5,
+        "toX": 1034.03,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0527"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "A",
+        "dx": -921.85,
+        "dy": 0,
+        "distance": 921.85,
+        "fromX": 1034.03,
+        "fromY": 523.5,
+        "toX": 112.18,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0528"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "H",
+        "dx": 921.85,
+        "dy": 0,
+        "distance": 921.85,
+        "fromX": 112.18,
+        "fromY": 523.5,
+        "toX": 1034.03,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0529"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "G",
+        "dx": -184.37,
+        "dy": 0,
+        "distance": 184.37,
+        "fromX": 1034.03,
+        "fromY": 523.5,
+        "toX": 849.66,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a052a"
+      },
+      {
+        "fromKey": "G",
+        "toKey": "H",
+        "dx": 184.37,
+        "dy": 0,
+        "distance": 184.37,
+        "fromX": 849.66,
+        "fromY": 523.5,
+        "toX": 1034.03,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a052b"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "G",
+        "dx": -184.37,
+        "dy": 0,
+        "distance": 184.37,
+        "fromX": 1034.03,
+        "fromY": 523.5,
+        "toX": 849.66,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a052c"
+      },
+      {
+        "fromKey": "G",
+        "toKey": "J",
+        "dx": 368.74,
+        "dy": 0,
+        "distance": 368.74,
+        "fromX": 849.66,
+        "fromY": 523.5,
+        "toX": 1218.4,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a052d"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "S",
+        "dx": -921.85,
+        "dy": 0,
+        "distance": 921.85,
+        "fromX": 1218.4,
+        "fromY": 523.5,
+        "toX": 296.55,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a052e"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "D",
+        "dx": 184.37,
+        "dy": 0,
+        "distance": 184.37,
+        "fromX": 296.55,
+        "fromY": 523.5,
+        "toX": 480.92,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a052f"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "K",
+        "dx": 921.85,
+        "dy": 0,
+        "distance": 921.85,
+        "fromX": 480.92,
+        "fromY": 523.5,
+        "toX": 1402.77,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0530"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "L",
+        "dx": 184.38,
+        "dy": 0,
+        "distance": 184.38,
+        "fromX": 1402.77,
+        "fromY": 523.5,
+        "toX": 1587.15,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0531"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "D",
+        "dx": -1106.22,
+        "dy": 0,
+        "distance": 1106.22,
+        "fromX": 1587.15,
+        "fromY": 523.5,
+        "toX": 480.92,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0532"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "G",
+        "dx": 368.74,
+        "dy": 0,
+        "distance": 368.74,
+        "fromX": 480.92,
+        "fromY": 523.5,
+        "toX": 849.66,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0533"
+      },
+      {
+        "fromKey": "G",
+        "toKey": "A",
+        "dx": -737.48,
+        "dy": 0,
+        "distance": 737.48,
+        "fromX": 849.66,
+        "fromY": 523.5,
+        "toX": 112.18,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0534"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "G",
+        "dx": 737.48,
+        "dy": 0,
+        "distance": 737.48,
+        "fromX": 112.18,
+        "fromY": 523.5,
+        "toX": 849.66,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0535"
+      },
+      {
+        "fromKey": "G",
+        "toKey": "L",
+        "dx": 737.48,
+        "dy": 0,
+        "distance": 737.48,
+        "fromX": 849.66,
+        "fromY": 523.5,
+        "toX": 1587.15,
+        "toY": 523.5,
+        "_id": "6aec7e6d7deb7860035a0536"
+      }
+    ],
+    "mobileMovements": [],
+    "createdAt": "2026-11-05T13:02:37.560Z",
+    "updatedAt": "2026-11-05T13:02:37.560Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec84c4313f51f25a4c3ac6",
+    "user": "6aead3aeddbab47f9d68adff",
+    "gameType": "piano_finger",
+    "gameName": "Piano - Finger Dexterity",
+    "time": "2026-11-05T13:29:40.861Z",
+    "levelspan": 6,
+    "sessionScore": 395,
+    "systemMetrics": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+      "resolution": "1699x935"
+    },
+    "play": [
+      {
+        "responsetime": 5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 2.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 0.9,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.6,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": -1
+      },
+      {
+        "responsetime": 1.9,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.4,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      }
+    ],
+    "coordinates": [],
+    "mode": "laptop",
+    "fingerTimeouts": {
+      "thumb": -1,
+      "index": -1,
+      "middle": -1,
+      "ring": -1,
+      "pinky": -1,
+      "leftPinky": 6,
+      "leftRing": 5,
+      "leftMiddle": 5,
+      "leftIndex": 5,
+      "rightIndex": 4,
+      "rightMiddle": 5,
+      "rightRing": 5,
+      "rightPinky": 5
+    },
+    "laptopMovements": [
+      {
+        "fromKey": "J",
+        "toKey": "D",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ac7"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "A",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ac8"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "D",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ac9"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "S",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3aca"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "K",
+        "dx": 1037.08,
+        "dy": 0,
+        "distance": 1037.08,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 1368.21,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3acb"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "H",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 1368.21,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3acc"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "A",
+        "dx": -829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3acd"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "F",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ace"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "D",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3acf"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "H",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad0"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "D",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad1"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "F",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad2"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "A",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad3"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "F",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad4"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "A",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad5"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "D",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad6"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "H",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad7"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "J",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad8"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "H",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ad9"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "F",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ada"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "A",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3adb"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "H",
+        "dx": 829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3adc"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "D",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3add"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "S",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ade"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "H",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3adf"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "L",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 1575.63,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae0"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "F",
+        "dx": -829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 1575.63,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae1"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "H",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae2"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "J",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae3"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "F",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae4"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "K",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 1368.21,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae5"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "H",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 1368.21,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae6"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "S",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae7"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "L",
+        "dx": 1244.5,
+        "dy": 0,
+        "distance": 1244.5,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 1575.63,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae8"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "J",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 1575.63,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3ae9"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "L",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 1575.63,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3aea"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "H",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1575.63,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3aeb"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "A",
+        "dx": -829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3aec"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "D",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3aed"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "A",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec84c4313f51f25a4c3aee"
+      }
+    ],
+    "mobileMovements": [
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 5,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3aef"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.5,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af0"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af1"
+      },
+      {
+        "key": "none",
+        "finger": "none",
+        "expectedFinger": "rightPinky",
+        "responsetime": -1,
+        "correct": 0,
+        "_id": "6aec84c4313f51f25a4c3af2"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.7,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af3"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 2.2,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af4"
+      },
+      {
+        "key": "K",
+        "finger": "rightRing",
+        "expectedFinger": "rightRing",
+        "responsetime": 1.5,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af5"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 2.3,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af6"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af7"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.5,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af8"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3af9"
+      },
+      {
+        "key": "none",
+        "finger": "none",
+        "expectedFinger": "leftIndex",
+        "responsetime": -1,
+        "correct": 0,
+        "_id": "6aec84c4313f51f25a4c3afa"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 2.4,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3afb"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3afc"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.5,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3afd"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3afe"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.4,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3aff"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b00"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b01"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b02"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b03"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.7,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b04"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.4,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b05"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 0.9,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b06"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b07"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b08"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b09"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b0a"
+      },
+      {
+        "key": "L",
+        "finger": "rightPinky",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.7,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b0b"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.5,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b0c"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b0d"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b0e"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b0f"
+      },
+      {
+        "key": "K",
+        "finger": "rightRing",
+        "expectedFinger": "rightRing",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b10"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.6,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b11"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 1.4,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b12"
+      },
+      {
+        "key": "L",
+        "finger": "rightPinky",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.4,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b13"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "leftRing",
+        "responsetime": 1.4,
+        "correct": -1,
+        "_id": "6aec84c4313f51f25a4c3b14"
+      },
+      {
+        "key": "L",
+        "finger": "rightPinky",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.9,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b15"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 2.1,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b16"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.4,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b17"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 2.4,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b18"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec84c4313f51f25a4c3b19"
+      },
+      {
+        "key": "none",
+        "finger": "none",
+        "expectedFinger": "leftIndex",
+        "responsetime": -1,
+        "correct": 0,
+        "_id": "6aec84c4313f51f25a4c3b1a"
+      }
+    ],
+    "createdAt": "2026-11-05T13:29:40.919Z",
+    "updatedAt": "2026-11-05T13:29:40.919Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec9daffc2577bc0ab9e136",
+    "user": "6aead3aeddbab47f9d68adff",
+    "gameType": "piano_finger",
+    "gameName": "Piano - Finger Dexterity",
+    "time": "2026-11-05T15:15:59.438Z",
+    "levelspan": 6,
+    "sessionScore": 120,
+    "systemMetrics": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+      "resolution": "1699x935"
+    },
+    "play": [
+      {
+        "responsetime": 1.5,
+        "correct": -1
+      },
+      {
+        "responsetime": 0.2,
+        "correct": -1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.8,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.6,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.9,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.7,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.6,
+        "correct": 1
+      },
+      {
+        "responsetime": 2.2,
+        "correct": 1
+      }
+    ],
+    "coordinates": [],
+    "mode": "laptop",
+    "fingerTimeouts": {
+      "thumb": -1,
+      "index": -1,
+      "middle": -1,
+      "ring": -1,
+      "pinky": -1,
+      "leftPinky": 6,
+      "leftRing": 5,
+      "leftMiddle": 5,
+      "leftIndex": 5,
+      "rightIndex": 4,
+      "rightMiddle": 5,
+      "rightRing": 5,
+      "rightPinky": 5
+    },
+    "laptopMovements": [
+      {
+        "fromKey": "J",
+        "toKey": "H",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e137"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "J",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e138"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "H",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e139"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "L",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 1575.63,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e13a"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "S",
+        "dx": -1244.5,
+        "dy": 0,
+        "distance": 1244.5,
+        "fromX": 1575.63,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e13b"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "K",
+        "dx": 1037.08,
+        "dy": 0,
+        "distance": 1037.08,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 1368.21,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e13c"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "H",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 1368.21,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e13d"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "J",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e13e"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "D",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e13f"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "F",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e140"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "D",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e141"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "A",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e142"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "F",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e143"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "J",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec9daffc2577bc0ab9e144"
+      }
+    ],
+    "mobileMovements": [
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.5,
+        "correct": -1,
+        "_id": "6aec9daffc2577bc0ab9e145"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 0.2,
+        "correct": -1,
+        "_id": "6aec9daffc2577bc0ab9e146"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e147"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.8,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e148"
+      },
+      {
+        "key": "L",
+        "finger": "rightPinky",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.6,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e149"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 1.7,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e14a"
+      },
+      {
+        "key": "K",
+        "finger": "rightRing",
+        "expectedFinger": "rightRing",
+        "responsetime": 2.1,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e14b"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 2.1,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e14c"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 2.3,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e14d"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.7,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e14e"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.9,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e14f"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 2.1,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e150"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.7,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e151"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 2.6,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e152"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 2.2,
+        "correct": 1,
+        "_id": "6aec9daffc2577bc0ab9e153"
+      }
+    ],
+    "createdAt": "2026-11-05T15:15:59.448Z",
+    "updatedAt": "2026-11-05T15:15:59.448Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec9df2fc2577bc0ab9e16f",
+    "user": "6aead3aeddbab47f9d68adff",
+    "gameType": "piano_finger",
+    "gameName": "Piano - Finger Dexterity",
+    "time": "2026-11-05T15:17:06.985Z",
+    "levelspan": 6,
+    "sessionScore": 175,
+    "systemMetrics": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+      "resolution": "1699x935"
+    },
+    "play": [
+      {
+        "responsetime": 1,
+        "correct": -1
+      },
+      {
+        "responsetime": 0.2,
+        "correct": -1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 0.9,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 0.6,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.9,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.6,
+        "correct": -1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.6,
+        "correct": 1
+      }
+    ],
+    "coordinates": [],
+    "mode": "laptop",
+    "fingerTimeouts": {
+      "thumb": -1,
+      "index": -1,
+      "middle": -1,
+      "ring": -1,
+      "pinky": -1,
+      "leftPinky": 6,
+      "leftRing": 5,
+      "leftMiddle": 5,
+      "leftIndex": 5,
+      "rightIndex": 4,
+      "rightMiddle": 5,
+      "rightRing": 5,
+      "rightPinky": 5
+    },
+    "laptopMovements": [
+      {
+        "fromKey": "A",
+        "toKey": "D",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e170"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "H",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e171"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "A",
+        "dx": -829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e172"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "H",
+        "dx": 829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e173"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "S",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e174"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "K",
+        "dx": 1037.08,
+        "dy": 0,
+        "distance": 1037.08,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 1368.21,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e175"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "F",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1368.21,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e176"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "K",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 1368.21,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e177"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "F",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1368.21,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e178"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "D",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e179"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "F",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e17a"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "J",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e17b"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "D",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e17c"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "H",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e17d"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "F",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e17e"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "S",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e17f"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "A",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e180"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "L",
+        "dx": 1451.92,
+        "dy": 0,
+        "distance": 1451.92,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 1575.63,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e181"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "S",
+        "dx": -1244.5,
+        "dy": 0,
+        "distance": 1244.5,
+        "fromX": 1575.63,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e182"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "J",
+        "dx": 829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e183"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "D",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df2fc2577bc0ab9e184"
+      }
+    ],
+    "mobileMovements": [
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1,
+        "correct": -1,
+        "_id": "6aec9df2fc2577bc0ab9e185"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftPinky",
+        "responsetime": 0.2,
+        "correct": -1,
+        "_id": "6aec9df2fc2577bc0ab9e186"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e187"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 0.9,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e188"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.5,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e189"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e18a"
+      },
+      {
+        "key": "K",
+        "finger": "rightRing",
+        "expectedFinger": "rightRing",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e18b"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e18c"
+      },
+      {
+        "key": "K",
+        "finger": "rightRing",
+        "expectedFinger": "rightRing",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e18d"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e18e"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e18f"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e190"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e191"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e192"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e193"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e194"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 0.6,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e195"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e196"
+      },
+      {
+        "key": "none",
+        "finger": "none",
+        "expectedFinger": "leftMiddle",
+        "responsetime": -1,
+        "correct": 0,
+        "_id": "6aec9df2fc2577bc0ab9e197"
+      },
+      {
+        "key": "L",
+        "finger": "rightPinky",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.9,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e198"
+      },
+      {
+        "key": "none",
+        "finger": "none",
+        "expectedFinger": "leftIndex",
+        "responsetime": -1,
+        "correct": 0,
+        "_id": "6aec9df2fc2577bc0ab9e199"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.6,
+        "correct": -1,
+        "_id": "6aec9df2fc2577bc0ab9e19a"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e19b"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.6,
+        "correct": 1,
+        "_id": "6aec9df2fc2577bc0ab9e19c"
+      }
+    ],
+    "createdAt": "2026-11-05T15:17:07.000Z",
+    "updatedAt": "2026-11-05T15:17:07.000Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec9df4fc2577bc0ab9e1a2",
+    "user": "6aead3aeddbab47f9d68adff",
+    "gameType": "piano_finger",
+    "gameName": "Piano - Finger Dexterity",
+    "time": "2026-11-05T15:17:08.384Z",
+    "levelspan": 6,
+    "sessionScore": 175,
+    "systemMetrics": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+      "resolution": "1699x935"
+    },
+    "play": [
+      {
+        "responsetime": 1,
+        "correct": -1
+      },
+      {
+        "responsetime": 0.2,
+        "correct": -1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 0.9,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.5,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.1,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": 0.6,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.2,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.9,
+        "correct": 1
+      },
+      {
+        "responsetime": -1,
+        "correct": 0
+      },
+      {
+        "responsetime": 1.6,
+        "correct": -1
+      },
+      {
+        "responsetime": 1.3,
+        "correct": 1
+      },
+      {
+        "responsetime": 1.6,
+        "correct": 1
+      }
+    ],
+    "coordinates": [],
+    "mode": "laptop",
+    "fingerTimeouts": {
+      "thumb": -1,
+      "index": -1,
+      "middle": -1,
+      "ring": -1,
+      "pinky": -1,
+      "leftPinky": 6,
+      "leftRing": 5,
+      "leftMiddle": 5,
+      "leftIndex": 5,
+      "rightIndex": 4,
+      "rightMiddle": 5,
+      "rightRing": 5,
+      "rightPinky": 5
+    },
+    "laptopMovements": [
+      {
+        "fromKey": "A",
+        "toKey": "D",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1a3"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "H",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1a4"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "A",
+        "dx": -829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1a5"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "H",
+        "dx": 829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1a6"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "S",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1a7"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "K",
+        "dx": 1037.08,
+        "dy": 0,
+        "distance": 1037.08,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 1368.21,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1a8"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "F",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1368.21,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1a9"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "K",
+        "dx": 622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 1368.21,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1aa"
+      },
+      {
+        "fromKey": "K",
+        "toKey": "F",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1368.21,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1ab"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "D",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1ac"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "F",
+        "dx": 207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1ad"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "J",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1ae"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "D",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1af"
+      },
+      {
+        "fromKey": "D",
+        "toKey": "H",
+        "dx": 414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 538.54,
+        "fromY": 457.5,
+        "toX": 953.38,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b0"
+      },
+      {
+        "fromKey": "H",
+        "toKey": "F",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 953.38,
+        "fromY": 457.5,
+        "toX": 745.96,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b1"
+      },
+      {
+        "fromKey": "F",
+        "toKey": "S",
+        "dx": -414.83,
+        "dy": 0,
+        "distance": 414.83,
+        "fromX": 745.96,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b2"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "A",
+        "dx": -207.42,
+        "dy": 0,
+        "distance": 207.42,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 123.71,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b3"
+      },
+      {
+        "fromKey": "A",
+        "toKey": "L",
+        "dx": 1451.92,
+        "dy": 0,
+        "distance": 1451.92,
+        "fromX": 123.71,
+        "fromY": 457.5,
+        "toX": 1575.63,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b4"
+      },
+      {
+        "fromKey": "L",
+        "toKey": "S",
+        "dx": -1244.5,
+        "dy": 0,
+        "distance": 1244.5,
+        "fromX": 1575.63,
+        "fromY": 457.5,
+        "toX": 331.13,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b5"
+      },
+      {
+        "fromKey": "S",
+        "toKey": "J",
+        "dx": 829.67,
+        "dy": 0,
+        "distance": 829.67,
+        "fromX": 331.13,
+        "fromY": 457.5,
+        "toX": 1160.79,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b6"
+      },
+      {
+        "fromKey": "J",
+        "toKey": "D",
+        "dx": -622.25,
+        "dy": 0,
+        "distance": 622.25,
+        "fromX": 1160.79,
+        "fromY": 457.5,
+        "toX": 538.54,
+        "toY": 457.5,
+        "_id": "6aec9df4fc2577bc0ab9e1b7"
+      }
+    ],
+    "mobileMovements": [
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1,
+        "correct": -1,
+        "_id": "6aec9df4fc2577bc0ab9e1b8"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftPinky",
+        "responsetime": 0.2,
+        "correct": -1,
+        "_id": "6aec9df4fc2577bc0ab9e1b9"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1ba"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 0.9,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1bb"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.5,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1bc"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1bd"
+      },
+      {
+        "key": "K",
+        "finger": "rightRing",
+        "expectedFinger": "rightRing",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1be"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1bf"
+      },
+      {
+        "key": "K",
+        "finger": "rightRing",
+        "expectedFinger": "rightRing",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c0"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c1"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c2"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c3"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c4"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c5"
+      },
+      {
+        "key": "H",
+        "finger": "rightIndex",
+        "expectedFinger": "rightIndex",
+        "responsetime": 1.1,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c6"
+      },
+      {
+        "key": "F",
+        "finger": "leftIndex",
+        "expectedFinger": "leftIndex",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c7"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "leftRing",
+        "responsetime": 0.6,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c8"
+      },
+      {
+        "key": "A",
+        "finger": "leftPinky",
+        "expectedFinger": "leftPinky",
+        "responsetime": 1.2,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1c9"
+      },
+      {
+        "key": "none",
+        "finger": "none",
+        "expectedFinger": "leftMiddle",
+        "responsetime": -1,
+        "correct": 0,
+        "_id": "6aec9df4fc2577bc0ab9e1ca"
+      },
+      {
+        "key": "L",
+        "finger": "rightPinky",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.9,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1cb"
+      },
+      {
+        "key": "none",
+        "finger": "none",
+        "expectedFinger": "leftIndex",
+        "responsetime": -1,
+        "correct": 0,
+        "_id": "6aec9df4fc2577bc0ab9e1cc"
+      },
+      {
+        "key": "S",
+        "finger": "leftRing",
+        "expectedFinger": "rightPinky",
+        "responsetime": 1.6,
+        "correct": -1,
+        "_id": "6aec9df4fc2577bc0ab9e1cd"
+      },
+      {
+        "key": "J",
+        "finger": "rightMiddle",
+        "expectedFinger": "rightMiddle",
+        "responsetime": 1.3,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1ce"
+      },
+      {
+        "key": "D",
+        "finger": "leftMiddle",
+        "expectedFinger": "leftMiddle",
+        "responsetime": 1.6,
+        "correct": 1,
+        "_id": "6aec9df4fc2577bc0ab9e1cf"
+      }
+    ],
+    "createdAt": "2026-11-05T15:17:08.402Z",
+    "updatedAt": "2026-11-05T15:17:08.402Z",
+    "__v": 0
+  }
+]

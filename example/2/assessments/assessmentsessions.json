@@ -1,0 +1,114 @@
+[
+  {
+    "_id": "6aec8aae1cbad7c0cf2271f9",
+    "user": "6aead3afddbab47f9d68ae05",
+    "phase": "pre",
+    "track": "both",
+    "label": "Pre-Therapy — 5/11/2026",
+    "status": "in_progress",
+    "prescribedGames": [
+      {
+        "gameType": "piano",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "fruit_basket",
+        "completed": true,
+        "gameSessionId": "6aec8b381cbad7c0cf227201"
+      },
+      {
+        "gameType": "board_drawing",
+        "completed": true,
+        "gameSessionId": "6aec8b845aeccfd7de3baa03"
+      },
+      {
+        "gameType": "shape_tracing",
+        "completed": true,
+        "gameSessionId": "6aec8bdd5aeccfd7de3baa0d"
+      }
+    ],
+    "createdAt": "2026-11-05T13:54:54.789Z",
+    "updatedAt": "2026-11-05T13:59:59.063Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec96c3b73d21c7d17bb95a",
+    "user": "6aead3afddbab47f9d68ae05",
+    "phase": "pre",
+    "track": "both",
+    "label": "Pre-Therapy — 5/11/2026",
+    "status": "in_progress",
+    "prescribedGames": [
+      {
+        "gameType": "piano",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "fruit_basket",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "board_drawing",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "shape_tracing",
+        "completed": false,
+        "gameSessionId": null
+      }
+    ],
+    "createdAt": "2026-11-05T14:46:27.248Z",
+    "updatedAt": "2026-11-05T14:46:27.248Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec9730441984508057c534",
+    "user": "6aead3afddbab47f9d68ae05",
+    "phase": "pre",
+    "track": "clinical",
+    "label": "Pre-Therapy — 5/11/2026",
+    "status": "in_progress",
+    "prescribedGames": [],
+    "createdAt": "2026-11-05T14:48:16.516Z",
+    "updatedAt": "2026-11-05T14:48:16.516Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec9a69fc2577bc0ab9e0f6",
+    "user": "6aead3afddbab47f9d68ae05",
+    "phase": "pre",
+    "track": "both",
+    "label": "Pre-Therapy — 5/11/2026",
+    "status": "in_progress",
+    "prescribedGames": [
+      {
+        "gameType": "piano",
+        "completed": true,
+        "gameSessionId": "6aec9c2e8dba51e9843dc6fa"
+      },
+      {
+        "gameType": "fruit_basket",
+        "completed": true,
+        "gameSessionId": "6aec9bfb8dba51e9843dc6bd"
+      },
+      {
+        "gameType": "board_drawing",
+        "completed": true,
+        "gameSessionId": "6aec9bbf8dba51e9843dc6b0"
+      },
+      {
+        "gameType": "shape_tracing",
+        "completed": true,
+        "gameSessionId": "6aec9ba3fc2577bc0ab9e102"
+      }
+    ],
+    "createdAt": "2026-11-05T15:02:01.843Z",
+    "updatedAt": "2026-11-05T15:09:35.502Z",
+    "__v": 0,
+    "clinicalTestSessionId": "6aec9b5efc2577bc0ab9e0fa"
+  }
+]

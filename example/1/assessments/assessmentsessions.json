@@ -1,0 +1,102 @@
+[
+  {
+    "_id": "6aec7e117deb7860035a0510",
+    "user": "6aead3aeddbab47f9d68adff",
+    "phase": "pre",
+    "track": "both",
+    "label": "Pre-Therapy — 5/11/2026",
+    "status": "in_progress",
+    "prescribedGames": [
+      {
+        "gameType": "piano",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "fruit_basket",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "board_drawing",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "shape_tracing",
+        "completed": false,
+        "gameSessionId": null
+      }
+    ],
+    "createdAt": "2026-11-05T13:01:05.073Z",
+    "updatedAt": "2026-11-05T13:01:05.073Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec7e803f24fcf394c81ba9",
+    "user": "6aead3aeddbab47f9d68adff",
+    "phase": "pre",
+    "track": "both",
+    "label": "Pre-Therapy — 5/11/2026",
+    "status": "in_progress",
+    "prescribedGames": [
+      {
+        "gameType": "piano",
+        "completed": false,
+        "gameSessionId": null
+      },
+      {
+        "gameType": "fruit_basket",
+        "completed": true,
+        "gameSessionId": "6aec7efb3f24fcf394c81baf"
+      },
+      {
+        "gameType": "board_drawing",
+        "completed": true,
+        "gameSessionId": "6aec7f6b7deb7860035a0540"
+      },
+      {
+        "gameType": "shape_tracing",
+        "completed": true,
+        "gameSessionId": "6aec7fbf7deb7860035a054a"
+      }
+    ],
+    "createdAt": "2026-11-05T13:02:56.870Z",
+    "updatedAt": "2026-11-05T13:08:17.419Z",
+    "__v": 0
+  },
+  {
+    "_id": "6aec9c578dba51e9843dc736",
+    "user": "6aead3aeddbab47f9d68adff",
+    "phase": "pre",
+    "track": "both",
+    "label": "Pre-Therapy — 5/11/2026",
+    "status": "in_progress",
+    "prescribedGames": [
+      {
+        "gameType": "piano",
+        "completed": true,
+        "gameSessionId": "6aec9df4fc2577bc0ab9e1a2"
+      },
+      {
+        "gameType": "fruit_basket",
+        "completed": true,
+        "gameSessionId": "6aec9d838dba51e9843dc765"
+      },
+      {
+        "gameType": "board_drawing",
+        "completed": true,
+        "gameSessionId": "6aec9d548dba51e9843dc758"
+      },
+      {
+        "gameType": "shape_tracing",
+        "completed": true,
+        "gameSessionId": "6aec9d3b8dba51e9843dc742"
+      }
+    ],
+    "createdAt": "2026-11-05T15:10:15.586Z",
+    "updatedAt": "2026-11-05T15:17:12.521Z",
+    "__v": 0,
+    "clinicalTestSessionId": "6aec9d0d8dba51e9843dc73a"
+  }
+]
