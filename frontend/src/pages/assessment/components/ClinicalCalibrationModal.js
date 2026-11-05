@@ -17,12 +17,12 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-// Predefined 5 interactive reach target bubbles: Ergonomically calibrated for seated table posture (90°-100° laptop screen angle)
+// Predefined 5 interactive reach target bubbles: Calibrated for 85°-95° arm elevation w.r.t ground (shoulder height forward reach & table surface)
 const REACH_TARGETS = [
-  { id: "top_left", label: "1. TOP LEFT", x: 0.20, y: 0.28, color: "#3B82F6", instruction: "Reach your hand up to the TOP-LEFT target bubble" },
-  { id: "top_right", label: "2. TOP RIGHT", x: 0.80, y: 0.28, color: "#10B981", instruction: "Now reach up to the TOP-RIGHT target bubble" },
-  { id: "bottom_right", label: "3. BOTTOM RIGHT", x: 0.80, y: 0.68, color: "#F59E0B", instruction: "Reach down to the BOTTOM-RIGHT target bubble (above table)" },
-  { id: "bottom_left", label: "4. BOTTOM LEFT", x: 0.20, y: 0.68, color: "#EC4899", instruction: "Reach down to the BOTTOM-LEFT target bubble (above table)" },
+  { id: "top_left", label: "1. TOP LEFT", x: 0.22, y: 0.38, color: "#3B82F6", instruction: "Reach forward at shoulder level (85°–95° angle) to TOP-LEFT bubble" },
+  { id: "top_right", label: "2. TOP RIGHT", x: 0.78, y: 0.38, color: "#10B981", instruction: "Reach forward at shoulder level (85°–95° angle) to TOP-RIGHT bubble" },
+  { id: "bottom_right", label: "3. BOTTOM RIGHT", x: 0.78, y: 0.62, color: "#F59E0B", instruction: "Reach forward just above table to BOTTOM-RIGHT bubble" },
+  { id: "bottom_left", label: "4. BOTTOM LEFT", x: 0.22, y: 0.62, color: "#EC4899", instruction: "Reach forward just above table to BOTTOM-LEFT bubble" },
   { id: "center", label: "5. CENTER", x: 0.50, y: 0.48, color: "#8B5CF6", instruction: "Return your hand to the CENTER bubble" },
 ];
 
@@ -50,12 +50,14 @@ export default function ClinicalCalibrationModal({
   const [postureStatus, setPostureStatus] = useState({
     isCentered: false,
     isGoodDistance: false,
+    isVerticalOk: false,
     isLevel: false,
     isReady: false,
     centerMsg: "Looking for user...",
-    distanceMsg: "Looking for user...",
+    verticalMsg: "Looking for user...",
     tiltMsg: "Looking for user...",
     tiltDeg: 0,
+    verticalAngleDeg: 90,
   });
 
   const [step0AutoCountdown, setStep0AutoCountdown] = useState(null);
@@ -439,6 +441,8 @@ export default function ClinicalCalibrationModal({
         let isDistOk = false;
         let isLevel = false;
         let tiltDeg = 0;
+        let verticalAngleDeg = 90;
+        let isVerticalOk = false;
 
         if (pl && pl[11] && pl[12]) {
           const lSh = pl[11];
@@ -451,7 +455,7 @@ export default function ClinicalCalibrationModal({
             normDist = Math.max(0.05, Math.min(0.95, (shDist - 0.15) / (0.52 - 0.15)));
 
             isXOk = currentMidX >= 0.38 && currentMidX <= 0.62;
-            isDistOk = shDist >= 0.22 && shDist <= 0.48;
+            isDistOk = shDist >= 0.20 && shDist <= 0.50;
 
             const dy = rSh.y - lSh.y;
             const dx = rSh.x - lSh.x;
@@ -461,17 +465,41 @@ export default function ClinicalCalibrationModal({
             tiltDeg = Math.round(rawTilt);
             isLevel = Math.abs(tiltDeg) <= 12;
 
-            const isReady = isXOk && isDistOk && isLevel;
+            // Estimate vertical camera / screen pitch angle relative to ground (table)
+            // 90° = perpendicular to ground/table
+            // 85°-95° = optimal vertical window
+            // 110°-120° = screen tilted back too far
+            if (pl[0]) {
+              const eyeY = (pl[2] && pl[5]) ? (pl[2].y + pl[5].y) / 2 : pl[0].y;
+              const earY = (pl[7] && pl[8]) ? (pl[7].y + pl[8].y) / 2 : eyeY;
+              const earEyeOffset = (earY - eyeY) / shDist;
+              const midShZ = ((lSh.z ?? 0) + (rSh.z ?? 0)) / 2;
+              const noseZ = pl[0].z ?? 0;
+              const zOffset = (midShZ - noseZ);
+
+              const pitchDelta = (earEyeOffset * 85) + (zOffset * 25);
+              verticalAngleDeg = Math.round(90 + Math.max(-20, Math.min(30, pitchDelta)));
+            }
+
+            isVerticalOk = verticalAngleDeg >= 85 && verticalAngleDeg <= 95;
+            const isReady = isXOk && isVerticalOk && isLevel && isDistOk;
 
             setPostureStatus({
               isCentered: isXOk,
               isGoodDistance: isDistOk,
+              isVerticalOk,
               isLevel,
               isReady,
               centerMsg: isXOk ? "✓ Centered" : currentMidX < 0.38 ? "Shift Right ◄" : "Shift Left ►",
-              distanceMsg: isDistOk ? "✓ Optimal Distance" : shDist < 0.22 ? "Step Closer" : "Step Back Slightly",
+              verticalMsg: isVerticalOk
+                ? `✓ ${verticalAngleDeg}° (85°–95°)`
+                : verticalAngleDeg > 95
+                ? `${verticalAngleDeg}° (Tilt Forward)`
+                : `${verticalAngleDeg}° (Tilt Back)`,
+              distanceMsg: isDistOk ? "✓ Optimal Distance" : shDist < 0.20 ? "Step Closer" : "Step Back Slightly",
               tiltMsg: isLevel ? `✓ Level (${tiltDeg}°)` : `Tilt: ${tiltDeg}° (Level camera)`,
               tiltDeg,
+              verticalAngleDeg,
             });
 
             // Draw shoulder connection line & angle
@@ -552,50 +580,61 @@ export default function ClinicalCalibrationModal({
         ctx.textAlign = "center";
         ctx.fillText(isXOk ? "✓ X CENTERED" : "HORIZONTAL CENTER (X)", xSliderX + xSliderW / 2, xSliderY + 20);
 
-        // ── 2. VERTICAL CAMERA DISTANCE GAUGE (Right Meter - Z / Lens Proximity) ──
-        const ySliderW = 46;
+        // ── 2. VERTICAL ANGLE GAUGE (Right Meter - Ground Angle: 85°–95°) ──
+        const ySliderW = 54;
         const ySliderH = Math.min(boxH, 250);
         const ySliderX = boxX + boxW + 16;
         const ySliderY = boxY + (boxH - ySliderH) / 2;
 
         if (ySliderX + ySliderW < width) {
-          ctx.fillStyle = "rgba(0, 0, 0, 0.82)";
+          ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
           ctx.beginPath();
           ctx.roundRect(ySliderX, ySliderY, ySliderW, ySliderH, 14);
           ctx.fill();
-          ctx.strokeStyle = isDistOk ? "rgba(16, 185, 129, 0.8)" : "rgba(255, 255, 255, 0.25)";
+          ctx.strokeStyle = isVerticalOk ? "rgba(16, 185, 129, 0.85)" : "rgba(255, 255, 255, 0.25)";
           ctx.lineWidth = 1.5;
           ctx.stroke();
 
-          // Target Distance Green Zone [32% - 68%]
-          const distTargetStart = ySliderY + ySliderH * 0.32;
-          const distTargetHeight = ySliderH * 0.36;
+          // Target 85°–95° Green Zone [scale: 70° (bottom) to 120° (top), span 50°]
+          // 95° is at (95 - 70) / 50 = 0.50 -> ySliderY + ySliderH * 0.50
+          // 85° is at (85 - 70) / 50 = 0.30 -> ySliderY + ySliderH * 0.70
+          const greenZoneStart = ySliderY + ySliderH * 0.50;
+          const greenZoneHeight = ySliderH * 0.20;
           ctx.fillStyle = "rgba(16, 185, 129, 0.28)";
-          ctx.fillRect(ySliderX + 4, distTargetStart, ySliderW - 8, distTargetHeight);
+          ctx.fillRect(ySliderX + 4, greenZoneStart, ySliderW - 8, greenZoneHeight);
 
-          // Center Ideal Tick
-          ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+          // 90° Ideal Center Tick
+          ctx.strokeStyle = "#10B981";
+          ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.moveTo(ySliderX + 6, ySliderY + ySliderH * 0.5);
-          ctx.lineTo(ySliderX + ySliderW - 6, ySliderY + ySliderH * 0.5);
+          ctx.moveTo(ySliderX + 4, ySliderY + ySliderH * 0.60);
+          ctx.lineTo(ySliderX + ySliderW - 4, ySliderY + ySliderH * 0.60);
           ctx.stroke();
 
-          // Distance Needle
-          const needleDistY = ySliderY + ySliderH * (1 - normDist);
+          // Vertical Angle Needle
+          const clampedAngle = Math.max(70, Math.min(120, verticalAngleDeg));
+          const normAngle = (clampedAngle - 70) / (120 - 70);
+          const needleAngleY = ySliderY + ySliderH * (1 - normAngle);
+
           ctx.beginPath();
-          ctx.arc(ySliderX + ySliderW / 2, needleDistY, 10, 0, Math.PI * 2);
-          ctx.fillStyle = isDistOk ? "#10B981" : "#F59E0B";
+          ctx.arc(ySliderX + ySliderW / 2, needleAngleY, 10, 0, Math.PI * 2);
+          ctx.fillStyle = isVerticalOk ? "#10B981" : "#F59E0B";
           ctx.fill();
           ctx.strokeStyle = "#ffffff";
           ctx.lineWidth = 2.5;
           ctx.stroke();
 
-          ctx.font = "bold 9px system-ui, sans-serif";
-          ctx.fillStyle = isDistOk ? "#10B981" : "rgba(255, 255, 255, 0.8)";
+          // Gauge Labels
+          ctx.font = "bold 8.5px system-ui, sans-serif";
+          ctx.fillStyle = verticalAngleDeg > 95 ? "#F59E0B" : "rgba(255, 255, 255, 0.7)";
           ctx.textAlign = "center";
-          ctx.fillText("CLOSE", ySliderX + ySliderW / 2, ySliderY + 15);
-          ctx.fillText("FAR", ySliderX + ySliderW / 2, ySliderY + ySliderH - 9);
-          ctx.fillText(isDistOk ? "✓ IDEAL" : "DIST", ySliderX + ySliderW / 2, ySliderY + ySliderH / 2 + 3);
+          ctx.fillText("120° ⚠️", ySliderX + ySliderW / 2, ySliderY + 14);
+
+          ctx.fillStyle = isVerticalOk ? "#10B981" : "rgba(255, 255, 255, 0.9)";
+          ctx.fillText(isVerticalOk ? "✓ 85°-95°" : `${verticalAngleDeg}°`, ySliderX + ySliderW / 2, ySliderY + ySliderH * 0.60 - 4);
+
+          ctx.fillStyle = verticalAngleDeg < 85 ? "#F59E0B" : "rgba(255, 255, 255, 0.7)";
+          ctx.fillText("70° ⚠️", ySliderX + ySliderW / 2, ySliderY + ySliderH - 8);
         }
       }
 
@@ -819,7 +858,7 @@ export default function ClinicalCalibrationModal({
                 Step {step + 1} of 3 • Clinical Motion Calibration
               </div>
               <h3 className="text-base md:text-lg font-black text-white leading-tight">
-                {step === 0 && "Body Alignment & Laptop Angle (90°–100° Screen)"}
+                {step === 0 && "Body Alignment & Laptop Ground Angle (85°–95°)"}
                 {step === 1 && (REACH_TARGETS[activeTargetIdx]?.instruction || "Reach to Target Bubble")}
                 {step === 2 && "Calibration Verified • Ready to Begin Battery"}
               </h3>
@@ -853,7 +892,7 @@ export default function ClinicalCalibrationModal({
           <div className="bg-gray-900/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-gray-700 text-center max-w-md pointer-events-auto space-y-4 animate-fade-in">
             <h4 className="text-base font-black text-white">Position Yourself & Set Screen Angle</h4>
             <p className="text-xs text-gray-300 leading-relaxed">
-              Place laptop on your table with the screen opened at a <strong>90°–100° angle</strong>. Align your body with the horizontal (X), distance, and tilt meters until all three turn green.
+              Place laptop on your table with the screen opened at an <strong>85°–95° angle from ground</strong> (do not tilt back to 110°–120°). Align until all three meters turn green.
             </p>
 
             <div className="grid grid-cols-3 gap-2">
@@ -864,10 +903,10 @@ export default function ClinicalCalibrationModal({
                 <span className="mt-1">{postureStatus.centerMsg}</span>
               </div>
               <div className={`p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center ${
-                postureStatus.isGoodDistance ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
+                postureStatus.isVerticalOk ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
               }`}>
-                <span className="text-[10px] uppercase font-bold text-gray-400">Distance</span>
-                <span className="mt-1">{postureStatus.distanceMsg}</span>
+                <span className="text-[10px] uppercase font-bold text-gray-400">Vertical Angle</span>
+                <span className="mt-1">{postureStatus.verticalMsg}</span>
               </div>
               <div className={`p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center ${
                 postureStatus.isLevel ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
