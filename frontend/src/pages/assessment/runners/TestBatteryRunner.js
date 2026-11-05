@@ -1158,8 +1158,11 @@ export default function TestBatteryRunner({
             normDist = clamp((shDist - 0.15) / (0.55 - 0.15), 0.05, 0.95);
             isXOk = currentMidX >= 0.36 && currentMidX <= 0.64;
             isDistOk = shDist >= 0.25 && shDist <= 0.48;
-            shoulderTilt = Math.round((Math.atan2(rSh.y - lSh.y, rSh.x - lSh.x) * 180) / Math.PI);
-            isTiltOk = Math.abs(shoulderTilt) <= 8;
+            let rawTilt = (Math.atan2(rSh.y - lSh.y, rSh.x - lSh.x) * 180) / Math.PI;
+            if (rawTilt > 90) rawTilt -= 180;
+            if (rawTilt < -90) rawTilt += 180;
+            shoulderTilt = Math.round(rawTilt);
+            isTiltOk = Math.abs(shoulderTilt) <= 12;
           }
 
           const shPt = pl[shIdx];

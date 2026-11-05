@@ -17,13 +17,13 @@ import {
   RotateCcw,
 } from "lucide-react";
 
-// Predefined 5 interactive reach target bubbles: Corners & Center
+// Predefined 5 interactive reach target bubbles: Ergonomically calibrated for seated table posture (90°-100° laptop screen angle)
 const REACH_TARGETS = [
-  { id: "top_left", label: "1. TOP LEFT", x: 0.16, y: 0.22, color: "#3B82F6", instruction: "Reach your hand up to the TOP-LEFT target bubble" },
-  { id: "top_right", label: "2. TOP RIGHT", x: 0.84, y: 0.22, color: "#10B981", instruction: "Now reach up to the TOP-RIGHT target bubble" },
-  { id: "bottom_right", label: "3. BOTTOM RIGHT", x: 0.84, y: 0.78, color: "#F59E0B", instruction: "Reach down to the BOTTOM-RIGHT target bubble" },
-  { id: "bottom_left", label: "4. BOTTOM LEFT", x: 0.16, y: 0.78, color: "#EC4899", instruction: "Reach down to the BOTTOM-LEFT target bubble" },
-  { id: "center", label: "5. CENTER", x: 0.50, y: 0.50, color: "#8B5CF6", instruction: "Return your hand to the CENTER bubble" },
+  { id: "top_left", label: "1. TOP LEFT", x: 0.20, y: 0.28, color: "#3B82F6", instruction: "Reach your hand up to the TOP-LEFT target bubble" },
+  { id: "top_right", label: "2. TOP RIGHT", x: 0.80, y: 0.28, color: "#10B981", instruction: "Now reach up to the TOP-RIGHT target bubble" },
+  { id: "bottom_right", label: "3. BOTTOM RIGHT", x: 0.80, y: 0.68, color: "#F59E0B", instruction: "Reach down to the BOTTOM-RIGHT target bubble (above table)" },
+  { id: "bottom_left", label: "4. BOTTOM LEFT", x: 0.20, y: 0.68, color: "#EC4899", instruction: "Reach down to the BOTTOM-LEFT target bubble (above table)" },
+  { id: "center", label: "5. CENTER", x: 0.50, y: 0.48, color: "#8B5CF6", instruction: "Return your hand to the CENTER bubble" },
 ];
 
 export default function ClinicalCalibrationModal({
@@ -389,18 +389,40 @@ export default function ClinicalCalibrationModal({
       const pl = latestPoseLandmarksRef.current;
       const hands = latestHandsRef.current;
 
-      // Collect available hand cursors (from Hands or Pose wrist fallback)
+      // Collect available hand cursors & hit candidate points (Hands palm + Pose wrists/indexes)
       const currentHands = [];
+      const hitCandidates = [];
+
       if (hands?.Right?.pos) {
         currentHands.push({ p: hands.Right.pos, closed: hands.Right.closed, label: "Right" });
-      } else if (pl && pl[16] && (pl[16].visibility ?? 0) > 0.35) {
-        currentHands.push({ p: { x: pl[16].x, y: pl[16].y }, closed: false, label: "Right" });
+        hitCandidates.push(hands.Right.pos);
       }
-
       if (hands?.Left?.pos) {
         currentHands.push({ p: hands.Left.pos, closed: hands.Left.closed, label: "Left" });
-      } else if (pl && pl[15] && (pl[15].visibility ?? 0) > 0.35) {
-        currentHands.push({ p: { x: pl[15].x, y: pl[15].y }, closed: false, label: "Left" });
+        hitCandidates.push(hands.Left.pos);
+      }
+
+      // Add pose wrist / index points for resilient edge tracking
+      if (pl) {
+        if (pl[16] && (pl[16].visibility ?? 0) > 0.25) {
+          hitCandidates.push({ x: pl[16].x, y: pl[16].y });
+          if (!hands?.Right?.pos) {
+            currentHands.push({ p: { x: pl[16].x, y: pl[16].y }, closed: false, label: "Right" });
+          }
+        }
+        if (pl[20] && (pl[20].visibility ?? 0) > 0.25) {
+          hitCandidates.push({ x: pl[20].x, y: pl[20].y });
+        }
+
+        if (pl[15] && (pl[15].visibility ?? 0) > 0.25) {
+          hitCandidates.push({ x: pl[15].x, y: pl[15].y });
+          if (!hands?.Left?.pos) {
+            currentHands.push({ p: { x: pl[15].x, y: pl[15].y }, closed: false, label: "Left" });
+          }
+        }
+        if (pl[19] && (pl[19].visibility ?? 0) > 0.25) {
+          hitCandidates.push({ x: pl[19].x, y: pl[19].y });
+        }
       }
 
       // ── STEP 0: Body Positioning & Live Guiding Gauges ──
@@ -433,8 +455,11 @@ export default function ClinicalCalibrationModal({
 
             const dy = rSh.y - lSh.y;
             const dx = rSh.x - lSh.x;
-            tiltDeg = Math.round(Math.atan2(dy, dx) * (180 / Math.PI));
-            isLevel = Math.abs(tiltDeg) <= 8;
+            let rawTilt = Math.atan2(dy, dx) * (180 / Math.PI);
+            if (rawTilt > 90) rawTilt -= 180;
+            if (rawTilt < -90) rawTilt += 180;
+            tiltDeg = Math.round(rawTilt);
+            isLevel = Math.abs(tiltDeg) <= 12;
 
             const isReady = isXOk && isDistOk && isLevel;
 
@@ -578,13 +603,33 @@ export default function ClinicalCalibrationModal({
       if (step === 1) {
         const currentTarget = REACH_TARGETS[activeTargetIdx];
 
+        // 0. Draw preview dashed guides for all 5 target positions
+        REACH_TARGETS.forEach((t, idx) => {
+          if (idx === activeTargetIdx || completedTargets.some((ct) => ct.id === t.id)) return;
+          const tx = t.x * width;
+          const ty = t.y * height;
+          ctx.beginPath();
+          ctx.arc(tx, ty, 32, 0, Math.PI * 2);
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+          ctx.font = "bold 11px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(String(idx + 1), tx, ty);
+        });
+
         // 1. Draw completed bubbles (Green with white checkmark)
         completedTargets.forEach((t) => {
           const tx = t.x * width;
           const ty = t.y * height;
           ctx.beginPath();
-          ctx.arc(tx, ty, 32, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(16, 185, 129, 0.88)";
+          ctx.arc(tx, ty, 34, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(16, 185, 129, 0.9)";
           ctx.fill();
           ctx.strokeStyle = "#ffffff";
           ctx.lineWidth = 3;
@@ -601,12 +646,12 @@ export default function ClinicalCalibrationModal({
         if (currentTarget) {
           const tx = currentTarget.x * width;
           const ty = currentTarget.y * height;
-          const baseRadius = 42;
+          const baseRadius = 44;
 
           // Outer glowing pulsing ring
           const pulse = Math.sin(Date.now() / 180) * 6;
           ctx.beginPath();
-          ctx.arc(tx, ty, baseRadius + 12 + pulse, 0, Math.PI * 2);
+          ctx.arc(tx, ty, baseRadius + 14 + pulse, 0, Math.PI * 2);
           ctx.strokeStyle = `${currentTarget.color}66`;
           ctx.lineWidth = 4;
           ctx.stroke();
@@ -627,33 +672,33 @@ export default function ClinicalCalibrationModal({
           ctx.textBaseline = "middle";
           ctx.fillText(currentTarget.label, tx, ty);
 
-          // Check if any hand cursor is inside bubble
+          // Check if any hand cursor or wrist landmark is hovering within bubble
           let isHovering = false;
           let activeHandPos = null;
 
-          for (const h of currentHands) {
-            const hx = h.p.x * width;
-            const hy = h.p.y * height;
+          for (const cand of hitCandidates) {
+            const hx = cand.x * width;
+            const hy = cand.y * height;
             const dist = Math.hypot(hx - tx, hy - ty);
 
-            if (dist <= baseRadius + 22) {
+            if (dist <= baseRadius + 34) {
               isHovering = true;
-              activeHandPos = h.p;
+              activeHandPos = cand;
               break;
             }
           }
 
-          // Dwell ring fill calculation
+          // Dwell ring fill calculation (500ms snappy dwell)
           if (isHovering) {
             if (!dwellStartTimeRef.current) {
               dwellStartTimeRef.current = Date.now();
             }
             const elapsed = Date.now() - dwellStartTimeRef.current;
-            reachProgressRef.current = Math.min(1, elapsed / 750); // 750ms dwell hold
+            reachProgressRef.current = Math.min(1, elapsed / 500);
 
             // Draw radial green fill progress ring around bubble
             ctx.beginPath();
-            ctx.arc(tx, ty, baseRadius + 7, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * reachProgressRef.current);
+            ctx.arc(tx, ty, baseRadius + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * reachProgressRef.current);
             ctx.strokeStyle = "#10B981";
             ctx.lineWidth = 8;
             ctx.lineCap = "round";
@@ -774,7 +819,7 @@ export default function ClinicalCalibrationModal({
                 Step {step + 1} of 3 • Clinical Motion Calibration
               </div>
               <h3 className="text-base md:text-lg font-black text-white leading-tight">
-                {step === 0 && "Body Alignment & Camera Distance"}
+                {step === 0 && "Body Alignment & Laptop Angle (90°–100° Screen)"}
                 {step === 1 && (REACH_TARGETS[activeTargetIdx]?.instruction || "Reach to Target Bubble")}
                 {step === 2 && "Calibration Verified • Ready to Begin Battery"}
               </h3>
@@ -806,9 +851,9 @@ export default function ClinicalCalibrationModal({
         {/* Step 0 Guidance Card & Status Pill */}
         {step === 0 && (
           <div className="bg-gray-900/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-gray-700 text-center max-w-md pointer-events-auto space-y-4 animate-fade-in">
-            <h4 className="text-base font-black text-white">Position Yourself In The Frame</h4>
+            <h4 className="text-base font-black text-white">Position Yourself & Set Screen Angle</h4>
             <p className="text-xs text-gray-300 leading-relaxed">
-              Align your body with the horizontal (X) and vertical distance meters until both turn green.
+              Place laptop on your table with the screen opened at a <strong>90°–100° angle</strong>. Align your body with the horizontal (X), distance, and tilt meters until all three turn green.
             </p>
 
             <div className="grid grid-cols-3 gap-2">
