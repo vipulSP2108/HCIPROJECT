@@ -8,7 +8,6 @@ import { Hands } from "@mediapipe/hands";
 import {
   X,
   AlertCircle,
-  ArrowRight,
   RefreshCw,
   Target,
   UserCheck,
@@ -844,106 +843,108 @@ export default function ClinicalCalibrationModal({
         />
       </div>
 
-      {/* Top Floating Instruction HUD */}
-      <div className="relative z-20 mx-auto mt-4 max-w-2xl w-full px-4">
-        <div className="p-4 md:p-5 bg-gray-900/90 backdrop-blur-md rounded-3xl shadow-2xl border border-gray-700/80 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="p-3 bg-primary-500 text-white rounded-2xl shadow-md shrink-0">
-              {step === 0 && <UserCheck size={22} />}
-              {step === 1 && <Target size={22} />}
-              {step === 2 && <Sparkles size={22} />}
-            </div>
-            <div>
-              <div className="text-[11px] font-black uppercase tracking-widest text-primary-400">
-                Step {step + 1} of 3 • Clinical Motion Calibration
+      {/* Top Floating Instruction HUD (Docked at Top - Leaves Camera View 100% Clear) */}
+      <div className="relative z-20 mx-auto mt-3 max-w-4xl w-full px-4 pointer-events-auto">
+        <div className="p-3.5 md:p-4 bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/80 flex flex-col gap-2.5">
+          {/* Header Bar */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-primary-500 text-white rounded-xl shadow-md shrink-0">
+                {step === 0 && <UserCheck size={20} />}
+                {step === 1 && <Target size={20} />}
+                {step === 2 && <Sparkles size={20} />}
               </div>
-              <h3 className="text-base md:text-lg font-black text-white leading-tight">
-                {step === 0 && "Body Alignment & Laptop Ground Angle (85°–95°)"}
-                {step === 1 && (REACH_TARGETS[activeTargetIdx]?.instruction || "Reach to Target Bubble")}
-                {step === 2 && "Calibration Verified • Ready to Begin Battery"}
-              </h3>
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-wider text-primary-400">
+                  Step {step + 1} of 3 • Clinical Motion Calibration
+                </div>
+                <h3 className="text-sm md:text-base font-black text-white leading-tight">
+                  {step === 0 && "Body Alignment & Laptop Ground Angle (85°–95°)"}
+                  {step === 1 && (REACH_TARGETS[activeTargetIdx]?.instruction || "Reach to Target Bubble")}
+                  {step === 2 && "Calibration Verified • Ready to Begin Battery"}
+                </h3>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleStart}
+                className="px-3 py-1.5 text-xs font-bold text-gray-300 hover:text-white hover:bg-gray-800 rounded-xl transition cursor-pointer border border-gray-700"
+              >
+                Skip to Battery ⏭
+              </button>
+              <button
+                type="button"
+                onClick={handleClose}
+                className="p-1.5 text-gray-400 hover:text-white rounded-full hover:bg-gray-800 transition cursor-pointer"
+                title="Close Calibration"
+              >
+                <X size={18} />
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleStart}
-              className="px-3.5 py-2 text-xs font-bold text-gray-300 hover:text-white hover:bg-gray-800 rounded-xl transition cursor-pointer border border-gray-700"
-            >
-              Skip to Battery ⏭
-            </button>
-            <button
-              type="button"
-              onClick={handleClose}
-              className="p-2 text-gray-400 hover:text-white rounded-full hover:bg-gray-800 transition cursor-pointer"
-              title="Close Calibration"
-            >
-              <X size={20} />
-            </button>
-          </div>
+          {/* Step 0 Controls & Status Indicators (Docked at Top - ZERO Obstruction to Camera) */}
+          {step === 0 && (
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-gray-800">
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Centering Pill */}
+                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${
+                  postureStatus.isCentered ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
+                }`}>
+                  <span className="text-[9.5px] uppercase font-bold text-gray-400">Centering:</span>
+                  <span>{postureStatus.centerMsg}</span>
+                </div>
+
+                {/* Vertical Angle Pill */}
+                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${
+                  postureStatus.isVerticalOk ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
+                }`}>
+                  <span className="text-[9.5px] uppercase font-bold text-gray-400">Vertical:</span>
+                  <span>{postureStatus.verticalMsg}</span>
+                </div>
+
+                {/* Tilt Pill */}
+                <div className={`px-2.5 py-1 rounded-xl border text-xs font-bold flex items-center gap-1.5 ${
+                  postureStatus.isLevel ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
+                }`}>
+                  <span className="text-[9.5px] uppercase font-bold text-gray-400">Tilt:</span>
+                  <span>{postureStatus.tiltMsg}</span>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <button
+                type="button"
+                onClick={() => { setStep(1); playChime("hit"); }}
+                className={`py-1.5 px-3.5 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                  postureStatus.isReady
+                    ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/30 scale-[1.02]"
+                    : "bg-primary-500 hover:bg-primary-600 text-white shadow-primary-500/25"
+                }`}
+              >
+                {step0AutoCountdown !== null && step0AutoCountdown > 0 ? (
+                  <span>Optimal! Starting in {step0AutoCountdown}s...</span>
+                ) : (
+                  <span>Start Reach Bubble Test →</span>
+                )}
+              </button>
+            </div>
+          )}
+
+          {/* Step 1 Quick Target Helper (Docked at Top) */}
+          {step === 1 && (
+            <div className="pt-2 border-t border-gray-800 text-xs font-bold text-gray-300 flex items-center justify-between">
+              <span>Target {activeTargetIdx + 1} of 5: Hover your hand inside the target bubble for 0.5s to pop it!</span>
+              <span className="text-emerald-400 font-extrabold">{completedTargets.length} / 5 Popped</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Center Interactive Guidance (Step-Specific Prompts) */}
+      {/* Center Interactive Guidance (Only used for Step 2 Summary - completely clear in Step 0 & 1) */}
       <div className="relative z-20 flex-1 flex flex-col items-center justify-center p-4 pointer-events-none">
-        {/* Step 0 Guidance Card & Status Pill */}
-        {step === 0 && (
-          <div className="bg-gray-900/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border border-gray-700 text-center max-w-md pointer-events-auto space-y-4 animate-fade-in">
-            <h4 className="text-base font-black text-white">Position Yourself & Set Screen Angle</h4>
-            <p className="text-xs text-gray-300 leading-relaxed">
-              Place laptop on your table with the screen opened at an <strong>85°–95° angle from ground</strong> (do not tilt back to 110°–120°). Align until all three meters turn green.
-            </p>
-
-            <div className="grid grid-cols-3 gap-2">
-              <div className={`p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center ${
-                postureStatus.isCentered ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
-              }`}>
-                <span className="text-[10px] uppercase font-bold text-gray-400">Centering</span>
-                <span className="mt-1">{postureStatus.centerMsg}</span>
-              </div>
-              <div className={`p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center ${
-                postureStatus.isVerticalOk ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
-              }`}>
-                <span className="text-[10px] uppercase font-bold text-gray-400">Vertical Angle</span>
-                <span className="mt-1">{postureStatus.verticalMsg}</span>
-              </div>
-              <div className={`p-2.5 rounded-xl border text-xs font-bold flex flex-col items-center ${
-                postureStatus.isLevel ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-300"
-              }`}>
-                <span className="text-[10px] uppercase font-bold text-gray-400">Tilt</span>
-                <span className="mt-1">{postureStatus.tiltMsg}</span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => { setStep(1); playChime("hit"); }}
-              className={`w-full py-3.5 px-6 font-black text-sm rounded-2xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer ${
-                postureStatus.isReady
-                  ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/30 scale-[1.02]"
-                  : "bg-primary-500 hover:bg-primary-600 text-white shadow-primary-500/25"
-              }`}
-            >
-              {step0AutoCountdown !== null && step0AutoCountdown > 0 ? (
-                <span>Optimal Posture! Starting in {step0AutoCountdown}s...</span>
-              ) : (
-                <span>Start Reach Bubble Test (Pop 5 Targets)</span>
-              )}
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        )}
-
-        {/* Step 1 Floating Quick Helper */}
-        {step === 1 && (
-          <div className="bg-gray-900/85 backdrop-blur-md px-6 py-3 rounded-full border border-gray-700 flex items-center gap-3 shadow-xl">
-            <span className="text-xs font-bold text-gray-200">
-              Target {activeTargetIdx + 1} of 5: Hover your hand inside the target bubble for 0.7s to pop it!
-            </span>
-          </div>
-        )}
-
         {/* Step 2 Summary Card */}
         {step === 2 && (
           <div className="bg-gray-900/95 backdrop-blur-md p-8 rounded-[2.5rem] shadow-2xl border border-gray-700 text-center max-w-lg pointer-events-auto space-y-6 animate-fade-in">
